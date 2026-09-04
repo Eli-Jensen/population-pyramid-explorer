@@ -1,0 +1,23 @@
+"""Repository paths (single source of truth)."""
+from __future__ import annotations
+
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DATA_RAW = REPO_ROOT / "data" / "raw"
+DATA_PROCESSED = REPO_ROOT / "data" / "processed"
+DATA_RENDERS = REPO_ROOT / "data" / "renders"
+DATA_OUT = REPO_ROOT / "data" / "out"
+PIPELINE = REPO_ROOT / "pipeline"
+EVALS = REPO_ROOT / "evals"
+WEB = REPO_ROOT / "web"
+WEB_DATA = WEB / "public" / "data"
+WEB_SRC_DATA = WEB / "src" / "data"
+
+REVISION = "wpp2024"
+YEARS = list(range(1950, 2101))          # 151 years
+N_YEARS = len(YEARS)
+AGE_STARTS = list(range(0, 101, 5))      # 21 bins, 100 = 100+
+N_BINS = len(AGE_STARTS)
+N_DIMS = 2 * N_BINS                      # 42 = 21 male + 21 female shares of total
+LAST_OBSERVED_YEAR = 2023

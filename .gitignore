@@ -1,0 +1,21 @@
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# data (raw + processed are rebuilt by scripts/; only web/public/data snapshots are committed)
+data/raw/
+data/processed/
+data/renders/
+evals/embeddings/*.npy
+# node
+web/node_modules/
+web/dist/
+*.local
+# editors / os
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+# logs
+*.log

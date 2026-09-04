@@ -1,0 +1,50 @@
+entities 237 years 1950 2100 bins 21
+N pyramids 35787 X bytes f32 6.012216 MB
+JPN 2026 [W1_age] SAME-YEAR  similar: ITA(1.9), HKG(2.77), GRC(2.86), PRT(2.87), PRI(2.89)
+                             different: CAF(29.4), TCD(27.9), SOM(27.8), NER(27.8), MLI(27.7)
+JPN 2026 [cosine42] SAME-YEAR  similar: ITA(0.00986), PRT(0.011), GRC(0.0123), PRI(0.0179), ESP(0.0195)
+                               different: CAF(0.45), SOM(0.414), TCD(0.414), NER(0.412), MLI(0.408)
+JPN 2026 [W1_sex+ratio] SAME-YEAR  similar: ITA(2.09), GRC(3.11), ESP(4), PRT(4.02), DEU(4.19)
+                                   different: QAT(39.5), OMN(33.4), ARE(32.3), SAU(30.6), CAF(30)
+JPN 2026 [W1_age] ANY-YEAR   similar: THA-2055(0.463), LVA-2062(0.517), CUB-2050(0.518), MKD-2064(0.531), CRI-2059(0.539)
+
+NER 2026 [W1_age] SAME-YEAR  similar: SOM(0.24), MLI(0.291), TCD(0.37), COD(0.619), MOZ(0.699)
+                             different: JPN(27.8), HKG(26.4), ITA(25.9), PRI(25), GRC(24.9)
+NER 2026 [cosine42] SAME-YEAR  similar: MLI(0.000374), SOM(0.00105), TCD(0.00115), COD(0.00123), AGO(0.00171)
+                               different: HKG(0.456), KOR(0.418), QAT(0.415), JPN(0.412), TWN(0.399)
+NER 2026 [W1_sex+ratio] SAME-YEAR  similar: MLI(0.63), TCD(1.02), SOM(1.02), AFG(1.37), COD(1.79)
+                                   different: HKG(32.1), QAT(31.1), JPN(29.8), PRI(28.6), PRT(28)
+NER 2026 [W1_age] ANY-YEAR   similar: PSE-2003(0.174), MOZ-2015(0.181), BFA-2003(0.183), MEX-1979(0.207), NIC-1991(0.21)
+
+QAT 2026 [W1_age] SAME-YEAR  similar: ARE(1.17), BHR(2.24), KWT(2.38), OMN(3.68), SAU(3.69)
+                             different: JPN(16), HKG(14.6), ITA(14.1), CAF(13.5), PRI(13.2)
+QAT 2026 [cosine42] SAME-YEAR  similar: ARE(0.0203), BHR(0.0268), OMN(0.0408), KWT(0.0458), SAU(0.0627)
+                               different: CAF(0.474), NER(0.415), SOM(0.414), COD(0.411), TCD(0.407)
+QAT 2026 [W1_sex+ratio] SAME-YEAR  similar: ARE(8.54), BHR(11.2), OMN(11.5), KWT(12.7), SAU(13.6)
+                                   different: HKG(41.7), JPN(39.5), PRI(38.6), PRT(38.2), LVA(37.8)
+QAT 2026 [W1_age] ANY-YEAR   similar: ARE-2026(1.17), KWT-2022(2), BHR-2023(2.18), OMN-2033(3.33), SGP-1998(3.69)
+
+USA 2026 [W1_age] SAME-YEAR  similar: AUS(0.396), NZL(0.443), ALB(0.606), IRL(0.863), GBR(1.08)
+                             different: CAF(21), TCD(19.5), SOM(19.4), NER(19.4), MLI(19.3)
+USA 2026 [cosine42] SAME-YEAR  similar: NZL(0.00128), AUS(0.00195), NOR(0.00252), GBR(0.00258), CAN(0.00377)
+                               different: CAF(0.273), QAT(0.245), SOM(0.24), TCD(0.239), NER(0.237)
+USA 2026 [W1_sex+ratio] SAME-YEAR  similar: NZL(1.02), AUS(1.06), NOR(1.27), ALB(1.51), IRL(1.64)
+                                   different: QAT(31.3), ARE(23.6), OMN(23.5), CAF(23.1), SAU(20.7)
+USA 2026 [W1_age] ANY-YEAR   similar: NZL-2028(0.173), NIC-2063(0.321), MAR-2056(0.321), LKA-2045(0.327), AUS-2027(0.351)
+
+KOR 2050 [W1_age] SAME-YEAR  similar: PRI(0.962), TWN(1.11), ITA(3.25), JPN(3.26), ESP(4.09)
+                             different: CAF(31.3), TCD(30.1), COD(30), MLI(29.9), SOM(29.8)
+KOR 2050 [cosine42] SAME-YEAR  similar: TWN(0.00566), PRI(0.0109), ITA(0.0138), JPN(0.0168), ESP(0.0179)
+                               different: CAF(0.496), COD(0.465), TCD(0.465), MLI(0.46), SOM(0.458)
+KOR 2050 [W1_sex+ratio] SAME-YEAR  similar: TWN(1.25), PRI(3.31), JPN(3.65), ITA(3.98), ESP(4.28)
+                                   different: QAT(41), ARE(34.5), OMN(32.9), CAF(31.9), TCD(31.4)
+KOR 2050 [W1_age] ANY-YEAR   similar: CHN-2067(0.612), TWN-2053(0.687), PRI-2053(0.856), UKR-2072(0.863), ALB-2070(1.28)
+
+Traceback (most recent call last):
+  File "/private/tmp/claude-501/-Users-elijensen-Projects/d786032f-481e-46d5-993f-907c938b43fe/scratchpad/proto/sim.py", line 48, in <module>
+    i = idx[(iso,year)]; mask=(keys.iso3==iso).to_numpy(); mask[i]=False
+                                                           ~~~~^^^
+ValueError: assignment destination is read-only
+
+temporal continuity (W1_age): nearest same-country row is an adjacent year in 78 / 78
+W1 over all pyramids: 0.95 ms/query
