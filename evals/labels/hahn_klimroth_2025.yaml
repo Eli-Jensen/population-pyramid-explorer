@@ -1,0 +1,662 @@
+# G2(b) — Hahn-Klimroth et al. 2025 rule-based pyramid shapes, computed from the data (metric-independent).
+# The paper (zoo mammal populations) reduces a pyramid to five buckets — juvenile / three equal adult blocks /
+# senior — and classifies the four bucket-to-bucket transitions (+1 / 0 / −1) with Table S8 (transcribed in
+# full below, 74 of the 81 sequences; the 7 unlisted sequences are classed 'other'). The human bucket
+# boundaries and the equality tolerance are OUR choices, fixed here before any metric was scored against them.
+# Vintage: rules only — classes are recomputed from WPP2024 rows at evaluation time.
+retrieved: '2026-09-04'
+written_by: scripts/fetch_labels.py
+source:
+  citation: Hahn-Klimroth M., Meireles J.P., Lackey L.B., van Eeuwijk N., Bertelsen M.F., Dierkes P.W., Clauss M. (2025).
+    A semi-automatic approach to study population dynamics based on population pyramids. arXiv:2508.03788 (q-bio.PE).
+  url: https://arxiv.org/abs/2508.03788
+  pdf: https://arxiv.org/pdf/2508.03788v1
+vintage: rule set (paper appendix Table S8, arXiv v1 2025-08-05)
+classes:
+- pyramid
+- plunger
+- bell
+- lower_diamond
+- diamond
+- upper_diamond
+- column
+- hourglass
+- inverted_pyramid
+- inverted_plunger
+- inverted_bell
+- other
+families:
+  note: 'gate level (G2b): the paper''s lower/middle/upper diamond variants are one shape family'
+  diamond:
+  - lower_diamond
+  - diamond
+  - upper_diamond
+buckets:
+  note: Human adaptation of the paper's five buckets (juvenile / three equal adult blocks / senior) on 5-year WPP bins. Bucket
+    value = mean population share per year of age inside the block (share / nominal width), as the paper uses the mean number
+    of individuals per age class. 'Same size' = relative difference ≤ tolerance (the paper uses ±0.5 SEM overlap, undefined
+    for a deterministic share vector).
+  B1:
+    ages: 0-14
+    bins:
+    - 0
+    - 1
+    - 2
+    width_years: 15
+  B2:
+    ages: 15-29
+    bins:
+    - 3
+    - 4
+    - 5
+    width_years: 15
+  B3:
+    ages: 30-44
+    bins:
+    - 6
+    - 7
+    - 8
+    width_years: 15
+  B4:
+    ages: 45-59
+    bins:
+    - 9
+    - 10
+    - 11
+    width_years: 15
+  B5:
+    ages: 60+
+    bins:
+    - 12
+    - 13
+    - 14
+    - 15
+    - 16
+    - 17
+    - 18
+    - 19
+    - 20
+    width_years: 25
+    why_25: open-ended tail folded into a 60-84 nominal width so the senior density is comparable to a 15-year adult block;
+      with the literal 45-year width (60-104) every human population steps down at B4→B5 and the class set collapses to pyramid/diamond
+      variants
+  tolerance_rel: 0.05
+rules:
+- seq:
+  - -1
+  - -1
+  - 1
+  - 1
+  class: hourglass
+- seq:
+  - -1
+  - -1
+  - 1
+  - 0
+  class: hourglass
+- seq:
+  - -1
+  - -1
+  - 0
+  - 1
+  class: hourglass
+- seq:
+  - 1
+  - 1
+  - 0
+  - 0
+  class: inverted_bell
+- seq:
+  - 1
+  - 0
+  - 0
+  - 0
+  class: inverted_bell
+- seq:
+  - 0
+  - 1
+  - 0
+  - 0
+  class: inverted_bell
+- seq:
+  - 0
+  - 0
+  - -1
+  - -1
+  class: bell
+- seq:
+  - 0
+  - 0
+  - -1
+  - 0
+  class: bell
+- seq:
+  - 0
+  - 0
+  - 0
+  - -1
+  class: bell
+- seq:
+  - 0
+  - 0
+  - 1
+  - 1
+  class: inverted_plunger
+- seq:
+  - 0
+  - 0
+  - 1
+  - 0
+  class: inverted_plunger
+- seq:
+  - 0
+  - 0
+  - 0
+  - 1
+  class: inverted_plunger
+- seq:
+  - 1
+  - 1
+  - 1
+  - 1
+  class: inverted_pyramid
+- seq:
+  - 1
+  - 1
+  - 1
+  - 0
+  class: inverted_pyramid
+- seq:
+  - 1
+  - 1
+  - 0
+  - 1
+  class: inverted_pyramid
+- seq:
+  - 1
+  - 0
+  - 1
+  - 1
+  class: inverted_pyramid
+- seq:
+  - 0
+  - 1
+  - 1
+  - 1
+  class: inverted_pyramid
+- seq:
+  - 0
+  - 1
+  - 1
+  - 0
+  class: inverted_pyramid
+- seq:
+  - 0
+  - 1
+  - 0
+  - 1
+  class: inverted_pyramid
+- seq:
+  - 1
+  - 0
+  - 1
+  - 0
+  class: inverted_pyramid
+- seq:
+  - 1
+  - 0
+  - 0
+  - 1
+  class: inverted_pyramid
+- seq:
+  - 1
+  - -1
+  - -1
+  - -1
+  class: lower_diamond
+- seq:
+  - 1
+  - -1
+  - -1
+  - 0
+  class: lower_diamond
+- seq:
+  - 1
+  - -1
+  - 0
+  - -1
+  class: lower_diamond
+- seq:
+  - 1
+  - -1
+  - 0
+  - 0
+  class: lower_diamond
+- seq:
+  - 1
+  - 0
+  - -1
+  - -1
+  class: lower_diamond
+- seq:
+  - 1
+  - 0
+  - -1
+  - 0
+  class: lower_diamond
+- seq:
+  - 1
+  - 1
+  - -1
+  - -1
+  class: diamond
+- seq:
+  - 1
+  - 1
+  - -1
+  - 0
+  class: diamond
+- seq:
+  - 1
+  - 0
+  - 0
+  - -1
+  class: diamond
+- seq:
+  - 0
+  - 1
+  - -1
+  - -1
+  class: diamond
+- seq:
+  - 0
+  - 1
+  - -1
+  - 0
+  class: diamond
+- seq:
+  - -1
+  - -1
+  - 0
+  - 0
+  class: plunger
+- seq:
+  - -1
+  - 0
+  - 0
+  - 0
+  class: plunger
+- seq:
+  - 0
+  - -1
+  - 0
+  - 0
+  class: plunger
+- seq:
+  - -1
+  - -1
+  - -1
+  - -1
+  class: pyramid
+- seq:
+  - -1
+  - -1
+  - -1
+  - 0
+  class: pyramid
+- seq:
+  - -1
+  - -1
+  - 0
+  - -1
+  class: pyramid
+- seq:
+  - -1
+  - 0
+  - -1
+  - -1
+  class: pyramid
+- seq:
+  - -1
+  - 0
+  - -1
+  - 0
+  class: pyramid
+- seq:
+  - -1
+  - 0
+  - 0
+  - -1
+  class: pyramid
+- seq:
+  - 0
+  - -1
+  - -1
+  - -1
+  class: pyramid
+- seq:
+  - 0
+  - -1
+  - -1
+  - 0
+  class: pyramid
+- seq:
+  - 0
+  - -1
+  - 0
+  - -1
+  class: pyramid
+- seq:
+  - 1
+  - 1
+  - 1
+  - -1
+  class: upper_diamond
+- seq:
+  - 1
+  - 1
+  - 0
+  - -1
+  class: upper_diamond
+- seq:
+  - 1
+  - 0
+  - 1
+  - -1
+  class: upper_diamond
+- seq:
+  - 0
+  - 1
+  - 1
+  - -1
+  class: upper_diamond
+- seq:
+  - 0
+  - 1
+  - 0
+  - -1
+  class: upper_diamond
+- seq:
+  - 0
+  - 0
+  - 1
+  - -1
+  class: upper_diamond
+- seq:
+  - 0
+  - 0
+  - 0
+  - 0
+  class: column
+- seq:
+  - -1
+  - -1
+  - -1
+  - 1
+  cases:
+  - - B3 > B5
+    - pyramid
+  - - else
+    - hourglass
+- seq:
+  - 0
+  - -1
+  - -1
+  - 1
+  cases:
+  - - B3 > B5
+    - pyramid
+  - - else
+    - hourglass
+- seq:
+  - 1
+  - 1
+  - -1
+  - 1
+  cases:
+  - - B3 > B5
+    - diamond
+  - - B3 = B5
+    - inverted_bell
+  - - else
+    - inverted_pyramid
+- seq:
+  - 0
+  - 0
+  - -1
+  - 1
+  cases:
+  - - B3 > B5
+    - bell
+  - - B3 = B5
+    - column
+  - - else
+    - inverted_plunger
+- seq:
+  - 0
+  - 1
+  - -1
+  - 1
+  cases:
+  - - B3 > B5
+    - diamond
+  - - B3 = B5
+    - inverted_bell
+  - - else
+    - inverted_pyramid
+- seq:
+  - 1
+  - 0
+  - -1
+  - 1
+  cases:
+  - - B3 > B5
+    - lower_diamond
+  - - B3 = B5
+    - inverted_bell
+  - - else
+    - inverted_pyramid
+- seq:
+  - 0
+  - -1
+  - 1
+  - 0
+  cases:
+  - - B2 > B4
+    - plunger
+  - - B2 = B4
+    - hourglass
+  - - else
+    - inverted_plunger
+- seq:
+  - 0
+  - -1
+  - 0
+  - 1
+  cases:
+  - - B2 > B5
+    - pyramid
+  - - B2 = B5
+    - hourglass
+  - - else
+    - inverted_plunger
+- seq:
+  - 1
+  - -1
+  - 1
+  - 0
+  cases:
+  - - B2 > B4
+    - lower_diamond
+  - - B2 = B4
+    - inverted_bell
+  - - else
+    - inverted_pyramid
+- seq:
+  - 0
+  - -1
+  - 1
+  - 1
+  cases:
+  - - B2 > B4
+    - hourglass
+  - - else
+    - inverted_plunger
+- seq:
+  - -1
+  - 0
+  - 0
+  - 1
+  cases:
+  - - B2 > B5
+    - plunger
+  - - B2 = B5
+    - hourglass
+  - - else
+    - inverted_plunger
+- seq:
+  - -1
+  - 0
+  - 1
+  - 1
+  cases:
+  - - B1 >= B4
+    - hourglass
+  - - else
+    - inverted_plunger
+- seq:
+  - -1
+  - 0
+  - 1
+  - 0
+  cases:
+  - - B1 >= B4
+    - hourglass
+  - - else
+    - inverted_plunger
+- seq:
+  - -1
+  - 1
+  - 1
+  - 0
+  cases:
+  - - B1 >= B4
+    - hourglass
+  - - B1 < B3
+    - inverted_pyramid
+  - - else
+    - hourglass
+- seq:
+  - -1
+  - 1
+  - -1
+  - -1
+  cases:
+  - - B1 > B3
+    - pyramid
+  - - B1 = B3
+    - bell
+  - - else
+    - diamond
+- seq:
+  - -1
+  - 1
+  - -1
+  - 0
+  cases:
+  - - B1 > B3
+    - pyramid
+  - - B1 = B3
+    - bell
+  - - else
+    - diamond
+- seq:
+  - -1
+  - 1
+  - 0
+  - -1
+  cases:
+  - - B1 > B3
+    - pyramid
+  - - B1 = B3
+    - bell
+  - - else
+    - upper_diamond
+- seq:
+  - -1
+  - 1
+  - 0
+  - 1
+  cases:
+  - - B1 > B3
+    - hourglass
+  - - B1 = B3
+    - inverted_plunger
+  - - else
+    - inverted_pyramid
+- seq:
+  - -1
+  - 1
+  - 1
+  - 1
+  cases:
+  - - B1 > B3
+    - hourglass
+  - - B1 = B3
+    - inverted_plunger
+  - - else
+    - inverted_pyramid
+- seq:
+  - -1
+  - 0
+  - -1
+  - 1
+  cases:
+  - - B1 = B5 or B2 < B5
+    - hourglass
+  - - B2 = B4
+    - plunger
+  - - else
+    - pyramid
+- seq:
+  - -1
+  - 1
+  - 0
+  - 0
+  cases:
+  - - B1 > B3
+    - plunger
+  - - B1 = B3
+    - column
+  - - else
+    - inverted_bell
+- seq:
+  - 1
+  - -1
+  - -1
+  - 1
+  cases:
+  - - B3 > B5
+    - lower_diamond
+  - - B3 = B5 and B1 > B3
+    - plunger
+  - - B3 = B5
+    - lower_diamond
+  - - B1 >= B3
+    - hourglass
+  - - else
+    - inverted_pyramid
+- seq:
+  - -1
+  - 1
+  - 1
+  - -1
+  cases:
+  - - B1 < B4
+    - upper_diamond
+  - - B1 > B3 and B3 > B5
+    - pyramid
+  - - B3 < B5
+    - hourglass
+  - - else
+    - bell

@@ -1,0 +1,15 @@
+# Hand-edited regression groups for `blend` (PLAN §4.6): REPORTED, never verdict gates.
+# Scored at `year` in same-year mode, countries ≥ 100k, own entity excluded: for every member as the query,
+# normalised P@5 = hits / min(5, |G|−1) over the other members, and MRR of the first other member.
+# Groups with |G| ≤ 3 report rank-of-first-member / MRR only.
+# Findings recorded in RESULTS.md, not label choices: JPN was dropped from an East-Asia group (its neighbours are
+# Southern Europe, not KOR/TWN) and VNM from a fast-transition group (it sits between THA and IDN); both are
+# statements about the metric, kept here so the next reader does not re-add them.
+year: 2024
+groups:
+  aged_europe: [JPN, ITA, DEU, GRC, PRT, ESP]
+  sahel: [NER, MLI, TCD, SOM]
+  gulf_migrant: [QAT, ARE, BHR, KWT, OMN]
+  anglo_nordic: [USA, AUS, NZL, GBR, NOR, CAN]
+  korea_taiwan: [KOR, TWN]
+  china_thailand_cuba: [CHN, THA, CUB]

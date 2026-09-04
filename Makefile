@@ -3,7 +3,8 @@
 SHELL := /bin/zsh
 UV    := uv run
 NPM   := npm --prefix web
-WPP_FROM ?= $(HOME)/Projects/pyramid-econ/data/raw/wpp2024
+WPP_FROM  ?= $(HOME)/Projects/pyramid-econ/data/raw/wpp2024
+ECON_FROM ?= $(HOME)/Projects/pyramid-econ
 Q ?=
 
 .DEFAULT_GOAL := help
@@ -20,9 +21,9 @@ setup: ## python (dev group) + web deps
 setup-embed: ## python embed group (torch, transformers, scikit-learn)
 	uv sync --group dev --group embed
 
-data: ## fetch/copy raw inputs (WPP 2024 + Togo update + LOCATIONS; Maddison, PWT, WDI, WEO) — sha256-verified, idempotent
+data: ## fetch/copy raw inputs (WPP 2024 + Togo update + LOCATIONS; Maddison, PWT, WDI + OGHIST, WEO) — sha256-verified, idempotent
 	$(UV) scripts/fetch_data.py --from $(WPP_FROM)
-	$(UV) scripts/fetch_econ.py
+	$(UV) scripts/fetch_econ.py --from $(ECON_FROM)
 
 build: ## rebuild DuckDB + corpus + web shards + build report
 	$(UV) scripts/build_data.py
@@ -33,11 +34,11 @@ build-nopatch: ## same, without the Togo interim update
 build-emb: ## same, also exporting the image-embedding spaces (needs `make embed`)
 	$(UV) scripts/build_data.py --emb evals/embeddings/siglip2-base-naflex.pca64.npy --emb evals/embeddings/dinov2-base.pca64.npy
 
-test: ## pytest (default marks; skips slow + network)
-	$(UV) pytest -q
+test: ## pytest, fast: skips slow (full-corpus) + network (a command-line -m replaces pyproject's, so both are spelled out)
+	$(UV) pytest -q -m "not slow and not network"
 
-test-slow: ## full-corpus evaluations
-	$(UV) pytest -q -m slow
+test-slow: ## full-corpus evaluations only (needs `make build`)
+	$(UV) pytest -q -m "slow and not network"
 
 test-all: ## everything incl. network
 	$(UV) pytest -q -m "slow or network or not (slow or network)" --override-ini addopts=""
@@ -53,7 +54,7 @@ embed: ## embed renders with SigLIP 2 + DINOv2 (local, MPS) and load them into t
 eval: ## similarity evaluation protocol → evals/RESULTS.md + evals/verdicts.json
 	$(UV) scripts/eval_similarity.py --full
 
-m0: data build test render embed eval ## the whole M0 chain, in order
+m0: data build test render embed eval build-emb ## the whole M0 chain, in order (ends by merging verdicts + emb/ into the shards)
 
 labels: ## retrieve/transcribe external label sets → evals/labels/
 	$(UV) scripts/fetch_labels.py

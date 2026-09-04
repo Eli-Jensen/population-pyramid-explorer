@@ -1,0 +1,37 @@
+# ISO3 remaps and drops per economic-source family, applied by
+# pyramid_explorer.data.econ_iso3.apply_remap (used by db.ingest_indicators).
+#
+# remap:            upstream code -> WPP entity id (source_entity_map rows)
+# drop:             upstream codes removed on purpose (recorded as source_orphan, reason 'drop')
+# expected_orphans: the FIXED allowlist of codes that may end up without an entity
+#                   (drops + known non-WPP codes). apply_remap(strict=True) raises when an
+#                   upstream file grows a code outside this list, so nothing is dropped silently.
+#
+# Inspected 2026-09-04 against the 237 WPP2024 country ids:
+#   Maddison 2023  169 codes; CSK/SUN/YUG are dissolved states, everything else is in WPP.
+#   PWT 11.0       185 codes; all in WPP (TWN present).
+#   WDI API v2     217 non-aggregate economies; CHI (Channel Islands) is the only non-WPP code;
+#                  XKX and PSE are used upstream as-is.
+#   OGHIST         223 codes; CHI + dissolved CSK/ANT/YUG/SUN.
+#   WEO 2025-04    196 codes; UVK = Kosovo, WBG = West Bank and Gaza.
+families:
+  maddison:
+    remap: {}
+    drop: [CSK, SUN, YUG]
+    expected_orphans: [CSK, SUN, YUG]
+  pwt:
+    remap: {}
+    drop: []
+    expected_orphans: []
+  wdi:
+    remap: {}
+    drop: [CHI]
+    expected_orphans: [CHI]
+  oghist:
+    remap: {}
+    drop: [CHI, CSK, ANT, YUG, SUN]
+    expected_orphans: [CHI, CSK, ANT, YUG, SUN]
+  weo:
+    remap: {UVK: XKX, WBG: PSE}
+    drop: []
+    expected_orphans: []

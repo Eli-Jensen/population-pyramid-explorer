@@ -1,0 +1,112 @@
+{
+  "maddison2023": {
+    "source": "maddison2023",
+    "file": "econ/mpd2023_web.xlsx",
+    "url": "https://dataverse.nl/api/access/datafile/421302",
+    "sha256": "ecc5916ca12789b983fc4be437f8a354bbf4291323605324ac3e0aea4c57cbb6",
+    "bytes": 4903804,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "Maddison Project Database 2023; gdppc in 2011 int. $, pop in thousands"
+  },
+  "oghist": {
+    "source": "oghist",
+    "file": "econ/OGHIST.xlsx",
+    "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037712/DR0090754/OGHIST.xlsx",
+    "sha256": "17eb9e67b2eaf7d489ceb303f39f53697ce5b6238ed13c0b11c0846c33024d7b",
+    "bytes": 116890,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "WB historical income classification; income_class_wb keyed by fiscal year, L=1 LM=2 UM=3 H=4"
+  },
+  "pwt110": {
+    "source": "pwt110",
+    "file": "econ/pwt110.xlsx",
+    "url": "https://dataverse.nl/api/access/datafile/554105",
+    "sha256": "7b337e94f39dfe304bc459e433f8ce0624496c812707ae0c924888f5142b3ab3",
+    "bytes": 5839841,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "PWT 11.0 sheet Data; rgdpna/rgdpe mil. 2021 US$, pop/emp millions, hc index"
+  },
+  "wdi:NY.GDP.MKTP.KD.ZG": {
+    "source": "wdi",
+    "file": "econ/wdi/NY.GDP.MKTP.KD.ZG.json",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.KD.ZG?format=json&per_page=20000&date=1960%3A2025",
+    "sha256": "c2708ab836fa861a77d46f3c8c73cee54dd8b01ad05901b09d3d10a279a2d5a2",
+    "bytes": 4187916,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "WDI API v2 pages verbatim"
+  },
+  "wdi:NY.GDP.PCAP.PP.KD": {
+    "source": "wdi",
+    "file": "econ/wdi/NY.GDP.PCAP.PP.KD.json",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.PP.KD?format=json&per_page=20000&date=1960%3A2025",
+    "sha256": "b860fe321e0db92eb37676df19983f66e04d5491e62f807ae53a2c59d555d934",
+    "bytes": 4641664,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "WDI API v2 pages verbatim"
+  },
+  "wdi:NY.GDP.TOTL.RT.ZS": {
+    "source": "wdi",
+    "file": "econ/wdi/NY.GDP.TOTL.RT.ZS.json",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.TOTL.RT.ZS?format=json&per_page=20000&date=1960%3A2025",
+    "sha256": "ac88fc13c1b1b0b4b2e34eaa68f8dc42271d66b082fda4e41f3e32ed987b0659",
+    "bytes": 4477832,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "WDI API v2 pages verbatim"
+  },
+  "wdi:SP.POP.1564.TO.ZS": {
+    "source": "wdi",
+    "file": "econ/wdi/SP.POP.1564.TO.ZS.json",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SP.POP.1564.TO.ZS?format=json&per_page=20000&date=1960%3A2025",
+    "sha256": "eb8c476da7358134275c5e68013dcbc2c453fa251006a03e728492e70beb8a20",
+    "bytes": 4641097,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "WDI API v2 pages verbatim"
+  },
+  "wdi:SP.POP.TOTL": {
+    "source": "wdi",
+    "file": "econ/wdi/SP.POP.TOTL.json",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=20000&date=1960%3A2025",
+    "sha256": "4a8cecb564caec92c905ecbae0f3f51471bc5110cf86a6fef9683278e1b3a48b",
+    "bytes": 3897146,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "WDI API v2 pages verbatim"
+  },
+  "wdi:countries": {
+    "source": "wdi",
+    "file": "econ/wdi/countries.json",
+    "url": "https://api.worldbank.org/v2/country?format=json&per_page=400",
+    "sha256": "0e60350622023f37aa26bfaad931a1fc230f677536b0eaa87622bdb4b4d5fe56",
+    "bytes": 125399,
+    "fetched_at": "2026-09-04",
+    "licence": "CC BY 4.0",
+    "redistributable": true,
+    "notes": "WDI API v2 pages verbatim"
+  },
+  "weo_2025-04": {
+    "source": "weo_2025-04",
+    "file": "econ/weo_202504.parquet",
+    "url": "https://api.db.nomics.world/v22/series/IMF/WEO%3A2025-04",
+    "sha256": "4a5bb1b5ab9af2b307c53c6f96417863828e0ff92a9d0e434a9fab524de894ba",
+    "bytes": 418121,
+    "fetched_at": "2026-09-04",
+    "licence": "IMF terms of use (no redistribution)",
+    "redistributable": false,
+    "notes": "IMF WEO 2025-04 via DBnomics; build-time only, never exported; forecast when year > 2024"
+  }
+}

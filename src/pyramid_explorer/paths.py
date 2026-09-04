@@ -1,9 +1,13 @@
 """Repository paths (single source of truth)."""
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+# Sibling checkout holding already-downloaded raw inputs (WPP CSVs, PWT xlsx, the WEO parquet); the econ
+# loaders copy from here before downloading. Override with PYRAMID_ECON_ROOT or `make data ECON_FROM=DIR`.
+PYRAMID_ECON_ROOT = Path(os.environ.get("PYRAMID_ECON_ROOT", Path.home() / "Projects" / "pyramid-econ"))
 DATA_RAW = REPO_ROOT / "data" / "raw"
 DATA_PROCESSED = REPO_ROOT / "data" / "processed"
 DATA_RENDERS = REPO_ROOT / "data" / "renders"

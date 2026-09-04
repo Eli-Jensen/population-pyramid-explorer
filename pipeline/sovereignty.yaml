@@ -1,0 +1,32 @@
+# Curated "state since" facts for entities whose modern borders post-date 1950 (WPP back-casts every
+# current country to 1950 within present borders). Optional; the table may stay sparse. `ref` = source.
+# Fields: entity_id (ISO3), state_since (year), predecessor (ISO3 or historic code), event, note, ref.
+rows:
+  - {entity_id: SSD, state_since: 2011, predecessor: SDN, event: independence, note: "Independence from Sudan 9 July 2011", ref: "UN GA resolution 65/308"}
+  - {entity_id: XKX, state_since: 2008, predecessor: SRB, event: declaration, note: "Declared independence 17 Feb 2008; UNSC res. 1244 administered region", ref: "UN WPP note 23"}
+  - {entity_id: TLS, state_since: 2002, predecessor: IDN, event: independence, note: "Restored independence 20 May 2002", ref: "UN GA resolution 57/3"}
+  - {entity_id: ERI, state_since: 1993, predecessor: ETH, event: independence, note: "Independence from Ethiopia 24 May 1993", ref: "UN GA resolution 47/230"}
+  - {entity_id: CZE, state_since: 1993, predecessor: CSK, event: dissolution, note: "Dissolution of Czechoslovakia 1 Jan 1993", ref: "UN GA resolution 47/221"}
+  - {entity_id: SVK, state_since: 1993, predecessor: CSK, event: dissolution, note: "Dissolution of Czechoslovakia 1 Jan 1993", ref: "UN GA resolution 47/222"}
+  - {entity_id: ARM, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/227"}
+  - {entity_id: AZE, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/230"}
+  - {entity_id: BLR, state_since: 1991, predecessor: SUN, event: dissolution, note: "UN member since 1945 as Byelorussian SSR; sovereign 1991", ref: "Belovezha Accords 8 Dec 1991"}
+  - {entity_id: EST, state_since: 1991, predecessor: SUN, event: dissolution, note: "Restored independence 20 Aug 1991", ref: "UN GA resolution 46/4"}
+  - {entity_id: GEO, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/241"}
+  - {entity_id: KAZ, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/224"}
+  - {entity_id: KGZ, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/225"}
+  - {entity_id: LVA, state_since: 1991, predecessor: SUN, event: dissolution, note: "Restored independence 21 Aug 1991", ref: "UN GA resolution 46/5"}
+  - {entity_id: LTU, state_since: 1991, predecessor: SUN, event: dissolution, note: "Restored independence 11 Mar 1990 (recognised 1991)", ref: "UN GA resolution 46/6"}
+  - {entity_id: MDA, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/223"}
+  - {entity_id: RUS, state_since: 1991, predecessor: SUN, event: dissolution, note: "Continuator state of the USSR", ref: "UN Secretariat note 24 Dec 1991"}
+  - {entity_id: TJK, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/228"}
+  - {entity_id: TKM, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/229"}
+  - {entity_id: UKR, state_since: 1991, predecessor: SUN, event: dissolution, note: "UN member since 1945 as Ukrainian SSR; sovereign 1991", ref: "Act of Declaration of Independence 24 Aug 1991"}
+  - {entity_id: UZB, state_since: 1991, predecessor: SUN, event: dissolution, note: "Dissolution of the USSR", ref: "UN GA resolution 46/226"}
+  - {entity_id: HRV, state_since: 1991, predecessor: YUG, event: dissolution, note: "Dissolution of Yugoslavia", ref: "UN GA resolution 46/238"}
+  - {entity_id: SVN, state_since: 1991, predecessor: YUG, event: dissolution, note: "Dissolution of Yugoslavia", ref: "UN GA resolution 46/236"}
+  - {entity_id: BIH, state_since: 1992, predecessor: YUG, event: dissolution, note: "Dissolution of Yugoslavia", ref: "UN GA resolution 46/237"}
+  - {entity_id: MKD, state_since: 1991, predecessor: YUG, event: dissolution, note: "Dissolution of Yugoslavia (UN member 1993)", ref: "UN GA resolution 47/225"}
+  - {entity_id: MNE, state_since: 2006, predecessor: SCG, event: dissolution, note: "Independence from Serbia and Montenegro 3 Jun 2006", ref: "UN GA resolution 60/264"}
+  - {entity_id: NAM, state_since: 1990, predecessor: ZAF, event: independence, note: "Independence 21 Mar 1990", ref: "UN GA resolution S-18/1"}
+  - {entity_id: BGD, state_since: 1971, predecessor: PAK, event: independence, note: "Independence 16 Dec 1971 (UN member 1974)", ref: "UN GA resolution 3203 (XXIX)"}

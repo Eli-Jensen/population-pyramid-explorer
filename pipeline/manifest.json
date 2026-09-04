@@ -1,0 +1,52 @@
+{
+  "revision": "wpp2024",
+  "base": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/",
+  "downloads_json": "https://population.un.org/wpp/assets/downloads.json",
+  "files": {
+    "WPP2024_PopulationByAge5GroupSex_Medium.csv.gz": {
+      "source_id": "wpp2024",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationByAge5GroupSex_Medium.csv.gz",
+      "sha256": "a04d7d1486a5eb2832cc812d599448f0a71e8ac9e1e7e6fa4066673d6a2487cd",
+      "bytes": 29948947,
+      "last_modified": "Fri, 13 Dec 2024 19:11:50 GMT",
+      "etag": "0x8DD1BA9FF59EA82",
+      "content_md5": "F5E6ALaYdvzhl+LQzqkERw==",
+      "fetched_at": "2026-09-04"
+    },
+    "WPP2024_Demographic_Indicators_Medium.csv.gz": {
+      "source_id": "wpp2024",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz",
+      "sha256": "286ac36bb1415e2e1ade03acfef0a29f0e4c087e2f78e38c48f50c5df89082bc",
+      "bytes": 16557272,
+      "last_modified": "Fri, 13 Dec 2024 19:11:17 GMT",
+      "etag": "0x8DD1BA9EBFD1565",
+      "content_md5": "ozQZwRtAcIbbevlCUsWpXQ==",
+      "fetched_at": "2026-09-04"
+    },
+    "WPP2024_CSV_files_update.zip": {
+      "source_id": "wpp2024-togo-update",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/WPP2024_CSV_files_update.zip",
+      "sha256": "eb7846bf5d937ee15060198e1130e770b885e58c24035b314966681ed929ca9f",
+      "bytes": 943827,
+      "last_modified": "Thu, 22 Jan 2026 17:45:21 GMT",
+      "etag": "0x8DE59DE03E038BF",
+      "content_md5": "uCHQs4g4eYKsQH88u2Zv/A==",
+      "fetched_at": "2026-09-04",
+      "extract": [
+        "WPP2024_PopulationByAge5GroupSex_Medium_Update.csv",
+        "WPP2024_Demographic_Indicators_Medium_Update.csv"
+      ]
+    },
+    "WPP2024_F01_LOCATIONS.xlsx": {
+      "source_id": "wpp2024",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/4_Metadata/WPP2024_F01_LOCATIONS.xlsx",
+      "sha256": "785cc94bf64e4e924179daf6af703164ebcf7d32b27560ebde226b8d1f0f4967",
+      "bytes": 704784,
+      "last_modified": "Fri, 13 Dec 2024 19:11:47 GMT",
+      "etag": "0x8DD1BA9FD803B1B",
+      "content_md5": "zdMZDiaaD5rQW1YE4hS+Dw==",
+      "fetched_at": "2026-09-04",
+      "convert_to": "pipeline/locations.parquet"
+    }
+  }
+}

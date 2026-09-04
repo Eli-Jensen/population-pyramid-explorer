@@ -1,0 +1,119 @@
+# Display-name overrides, extra aliases and the aggregate deny-list for entities.build_entities.
+# Keys are ISO3 for countries and `agg-<locid>` for aggregates. `slug` = slugify(short_name); both the
+# UN-name slug and the short-name slug are aliases automatically, plus ISO3/ISO2. Build fails on any
+# duplicate slug or alias across entities.
+short_names:
+  TWN: Taiwan
+  XKX: Kosovo
+  KOR: South Korea
+  PRK: North Korea
+  USA: United States
+  RUS: Russia
+  IRN: Iran
+  VNM: Vietnam
+  LAO: Laos
+  SYR: Syria
+  BOL: Bolivia
+  VEN: Venezuela
+  TZA: Tanzania
+  TUR: Türkiye
+  FSM: Micronesia
+  HKG: Hong Kong
+  MAC: Macao
+  REU: Réunion
+  CIV: Côte d'Ivoire
+  COD: DR Congo
+  PSE: Palestine
+  MDA: Moldova
+  BRN: Brunei
+  GBR: United Kingdom
+  CZE: Czechia
+  MMR: Myanmar
+  CPV: Cabo Verde
+  SWZ: Eswatini
+  MKD: North Macedonia
+  STP: São Tomé and Príncipe
+  FLK: Falkland Islands
+  VIR: US Virgin Islands
+  VGB: British Virgin Islands
+  BES: Caribbean Netherlands
+  MAF: Saint Martin
+  SXM: Sint Maarten
+  VAT: Vatican City
+  WLF: Wallis and Futuna
+  agg-900: World
+  agg-1835: Oceania (excl. Australia and New Zealand)
+  agg-941: Least developed countries
+  agg-1636: Landlocked developing countries
+  agg-1637: Small island developing states
+  agg-954: Micronesia (subregion)
+aliases:
+  USA: [usa, us, america, united-states-of-america]
+  GBR: [uk, britain, great-britain, england]
+  KOR: [korea, republic-of-korea, south-korea]
+  PRK: [dprk, north-korea]
+  RUS: [russia, russian-federation]
+  IRN: [iran, persia]
+  VNM: [vietnam, viet-nam]
+  LAO: [laos, lao]
+  SYR: [syria]
+  BOL: [bolivia]
+  VEN: [venezuela]
+  TZA: [tanzania]
+  TUR: [turkiye, turkey]
+  CIV: [ivory-coast, cote-d-ivoire, cote-divoire]
+  COD: [dr-congo, drc, congo-kinshasa, democratic-republic-of-the-congo]
+  COG: [congo-brazzaville, republic-of-the-congo]
+  PSE: [palestine, west-bank-and-gaza, gaza]
+  TWN: [taiwan, republic-of-china]
+  XKX: [kosovo]
+  MDA: [moldova]
+  BRN: [brunei]
+  CZE: [czech-republic]
+  MMR: [burma]
+  CPV: [cape-verde]
+  SWZ: [swaziland]
+  MKD: [macedonia]
+  NLD: [holland]
+  CHE: [swiss]
+  ARE: [uae, emirates]
+  FSM: [micronesia-federated-states-of, fsm]
+  HKG: [hong-kong-sar]
+  MAC: [macau]
+  VAT: [holy-see, vatican]
+  TLS: [east-timor]
+  BES: [bonaire]
+  MAF: [saint-martin-french-part, st-martin]
+  SXM: [sint-maarten-dutch-part]
+  VIR: [united-states-virgin-islands, virgin-islands-us]
+  STP: [sao-tome]
+  DEU: [deutschland]
+  ESP: [espana]
+  BHS: [the-bahamas]
+  GMB: [the-gambia]
+  agg-900: [earth, global]
+  agg-1834: [ssa]
+  agg-904: [lac, latam]
+  agg-1503: [hic, high-income]
+  agg-1502: [umic, upper-middle-income]
+  agg-1501: [lmic, lower-middle-income]
+  agg-1500: [lic, low-income]
+  agg-941: [ldc]
+  agg-1636: [lldc]
+  agg-1637: [sids]
+# Automatic aliases to remove (a UN-name slug that collides with another entity's slug).
+drop_aliases:
+  agg-954: [micronesia]   # the country FSM owns 'micronesia'; the subregion keeps 'micronesia-subregion'
+# Aggregates of the six kept LocTypeNames that are NOT entities, with the reason (PLAN §3.2).
+deny_aggregates:
+  1518: no income group available (residual bucket, 12 territories)
+  5502: Europe + Northern America + Australia/New Zealand union of two SDG regions
+  5503: high-and-upper-middle income union
+  5504: low-and-lower-middle income union
+  1859: low-and-middle income union
+  1517: middle income union
+  934: less developed excluding least developed ("excluding" variant)
+  948: less developed excluding China ("excluding" variant)
+  5505: Americas (keep 904 Latin America and the Caribbean + 905 Northern America)
+  1836: SDG Australia/New Zealand is identical to subregion 927 (same two members, same name)
+  1830: SDG Latin America and the Caribbean is identical to geographic region 904 (same members, same name)

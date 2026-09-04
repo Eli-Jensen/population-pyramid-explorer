@@ -1,0 +1,1010 @@
+# ETF universe for the economic-lens backtest — hand-curated BEFORE any price fetch (PREREG.md §6).
+# Pre-registered companion of PREREG.md. Nothing here changes after `scripts/fetch_etf.py` runs for the
+# first time: NO ticker is added or removed; a date found wrong later is recorded in the "Deviations from
+# PREREG" section of evals/econ/RESULTS.md, never edited here.
+
+version: 1
+as_of: "2026-09-04"
+prereg: evals/econ/PREREG.md
+
+rules: >-
+  Summary of PREREG.md §3.4 and §6 (the PREREG text governs). Investable at T iff `inception` <= the entry
+  date (last NYSE trading day of calendar year T). A country with several funds uses the one with the
+  earliest inception that is still <= entry (CHN: FXI for T <= 2010, MCHI otherwise duplicates it; IND: EPI
+  for T = 2010, INDA is a duplicate; RUS: RSX, ERUS duplicates it). Windows that run past a fund's last
+  trading day compound to that day (calendar-year NAV ladder in evals/econ/etf_manual.yaml) and are held at
+  0 % nominal cash thereafter, flagged liquidated_in_window. Liveness comes ONLY from `delisted: null` here
+  AND guard assertion 3 (last bar >= today - 10 days); a Yahoo quote is never evidence of life. Guard per
+  ticker: n_bars >= 250; first bar <= inception + 45 days; live => last bar >= today - 10 days;
+  delisted => Yahoo refused (one stale bar or no data at all — see `yahoo_note`) and the ticker is routed to
+  etf_manual.yaml; no gap > 45 days. Benchmarks (role: benchmark) are never picks. role: basket (FM) is a
+  multi-country fund kept only as a liquidation/stale-bar fixture; it is never a pick and is excluded from
+  the equal-weight single-country basket.
+
+field_notes:
+  ticker: the US listing ticker as used in the plan (see yahoo_symbol where Yahoo's symbol differs)
+  iso3: ISO 3166-1 alpha-3 of the country; WORLD / DM_EX_US / EM / USA for benchmarks; null for the basket
+  inception: issuer inception date (YYYY-MM-DD)
+  inception_verified: "yes = read on 2026-09-04 from the issuer's own page, fact sheet or SEC filing named in source_url; no = best-known date from secondary sources (issuer site not reachable by automated fetch)"
+  yahoo_first_bar: >-
+    month (YYYY-MM) of the first bar returned by Yahoo Finance chart v8 range=max&interval=1mo on
+    2026-09-04. The raw endpoint answered HTTP 429 for every request from this network that day; the same
+    endpoint was read through yfinance's cookie/crumb session instead (identical data source). null when
+    Yahoo returned no usable history (delisted tickers).
+  discrepancy_days: >-
+    first Yahoo DAILY bar minus issuer inception, in days, where the daily first bar was checked (THD,
+    COLO/GXG, NORW); otherwise 0 when the first monthly bar falls in the inception month, else the days from
+    inception to the first day of that month. Negative = Yahoo history predates the issuer inception.
+    null when no usable Yahoo history. The daily fetch recomputes the exact figure (guard assertion 2).
+  status: live | liquidated (final distribution paid) | liquidating (delisted, distributions continuing)
+  delisted: last day the shares traded on the listing exchange (or the exchange's suspension date); null if live
+  status_url: issuer or exchange document for the liquidation (press release, SEC filing, Form 8937)
+  msci_class: >-
+    MSCI market classification of the country as known to the author on 2026-09-04 (DM | EM | FM |
+    standalone | none | n/a for benchmarks/basket). Informational only; no test reads it.
+  yahoo_symbol: only present when Yahoo's symbol differs from `ticker` (COLO for GXG after the 2025-06 rename)
+
+yahoo_note: >-
+  Observed 2026-09-04: the liquidated tickers do NOT all show the same refusal signature. EGPT, NGE, PAK and
+  FM return exactly ONE stale bar (dates 2024-03-21, 2024-03-25, 2025-06-11, 2025-01-06 respectively — for
+  NGE and PAK that date is months AFTER the real last trading day, which is exactly why a stale bar must
+  never be read as liveness or as a liquidation date). ERUS and RSX return NO data at all through yfinance
+  ("possibly delisted; no price data found"), while the raw chart endpoint returned one stale bar for them
+  earlier the same day (PREREG.md §6). The guard's "Yahoo refused" branch must therefore accept both
+  signatures (a single bar OR an empty result); both route the ticker to etf_manual.yaml.
+
+entries:
+  # ---- the 17 original WEBS / iShares MSCI country funds (all 1996-03-12) ----
+  - ticker: EWA
+    iso3: AUS
+    role: single_country
+    name: iShares MSCI Australia ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Australia Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239607/ishares-msci-australia-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWC
+    iso3: CAN
+    role: single_country
+    name: iShares MSCI Canada ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Canada Custom Capped Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239615/ishares-msci-canada-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWD
+    iso3: SWE
+    role: single_country
+    name: iShares MSCI Sweden ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Sweden 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239684/ishares-msci-sweden-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWG
+    iso3: DEU
+    role: single_country
+    name: iShares MSCI Germany ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Germany Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239650/ishares-msci-germany-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWH
+    iso3: HKG
+    role: single_country
+    name: iShares MSCI Hong Kong ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Hong Kong 25-50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239657/ishares-msci-hong-kong-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWI
+    iso3: ITA
+    role: single_country
+    name: iShares MSCI Italy ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Italy 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239664/ishares-msci-italy-capped-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWJ
+    iso3: JPN
+    role: single_country
+    name: iShares MSCI Japan ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Japan Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239665/ishares-msci-japan-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: cross-check fund (etf_crosscheck.yaml)
+  - ticker: EWK
+    iso3: BEL
+    role: single_country
+    name: iShares MSCI Belgium ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Belgium IMI 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239610/ishares-msci-belgium-capped-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWL
+    iso3: CHE
+    role: single_country
+    name: iShares MSCI Switzerland ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Switzerland 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239685/ishares-msci-switzerland-capped-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWM
+    iso3: MYS
+    role: single_country
+    name: iShares MSCI Malaysia ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Malaysia Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239669/ishares-msci-malaysia-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: EWN
+    iso3: NLD
+    role: single_country
+    name: iShares MSCI Netherlands ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Netherlands IMI 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239671/ishares-msci-netherlands-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWO
+    iso3: AUT
+    role: single_country
+    name: iShares MSCI Austria ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Austria IMI 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239609/ishares-msci-austria-capped-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWP
+    iso3: ESP
+    role: single_country
+    name: iShares MSCI Spain ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Spain 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239683/ishares-msci-spain-capped-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWQ
+    iso3: FRA
+    role: single_country
+    name: iShares MSCI France ETF
+    issuer: iShares (BlackRock)
+    index: MSCI France Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239648/ishares-msci-france-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWS
+    iso3: SGP
+    role: single_country
+    name: iShares MSCI Singapore ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Singapore 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239678/ishares-msci-singapore-capped-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWU
+    iso3: GBR
+    role: single_country
+    name: iShares MSCI United Kingdom ETF
+    issuer: iShares (BlackRock)
+    index: MSCI United Kingdom Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239690/ishares-msci-united-kingdom-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EWW
+    iso3: MEX
+    role: single_country
+    name: iShares MSCI Mexico ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Mexico IMI 25/50 Index
+    inception: "1996-03-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239670/ishares-msci-mexico-capped-etf"
+    yahoo_first_bar: "1996-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+
+  # ---- later iShares single-country funds ----
+  - ticker: EWY
+    iso3: KOR
+    role: single_country
+    name: iShares MSCI South Korea ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Korea 25/50 Index
+    inception: "2000-05-09"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239681/ishares-msci-south-korea-capped-etf"
+    yahoo_first_bar: "2000-05"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: cross-check fund (etf_crosscheck.yaml)
+  - ticker: EWT
+    iso3: TWN
+    role: single_country
+    name: iShares MSCI Taiwan ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Taiwan 25/50 Index
+    inception: "2000-06-20"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239686/ishares-msci-taiwan-etf"
+    yahoo_first_bar: "2000-06"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: EWZ
+    iso3: BRA
+    role: single_country
+    name: iShares MSCI Brazil ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Brazil 25/50 Index
+    inception: "2000-07-10"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239612/ishares-msci-brazil-capped-etf"
+    yahoo_first_bar: "2000-07"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: cross-check fund (etf_crosscheck.yaml)
+  - ticker: EZA
+    iso3: ZAF
+    role: single_country
+    name: iShares MSCI South Africa ETF
+    issuer: iShares (BlackRock)
+    index: MSCI South Africa 25/50 Index
+    inception: "2003-02-03"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239680/ishares-msci-south-africa-etf"
+    yahoo_first_bar: "2003-02"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: FXI
+    iso3: CHN
+    role: single_country
+    name: iShares China Large-Cap ETF
+    issuer: iShares (BlackRock)
+    index: FTSE China 50 Index (FTSE China 25 Index before 2012)
+    inception: "2004-10-05"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239536/ishares-china-largecap-etf"
+    yahoo_first_bar: "2004-10"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: >-
+      CHN fund for T <= 2010 (earliest inception <= entry); MCHI is the duplicate. Not an MSCI-index fund
+      (FTSE China 50, H-shares/red chips) — the only US-listed broad China fund at the 2005 and 2010 entries.
+      Cross-check fund (etf_crosscheck.yaml).
+  - ticker: ECH
+    iso3: CHL
+    role: single_country
+    name: iShares MSCI Chile ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Chile IMI 25/50 Index
+    inception: "2007-11-12"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239618/ishares-msci-chile-capped-etf"
+    yahoo_first_bar: "2007-11"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: THD
+    iso3: THA
+    role: single_country
+    name: iShares MSCI Thailand ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Thailand IMI 25/50 Index
+    inception: "2008-03-26"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239688/ishares-msci-thailand-capped-etf"
+    yahoo_first_bar: "2008-04"
+    discrepancy_days: 6
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: Yahoo daily history starts 2008-04-01 (inception 2008-03-26); within the 45-day tolerance.
+  - ticker: TUR
+    iso3: TUR
+    role: single_country
+    name: iShares MSCI Turkey ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Turkey IMI 25/50 Index
+    inception: "2008-03-26"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239689/ishares-msci-turkey-etf"
+    yahoo_first_bar: "2008-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: EIS
+    iso3: ISR
+    role: single_country
+    name: iShares MSCI Israel ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Israel Capped Index
+    inception: "2008-03-26"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239663/ishares-msci-israel-capped-etf"
+    yahoo_first_bar: "2008-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: Israel was EM at inception; MSCI reclassified it to DM in May 2010.
+  - ticker: EPU
+    iso3: PER
+    role: single_country
+    name: iShares MSCI Peru and Global Exposure ETF (formerly iShares MSCI All Peru Capped ETF)
+    issuer: iShares (BlackRock)
+    index: MSCI All Peru Capped Index
+    inception: "2009-06-19"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239606/ishares-msci-all-peru-capped-etf"
+    yahoo_first_bar: "2009-06"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: EIDO
+    iso3: IDN
+    role: single_country
+    name: iShares MSCI Indonesia ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Indonesia IMI 25/50 Index
+    inception: "2010-05-05"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239661/ishares-msci-indonesia-etf"
+    yahoo_first_bar: "2010-05"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: EPOL
+    iso3: POL
+    role: single_country
+    name: iShares MSCI Poland ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Poland IMI 25/50 Index
+    inception: "2010-05-25"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239676/ishares-msci-poland-capped-etf"
+    yahoo_first_bar: "2010-05"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: EIRL
+    iso3: IRL
+    role: single_country
+    name: iShares MSCI Ireland ETF
+    issuer: iShares (BlackRock)
+    index: MSCI All Ireland Capped Index
+    inception: "2010-05-05"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239662/ishares-msci-ireland-capped-etf"
+    yahoo_first_bar: "2010-05"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: EPHE
+    iso3: PHL
+    role: single_country
+    name: iShares MSCI Philippines ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Philippines IMI 25/50 Index
+    inception: "2010-09-28"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239675/ishares-msci-philippines-etf"
+    yahoo_first_bar: "2010-09"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: null
+  - ticker: ENZL
+    iso3: NZL
+    role: single_country
+    name: iShares MSCI New Zealand ETF
+    issuer: iShares (BlackRock)
+    index: MSCI New Zealand IMI 25/50 Index
+    inception: "2010-09-01"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239672/ishares-msci-new-zealand-capped-etf"
+    yahoo_first_bar: "2010-09"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: null
+  - ticker: MCHI
+    iso3: CHN
+    role: single_country
+    name: iShares MSCI China ETF
+    issuer: iShares (BlackRock)
+    index: MSCI China Index
+    inception: "2011-03-29"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239619/ishares-msci-china-etf"
+    yahoo_first_bar: "2011-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: Duplicate of FXI for CHN (inception > the 2010-12-31 entry); FXI is used at every T per PREREG §3.4.
+  - ticker: INDA
+    iso3: IND
+    role: single_country
+    name: iShares MSCI India ETF
+    issuer: iShares (BlackRock)
+    index: MSCI India Index
+    inception: "2012-02-02"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239659/ishares-msci-india-etf"
+    yahoo_first_bar: "2012-02"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: Duplicate of EPI for IND (inception > the 2010-12-31 entry); EPI is used per PREREG §3.4.
+  - ticker: UAE
+    iso3: ARE
+    role: single_country
+    name: iShares MSCI UAE ETF
+    issuer: iShares (BlackRock)
+    index: MSCI All UAE Capped Index
+    inception: "2014-04-29"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/264275/ishares-msci-uae-capped-etf"
+    yahoo_first_bar: "2014-05"
+    discrepancy_days: 2
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: First Yahoo monthly bar is 2014-05 (inception 2014-04-29, two trading days before month-end); daily fetch decides.
+  - ticker: QAT
+    iso3: QAT
+    role: single_country
+    name: iShares MSCI Qatar ETF
+    issuer: iShares (BlackRock)
+    index: MSCI All Qatar Capped Index
+    inception: "2014-04-29"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/264273/ishares-msci-qatar-capped-etf"
+    yahoo_first_bar: "2014-05"
+    discrepancy_days: 2
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: Same month-boundary artefact as UAE.
+  - ticker: KSA
+    iso3: SAU
+    role: single_country
+    name: iShares MSCI Saudi Arabia ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Saudi Arabia 20/35 Index
+    inception: "2015-09-16"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/271542/ishares-msci-saudi-arabia-capped-etf"
+    yahoo_first_bar: "2015-09"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: Saudi Arabia was standalone/FM at inception; MSCI EM from 2019. Last fund in the universe (inception <= 2015-12-31 entry).
+  - ticker: ERUS
+    iso3: RUS
+    role: single_country
+    name: iShares MSCI Russia ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Russia 25/50 Index
+    inception: "2010-11-09"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239677/ishares-msci-russia-etf"
+    yahoo_first_bar: null
+    discrepancy_days: null
+    status: liquidating
+    delisted: "2022-08-17"
+    status_url: "https://www.ishares.com/us/literature/tax-information/form-8937-erus-08-17-2022.pdf"
+    msci_class: standalone
+    note: >-
+      Duplicate of RSX for RUS (RSX has the earlier inception). Trading halted before the open on 2022-03-04
+      (last session 2022-03-03); redemptions suspended 2022-08-03; NYSE Arca delisting 2022-08-17; first
+      liquidating distribution 2022-08-17 of $0.032727/share (Form 8937); still in liquidation through
+      2026-12-31. MSCI reclassified Russia from EM to standalone on 2022-03-09. Yahoo via yfinance on
+      2026-09-04: NO data at all (see yahoo_note); routed to etf_manual.yaml.
+
+  # ---- iShares multi-country frontier fund (fixture only) ----
+  - ticker: FM
+    iso3: null
+    role: basket
+    name: iShares Frontier and Select EM ETF (formerly iShares MSCI Frontier 100 ETF)
+    issuer: iShares (BlackRock)
+    index: MSCI Frontier and Emerging Markets Select Index (formerly MSCI Frontier Markets 100 Index)
+    inception: "2012-09-12"
+    inception_verified: "yes"
+    source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312514220145/d735493d497.htm"
+    yahoo_first_bar: null
+    discrepancy_days: null
+    status: liquidated
+    delisted: "2025-01-06"
+    status_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524286769/d917051d497.htm"
+    msci_class: n/a
+    note: >-
+      Liquidation announced 2024-06-07; last trading day 2025-01-06 (close $27.19); final distribution
+      2025-01-09 of $27.234261/share (SEC 497 dated 2024-12-30; also
+      https://www.ishares.com/us/products/closed-funds/updates). Yahoo on 2026-09-04: one stale bar dated
+      2025-01-06. Never a pick; not in the equal-weight single-country basket; kept as the second
+      liquidation fixture and for the frontier narrative in RESULTS.
+
+  # ---- non-iShares single-country funds ----
+  - ticker: GXG
+    iso3: COL
+    role: single_country
+    name: Global X MSCI Colombia ETF (formerly Global X FTSE Colombia 20 ETF)
+    issuer: Global X (Mirae Asset)
+    index: MSCI All Colombia Select 25/50 Index
+    inception: "2009-02-05"
+    inception_verified: "yes"
+    source_url: "https://www.globalxetfs.com/funds/colo/"
+    yahoo_symbol: COLO
+    yahoo_first_bar: "2009-02"
+    discrepancy_days: 4
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: >-
+      Ticker changed GXG -> COLO effective 2025-06-23 (MIAX corporate-action alert 2025-06-20,
+      https://www.miaxglobal.com/alert/2025/06/20/miax-exchange-group-options-markets-corporate-action-alert-global-x-msci-2).
+      Yahoo keeps the full history under COLO (daily from 2009-02-09, live); the old symbol GXG is a dead
+      series ending 2025-07 — the fetch MUST request COLO. Inception also in the Global X N-CSR FY2021
+      ("Fund commenced operations on February 5, 2009"). The plan's "GXG 2009-02" is correct; the plan's
+      attribution to iShares was wrong (Global X fund). MSCI announced a consultation on Colombia's EM status
+      in 2025 — verify the classification at fetch time.
+  - ticker: VNM
+    iso3: VNM
+    role: single_country
+    name: VanEck Vietnam ETF (formerly Market Vectors Vietnam ETF)
+    issuer: VanEck
+    index: MarketVector Vietnam Local Index
+    inception: "2009-08-11"
+    inception_verified: "no"
+    source_url: "https://www.vaneck.com/us/en/investments/vietnam-etf-vnm/"
+    yahoo_first_bar: "2009-08"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: FM
+    note: >-
+      vaneck.com refuses automated fetches (cookie-gate redirect loop), so the issuer page could not be read
+      on 2026-09-04. Date is the consensus of secondary sources (VanEck-derived: 08/11/2009); one source says
+      2009-08-14; the Market Vectors 497 prospectus dated 2009-08-12
+      (https://www.sec.gov/Archives/edgar/data/1137360/000093041309004238/c55458_497.htm) still says "has not
+      yet commenced operations". Yahoo monthly history starts 2009-08 — consistent with either day; the daily
+      fetch settles it within the 45-day tolerance.
+  - ticker: EGPT
+    iso3: EGY
+    role: single_country
+    name: VanEck Egypt Index ETF (formerly Market Vectors Egypt Index ETF)
+    issuer: VanEck
+    index: MVIS Egypt Index
+    inception: "2010-02-16"
+    inception_verified: "no"
+    source_url: null
+    yahoo_first_bar: null
+    discrepancy_days: null
+    status: liquidated
+    delisted: "2024-03-21"
+    status_url: "https://www.vaneck.com/us/en/press-releases/vaneck-announces-changes-to-etf-product-line-egypt-index-etf.pdf/"
+    msci_class: EM
+    note: >-
+      The plan's "EGPT 2011-02" was wrong: the fund launched 2010-02-16 (secondary consensus; VanEck's fund
+      page is gone and vaneck.com blocks automated fetch — hence inception_verified: no; it was trading
+      through the January 2011 uprising). Liquidation (verified from the VanEck press-release PDF): board
+      approval 2024-03-08; last day of trading NYSE Arca 2024-03-21; liquidating distribution 2024-03-28 of
+      $21.38893/share (https://www.vaneck.com/us/en/vaneck-egpt-liquidating-distribution.pdf). Yahoo on
+      2026-09-04: one stale bar dated 2024-03-21. Routed to etf_manual.yaml.
+  - ticker: RSX
+    iso3: RUS
+    role: single_country
+    name: VanEck Russia ETF (formerly Market Vectors Russia ETF)
+    issuer: VanEck
+    index: MVIS Russia Index
+    inception: "2007-04-24"
+    inception_verified: "no"
+    source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000113736024000317/vaneckrussiaetfrsxsumpro05.htm"
+    yahoo_first_bar: null
+    discrepancy_days: null
+    status: liquidating
+    delisted: "2023-01-12"
+    status_url: "https://www.prnewswire.com/news-releases/cboe-bzx-exchange-to-suspend-trading-in-vaneck-russia-etf-rsx-and-vaneck-russia-small-cap-etf-rsxj-and-commence-delisting-proceedings-301720181.html"
+    msci_class: standalone
+    note: >-
+      RUS fund (earliest inception; ERUS duplicates it). Inception 2007-04-24 is the secondary-source
+      consensus; VanEck's 2024 summary prospectus (source_url) only confirms the portfolio manager "April
+      2007". Liquidation (verified, SEC 497K + Cboe release): trading halted on Cboe BZX 2022-03-04; plan of
+      liquidation approved 2022-09-29; redemptions suspended under SEC exemptive relief 2022-12-28; Cboe
+      BZX suspended trading and began delisting 2023-01-12; distributions 2023-01-12 ($0.0313 return of
+      capital), 2023-07-27 ($0.3403), 2023-09-29 ($0.3144)
+      (https://www.vaneck.com/us/en/vaneck-rsx-and-rsxj-liquidating-distributions-2023.pdf), further
+      distributions reported 2024-04-19, 2024-10-07, 2024-12-24; no termination found as of 2026-09-04 ->
+      liquidating. Yahoo via yfinance: NO data at all (see yahoo_note). Routed to etf_manual.yaml.
+  - ticker: NGE
+    iso3: NGA
+    role: single_country
+    name: Global X MSCI Nigeria ETF (formerly Global X Nigeria Index ETF)
+    issuer: Global X (Mirae Asset)
+    index: MSCI All Nigeria Select 25/50 Index
+    inception: "2013-04-02"
+    inception_verified: "yes"
+    source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000113542822000013/globalxintl103121.htm"
+    yahoo_first_bar: null
+    discrepancy_days: null
+    status: liquidated
+    delisted: "2023-07-28"
+    status_url: "https://www.prnewswire.com/news-releases/global-x-etfs-to-liquidate-msci-nigeria-etf-nge-301858690.html"
+    msci_class: standalone
+    note: >-
+      Inception from the Global X N-CSR for FY ended 2021-10-31 ("Fund commenced operations on April 2,
+      2013"; the fund page no longer exists). Liquidation: board decision and press release 2023-06-22;
+      last day of trading 2023-07-28; liquidation on or around 2023-07-28 at NAV. Yahoo on 2026-09-04: one
+      stale bar dated 2024-03-25 — eight months AFTER the real last trade (never use it). MSCI moved Nigeria
+      from FM to standalone in early 2024. Routed to etf_manual.yaml. The NGE one-bar fixture in
+      tests/ is this ticker.
+  - ticker: PAK
+    iso3: PAK
+    role: single_country
+    name: Global X MSCI Pakistan ETF
+    issuer: Global X (Mirae Asset)
+    index: MSCI All Pakistan Select 25/50 Index
+    inception: "2015-04-22"
+    inception_verified: "yes"
+    source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000113542822000013/globalxintl103121.htm"
+    yahoo_first_bar: null
+    discrepancy_days: null
+    status: liquidated
+    delisted: "2024-02-16"
+    status_url: "https://www.prnewswire.com/news-releases/global-x-etfs-to-liquidate-19-etfs-302039841.html"
+    msci_class: FM
+    note: >-
+      Inception from the Global X N-CSR FY2021 ("Fund commenced operations on April 22, 2015").
+      Liquidation (verified, Global X press release 2024-01-19 listing all 19 funds, PAK included): last day
+      of trading 2024-02-16; liquidation on or around 2024-02-23 at NAV. The plan's "PAK †2025" and the
+      hand-off note "liquidated 2025-06" were both inferred from Yahoo's stale bar (dated 2025-06-11) — the
+      exact trap PREREG §6 warns about; the real closure is February 2024. Pakistan: MSCI FM -> EM 2017-05,
+      back to FM 2021-11. Routed to etf_manual.yaml.
+  - ticker: ARGT
+    iso3: ARG
+    role: single_country
+    name: Global X MSCI Argentina ETF (formerly Global X FTSE Argentina 20 ETF)
+    issuer: Global X (Mirae Asset)
+    index: MSCI All Argentina 25/50 Index
+    inception: "2011-03-02"
+    inception_verified: "yes"
+    source_url: "https://www.globalxetfs.com/funds/argt/"
+    yahoo_first_bar: "2011-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: standalone
+    note: Also in the Global X N-CSR FY2021 ("commenced operations on March 2, 2011"). Argentina FM -> EM 2019-05 -> standalone 2021-11.
+  - ticker: GREK
+    iso3: GRC
+    role: single_country
+    name: Global X MSCI Greece ETF (formerly Global X FTSE Greece 20 ETF)
+    issuer: Global X (Mirae Asset)
+    index: MSCI All Greece Select 25/50 Index
+    inception: "2011-12-07"
+    inception_verified: "yes"
+    source_url: "https://www.globalxetfs.com/funds/grek/"
+    yahoo_first_bar: "2011-12"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: Also in the Global X N-CSR FY2021 ("commenced operations on December 7, 2011"). Greece DM -> EM 2013-11; an MSCI consultation on a return to DM was announced in 2025 — verify at fetch time.
+  - ticker: NORW
+    iso3: NOR
+    role: single_country
+    name: Global X MSCI Norway ETF (formerly Global X FTSE Norway 30 ETF)
+    issuer: Global X (Mirae Asset)
+    index: MSCI Norway IMI 25/50 Index
+    inception: "2010-11-09"
+    inception_verified: "yes"
+    source_url: "https://www.globalxetfs.com/funds/norw/"
+    yahoo_first_bar: "2009-08"
+    discrepancy_days: -442
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: DM
+    note: >-
+      DISCREPANCY > 45 days, in the unexpected direction: Yahoo carries daily bars for NORW from 2009-08-24
+      with real-looking prices and volume (309 rows before the issuer inception), while Global X's fund page
+      says 11/09/10 and the Global X 485BPOS filed 2025 says "since inception on 11/09/10". The plan's
+      "NORW 2009-09" was taken from this Yahoo series. Most likely a Yahoo symbol mix-up (Global X's FTSE
+      Nordic Region ETF launched 2009-08). The fetch must DROP every bar before 2010-11-09 and RESULTS must
+      list this under discrepancies; guard assertion 2 passes trivially and is not the check that catches
+      it.
+  - ticker: EPI
+    iso3: IND
+    role: single_country
+    name: WisdomTree India Earnings Fund
+    issuer: WisdomTree
+    index: WisdomTree India Earnings Index
+    inception: "2008-02-22"
+    inception_verified: "no"
+    source_url: "https://www.sec.gov/Archives/edgar/data/1350487/000119312520277104/d91756d497k.htm"
+    yahoo_first_bar: "2008-02"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: EM
+    note: >-
+      IND fund for T = 2010 (INDA's 2012 inception is after the entry). wisdomtree.com returns HTTP 403 to
+      automated fetches; the WisdomTree 497K (source_url) confirms only "inception in February 2008"; the
+      day (22) is the consensus of secondary sources. Yahoo monthly history starts 2008-02. Not an MSCI
+      index fund (earnings-weighted).
+
+  # ---- benchmarks (never picks) ----
+  - ticker: SPY
+    iso3: USA
+    role: benchmark
+    name: SPDR S&P 500 ETF Trust
+    issuer: State Street Global Advisors
+    index: S&P 500 Index
+    inception: "1993-01-22"
+    inception_verified: "yes"
+    source_url: "https://www.ssga.com/us/en/intermediary/etfs/spdr-sp-500-etf-trust-spy"
+    yahoo_first_bar: "1993-01"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: n/a
+    note: VT-proxy component (T = 2000 and 2005 windows) and reference benchmark; cross-check fund.
+  - ticker: EFA
+    iso3: DM_EX_US
+    role: benchmark
+    name: iShares MSCI EAFE ETF
+    issuer: iShares (BlackRock)
+    index: MSCI EAFE Index
+    inception: "2001-08-14"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239623/ishares-msci-eafe-etf"
+    yahoo_first_bar: "2001-08"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: n/a
+    note: VT-proxy component from its first bar (T = 2000 window) and 40 % of the T = 2005 proxy; reference benchmark.
+  - ticker: EEM
+    iso3: EM
+    role: benchmark
+    name: iShares MSCI Emerging Markets ETF
+    issuer: iShares (BlackRock)
+    index: MSCI Emerging Markets Index
+    inception: "2003-04-07"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239637/ishares-msci-emerging-markets-etf"
+    yahoo_first_bar: "2003-04"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: n/a
+    note: 10 % of the T = 2005 VT proxy; reference benchmark; cross-check fund.
+  - ticker: VWO
+    iso3: EM
+    role: benchmark
+    name: Vanguard FTSE Emerging Markets ETF
+    issuer: Vanguard
+    index: FTSE Emerging Markets All Cap China A Inclusion Index
+    inception: "2005-03-04"
+    inception_verified: "yes"
+    source_url: "https://institutional.vanguard.com/iippdf/pdfs/FS0964.pdf"
+    yahoo_first_bar: "2005-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: n/a
+    note: Reference only (EEM is the pre-registered EM reference row); inception from the Vanguard fact sheet as of 2026-06-30.
+  - ticker: ACWI
+    iso3: WORLD
+    role: benchmark
+    name: iShares MSCI ACWI ETF
+    issuer: iShares (BlackRock)
+    index: MSCI ACWI
+    inception: "2008-03-26"
+    inception_verified: "yes"
+    source_url: "https://www.ishares.com/us/products/239600/ishares-msci-acwi-etf"
+    yahoo_first_bar: "2008-03"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: n/a
+    note: Reference only; VT (not ACWI) is the headline benchmark.
+  - ticker: VT
+    iso3: WORLD
+    role: benchmark
+    name: Vanguard Total World Stock ETF
+    issuer: Vanguard
+    index: FTSE Global All Cap Index (FTSE All-World Index through 2011-12-18)
+    inception: "2008-06-24"
+    inception_verified: "yes"
+    source_url: "https://institutional.vanguard.com/iippdf/pdfs/FS3141.pdf"
+    yahoo_first_bar: "2008-06"
+    discrepancy_days: 0
+    status: live
+    delisted: null
+    status_url: null
+    msci_class: n/a
+    note: HEADLINE benchmark ("VT and chill"); VT proxy before 2008-06-24 per PREREG §3.5; inception from the Vanguard fact sheet as of 2026-06-30; cross-check fund.

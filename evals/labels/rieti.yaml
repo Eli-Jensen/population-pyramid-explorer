@@ -1,0 +1,26 @@
+# G2(d) — RIETI (Kwan 2022): China's 2020 age structure matched Japan's around 1989–1991 on child/elderly/working-age
+# shares and median age → time-shift window [1985, 1995] for CHN 2020 → JPN best year.
+# Vintage: China 2020 census / Japanese official statistics as cited by the author (not WPP).
+retrieved: '2026-09-04'
+written_by: scripts/fetch_labels.py
+source:
+  citation: Kwan C.H. (2022-12-05). The Low Birthrate and Aging Population in China — A comparison with Japan. RIETI China
+    in Transition.
+  url: https://www.rieti.go.jp/en/china/22102701.html
+vintage: China 2020 census + Japan official statistics (author's tables)
+china_2020:
+  child_0_14_pct: 18.0
+  working_age_15_59_pct: 64.1
+  elderly_60_plus_pct: 17.8
+  median_age: 37.4
+quotes:
+- In 2020, the proportion of the child population and that of elderly population in China were equivalent to their respective
+  levels in Japan in 1990, and the proportion of the working-age population was equivalent to the 1989 level in Japan.
+- China's median age in 2020 was 10.6 years lower than that of Japan's and resembled that of Japan in 1991.
+japan_years_named:
+  child_and_elderly_share: 1990
+  working_age_share: 1989
+  median_age: 1991
+window:
+- 1985
+- 1995

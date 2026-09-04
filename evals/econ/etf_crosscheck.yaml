@@ -1,0 +1,135 @@
+# Issuer-published annualised NAV total returns, hand-transcribed on 2026-09-04 — the cross-check for the
+# Yahoo adjusted-close series (PREREG.md §6, last bullet). Pre-registered companion of PREREG.md; nothing
+# here changes after the ETF fetch. Facts only (a handful of published percentages with their URL); no series.
+#
+# The check: for every entry with verified: yes, `scripts/fetch_etf.py` computes the annualised total return
+# from Yahoo adjusted closes over the identical period — 10 years ending at `as_of` (first bar on or before
+# as_of minus 10 years) and, for `since_inception`, from the first available bar to `as_of` — and the build
+# fails unless |computed - published| <= tolerance_pp for the 10y figure and for every other figure listed
+# under `check`. Since-inception figures are compared where the first Yahoo bar is within 45 days of the
+# issuer inception (guard assertion 2); the few-day start offset is well inside the tolerance for these
+# multi-decade windows. All figures are NAV total returns with distributions reinvested, in USD, annualised.
+# Yahoo's adjusted close reflects market price, not NAV; the tolerance absorbs premium/discount drift.
+
+version: 1
+accessed: "2026-09-04"
+tolerance_pp: 0.5
+currency: USD
+basis: NAV total return, distributions reinvested, average annual (%)
+column_order: [1y, 3y, 5y, 10y, since_inception]
+
+entries:
+  EWJ:
+    name: iShares MSCI Japan ETF
+    inception: "1996-03-12"
+    as_of: "2026-06-30"
+    verified: "yes"
+    source: iShares fact sheet PDF ("Fact Sheet as of June 30, 2026"; ANNUALIZED PERFORMANCE, NAV row), cross-read against the product page performance table
+    url: "https://www.ishares.com/us/literature/fact-sheet/ewj-ishares-msci-japan-etf-fund-fact-sheet-en-us.pdf"
+    url_alt: "https://www.ishares.com/us/products/239665/ishares-msci-japan-etf"
+    nav_pct: {1y: 29.89, 3y: 18.15, 5y: 9.33, 10y: 9.54, since_inception: 2.86}
+    market_price_pct: {1y: 29.81, 3y: 18.04, 5y: 9.25, 10y: 9.49, since_inception: 2.85}
+    check: [10y, since_inception]
+  EWY:
+    name: iShares MSCI South Korea ETF
+    inception: "2000-05-09"
+    as_of: "2026-06-30"
+    verified: "yes"
+    source: iShares fact sheet PDF (as of June 30, 2026; NAV row), cross-read against the product page
+    url: "https://www.ishares.com/us/literature/fact-sheet/ewy-ishares-msci-south-korea-etf-fund-fact-sheet-en-us.pdf"
+    url_alt: "https://www.ishares.com/us/products/239681/ishares-msci-south-korea-capped-etf"
+    nav_pct: {1y: 188.51, 3y: 50.86, 5y: 19.08, 10y: 16.72, since_inception: 10.57}
+    market_price_pct: {1y: 187.68, 3y: 50.73, 5y: 19.21, 10y: 16.71, since_inception: 10.56}
+    check: [10y, since_inception]
+  EWZ:
+    name: iShares MSCI Brazil ETF
+    inception: "2000-07-10"
+    as_of: "2026-06-30"
+    verified: "yes"
+    source: iShares fact sheet PDF (as of June 30, 2026; NAV row), cross-read against the product page
+    url: "https://www.ishares.com/us/literature/fact-sheet/ewz-ishares-msci-brazil-etf-fund-fact-sheet-en-us.pdf"
+    url_alt: "https://www.ishares.com/us/products/239612/ishares-msci-brazil-capped-etf"
+    nav_pct: {1y: 25.47, 3y: 8.33, 5y: 4.69, 10y: 6.71, since_inception: 6.01}
+    market_price_pct: {1y: 25.06, 3y: 8.22, 5y: 4.74, 10y: 6.74, since_inception: 5.99}
+    check: [10y, since_inception]
+  FXI:
+    name: iShares China Large-Cap ETF
+    inception: "2004-10-05"
+    as_of: "2026-06-30"
+    verified: "yes"
+    source: iShares fact sheet PDF (as of June 30, 2026; NAV row), cross-read against the product page
+    url: "https://www.ishares.com/us/literature/fact-sheet/fxi-ishares-china-large-cap-etf-fund-fact-sheet-en-us.pdf"
+    url_alt: "https://www.ishares.com/us/products/239536/ishares-china-largecap-etf"
+    nav_pct: {1y: -11.84, 3y: 7.95, 5y: -5.06, 10y: 1.75, since_inception: 4.94}
+    market_price_pct: {1y: -12.47, 3y: 7.83, 5y: -5.16, 10y: 1.63, since_inception: 4.91}
+    check: [10y, since_inception]
+  EEM:
+    name: iShares MSCI Emerging Markets ETF
+    inception: "2003-04-07"
+    as_of: "2026-06-30"
+    verified: "yes"
+    source: iShares fact sheet PDF (as of June 30, 2026; NAV row), transcribed by the previous agent on 2026-09-04 and carried over unchanged
+    url: "https://www.ishares.com/us/literature/fact-sheet/eem-ishares-msci-emerging-markets-etf-fund-fact-sheet-en-us.pdf"
+    url_alt: "https://www.ishares.com/us/products/239637/ishares-msci-emerging-markets-etf"
+    nav_pct: {1y: 45.06, 3y: 22.93, 5y: 6.88, 10y: 9.58, since_inception: 10.17}
+    market_price_pct: null
+    check: [10y, since_inception]
+  SPY:
+    name: SPDR S&P 500 ETF Trust
+    inception: "1993-01-22"
+    as_of: "2026-06-30"
+    verified: "yes"
+    source: >-
+      SSGA fact sheet PDF ("As of 06/30/2026", Total Return chart, NAV bars: QTD 15.17, YTD 10.13, 1y 22.15,
+      3y 20.46, 5y 13.26, 10y 15.35). The fact sheet carries no since-inception column; the since-inception
+      figure below is from the SSGA product page as of 2026-07-31 and is checked at THAT date.
+    url: "https://www.ssga.com/us/en/intermediary/library-content/products/factsheets/etfs/us/factsheet-us-en-spy.pdf"
+    url_alt: "https://www.ssga.com/us/en/intermediary/etfs/spdr-sp-500-etf-trust-spy"
+    nav_pct: {1y: 22.15, 3y: 20.46, 5y: 13.26, 10y: 15.35, since_inception: null}
+    market_price_pct: {1y: 22.08, 3y: 20.44, 5y: 13.25, 10y: 15.34, since_inception: null}
+    index_pct: {1y: 22.32, 3y: 20.61, 5y: 13.41, 10y: 15.51}
+    since_inception_alt:
+      as_of: "2026-07-31"
+      nav_pct: 10.80
+      also_at_that_date: {1y: 19.40, 3y: 19.18, 5y: 12.72, 10y: 14.93, ytd: 10.06}
+      url: "https://www.ssga.com/us/en/intermediary/etfs/spdr-sp-500-etf-trust-spy"
+    check: [10y, since_inception_alt]
+  VT:
+    name: Vanguard Total World Stock ETF
+    inception: "2008-06-24"
+    as_of: "2026-06-30"
+    verified: "yes"
+    source: Vanguard fact sheet PDF ("Total returns for period ended June 30, 2026"; "Net asset value (NAV) return" row)
+    url: "https://institutional.vanguard.com/iippdf/pdfs/FS3141.pdf"
+    url_alt: "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3141.pdf"
+    nav_pct: {1y: 24.28, 3y: 19.69, 5y: 10.89, 10y: 12.82, since_inception: 8.87}
+    market_price_pct: {1y: 24.26, 3y: 19.67, 5y: 10.86, 10y: 12.80, since_inception: 8.86}
+    index_pct: {1y: 24.07, 3y: 19.70, 5y: 10.89, 10y: 12.87, since_inception: 8.90}
+    index_note: Spliced Total World Stock Index (FTSE All-World through 2011-12-18, FTSE Global All Cap thereafter), withholding-tax adjusted
+    quarter_pct: 14.13
+    ytd_pct: 11.98
+    check: [10y, since_inception]
+
+# Not required by PREREG §6 (reference only; the guard does not read it). Transcribed because it came free
+# with the VT fetch and VWO is in the universe as a reference benchmark.
+extra:
+  VWO:
+    name: Vanguard FTSE Emerging Markets ETF
+    inception: "2005-03-04"
+    as_of: "2026-06-30"
+    verified: "yes"
+    required: false
+    source: Vanguard fact sheet PDF (period ended June 30, 2026; NAV return row)
+    url: "https://institutional.vanguard.com/iippdf/pdfs/FS0964.pdf"
+    nav_pct: {1y: 24.08, 3y: 17.13, 5y: 5.13, 10y: 8.49, since_inception: 6.88}
+    market_price_pct: {1y: 23.81, 3y: 17.11, 5y: 5.14, 10y: 8.48, since_inception: 6.88}
+    quarter_pct: 11.41
+    ytd_pct: 11.19
+
+unverified: []
+notes: >-
+  All seven required entries were read from the issuer's own document on 2026-09-04 (iShares and SSGA PDFs
+  extracted with pdftotext -layout; Vanguard PDFs likewise; iShares product pages cross-read). iShares
+  "since inception" is measured from the fund's launch date; Vanguard's from 2008-06-24; SSGA's product-page
+  figure from 1993-01-22. For FXI the fact sheet notes the index changed from FTSE China 25 to FTSE China 50
+  on 2012-02-10 — irrelevant to the NAV return but relevant to any index comparison.

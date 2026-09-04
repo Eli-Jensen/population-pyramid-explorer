@@ -1,0 +1,86 @@
+# Data sources known to the DuckDB store (table `source`). `redistributable: false` rows are build-time
+# only: `indicator_public` hides them and tests/test_db.py::test_weo_never_exported guards the exports.
+# sha256 / bytes / fetched_at are filled at ingest from pipeline/manifest.json and pipeline/econ_manifest.json
+# by matching `files`. Entries under `families` are fallbacks used when an econ loader ingests under a
+# source id that is not listed here (e.g. a dated `wdi-<date>`): the family's licence and flag apply.
+sources:
+  wpp2024:
+    family: wpp
+    name: UN World Population Prospects 2024, Online Edition (medium variant)
+    url: https://population.un.org/wpp/
+    vintage: "2024-07-11"
+    licence: CC BY 3.0 IGO
+    redistributable: true
+    attribution: "United Nations, Department of Economic and Social Affairs, Population Division (2024). World Population Prospects 2024, Online Edition. © 2024 United Nations, CC BY 3.0 IGO."
+    files: [WPP2024_PopulationByAge5GroupSex_Medium.csv.gz, WPP2024_Demographic_Indicators_Medium.csv.gz, WPP2024_F01_LOCATIONS.xlsx]
+  wpp2024-togo-update:
+    family: wpp
+    name: WPP 2024 interim update for Togo (19 January 2026)
+    url: https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/WPP2024_CSV_files_update.zip
+    vintage: "2026-01-19"
+    licence: CC BY 3.0 IGO
+    redistributable: true
+    attribution: "United Nations, Population Division (2026). WPP 2024 interim update for Togo. CC BY 3.0 IGO. Aggregates containing Togo recomputed from members by this site; the UN did not revise aggregates."
+    files: [WPP2024_CSV_files_update.zip]
+  maddison-2023:
+    family: maddison
+    name: Maddison Project Database 2023
+    url: https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023
+    vintage: "2023"
+    licence: CC BY 4.0
+    redistributable: true
+    attribution: "Bolt, J. and J. L. van Zanden (2024). Maddison Project Database 2023. CC BY 4.0."
+    files: [mpd2023_web.xlsx]
+  pwt-11.0:
+    family: pwt
+    name: Penn World Table 11.0
+    url: https://www.rug.nl/ggdc/productivity/pwt/
+    vintage: "11.0"
+    licence: CC BY 4.0
+    redistributable: true
+    attribution: "Feenstra, R. C., R. Inklaar and M. P. Timmer, Penn World Table 11.0. CC BY 4.0."
+    files: [pwt110.xlsx]
+  wdi:
+    family: wdi
+    name: World Bank World Development Indicators (API v2)
+    url: https://datahelpdesk.worldbank.org/knowledgebase/articles/889392
+    vintage: null
+    licence: CC BY 4.0
+    redistributable: true
+    attribution: "World Bank, World Development Indicators. CC BY 4.0."
+    files: []
+  oghist:
+    family: oghist
+    name: World Bank historical classification by income (OGHIST)
+    url: https://datacatalogfiles.worldbank.org/ddh-published/0037712/DR0090754/OGHIST.xlsx
+    vintage: "FY2026"
+    licence: CC BY 4.0
+    redistributable: true
+    attribution: "World Bank, historical classification by income (OGHIST). CC BY 4.0."
+    files: [OGHIST.xlsx]
+  weo-2025-04:
+    family: weo
+    name: IMF World Economic Outlook, April 2025
+    url: https://www.imf.org/en/Publications/WEO/weo-database/2025/April
+    vintage: "2025-04"
+    licence: IMF terms of use (no redistribution)
+    redistributable: false
+    attribution: "International Monetary Fund, World Economic Outlook Database, April 2025 (build-time cross-check only; never exported)."
+    files: [weo_202504.parquet]
+  curated:
+    family: curated
+    name: Hand-curated tables in pipeline/*.yaml (sovereignty, names, deny-lists)
+    url: https://github.com/Eli-Jensen/population-pyramid-explorer
+    vintage: null
+    licence: MIT
+    redistributable: true
+    attribution: "population-pyramid-explorer curated tables."
+    files: []
+families:
+  wpp: {licence: CC BY 3.0 IGO, redistributable: true}
+  maddison: {licence: CC BY 4.0, redistributable: true}
+  pwt: {licence: CC BY 4.0, redistributable: true}
+  wdi: {licence: CC BY 4.0, redistributable: true}
+  oghist: {licence: CC BY 4.0, redistributable: true}
+  weo: {licence: IMF terms of use (no redistribution), redistributable: false}
+  curated: {licence: MIT, redistributable: true}

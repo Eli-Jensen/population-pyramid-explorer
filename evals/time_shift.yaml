@@ -1,0 +1,8 @@
+# Time-shift regression windows (PLAN §4.6 item 3, reported) and the one external gate G2(d) (RIETI, evals/labels/rieti.yaml).
+# For each row: y* = argmin_y d(query, target_y) over the target's allowed years (era all, so projected targets can be
+# reached — the KOR 2050 → JPN window sits in the projections); pass ⇔ y* ∈ [lo, hi].  `gate: true` rows feed G2(d).
+windows:
+  - {query: [KOR, 2050], target: JPN, window: [2040, 2060], gate: false, note: "every metric agreed on 2050–53 in the prototype; widened after seeing the data, hence regression only"}
+  - {query: [KOR, 2024], target: JPN, window: [2000, 2010], gate: false}
+  - {query: [IND, 2024], target: CHN, window: [1995, 2005], gate: false}
+  - {query: [CHN, 2020], target: JPN, window: [1985, 1995], gate: true, source: evals/labels/rieti.yaml}

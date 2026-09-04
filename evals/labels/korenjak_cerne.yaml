@@ -1,0 +1,1396 @@
+# G2(a) — Korenjak-Černe, Kejžar & Batagelj: clusters of the world's countries by population-pyramid shape.
+# FALLBACK STATUS: rung 1 of the PLAN §4.6 ladder — the 2015 Population Studies memberships are unobtainable
+# (paywalled, no OA copy), so the 2008 Informatica lists are used; 2006 is the primary label year (closest to a
+# year we can score), 1996 and 2001 are kept for reference/sensitivity.
+# Method (paper): Ward hierarchical clustering, Euclidean distance on 34 normalised age-sex shares (17 five-year
+# bins per sex, 80+ open), US Census Bureau International Data Base (2008 pull). Four main clusters A–D =
+# the four-cluster cut of Figs 9/10/11 (A ≈ DTM stage 1 expansive … D ≈ stage 4 aged).
+# Transcription: leaf order from the dendrogram text layer, membership from the rasterised tree (see
+# scripts/fetch_labels.py::parse_kc2008); cross-checked against every count/mover in the paper's prose.
+# Vintage caveat: IDB-2008 estimates, not WPP2024 — the vintage-sensitivity row (drop countries whose 2006 total
+# differs > 10 % between vintages) is NOT computed because no IDB-2008 totals are on disk; recorded as omitted.
+retrieved: '2026-09-04'
+written_by: scripts/fetch_labels.py
+source:
+  citation: Korenjak-Černe S., Kejžar N., Batagelj V. (2008). Clustering of Population Pyramids. Informatica 32, 157–167.
+  url: https://www.informatica.si/index.php/informatica/article/view/188
+  pdf: https://www.informatica.si/index.php/informatica/article/download/188/184
+  licence: open access (Informatica, Slovene Society Informatika)
+source_2015:
+  citation: Korenjak-Černe S., Kejžar N., Batagelj V. (2015). A weighted clustering of population pyramids for the world's
+    countries, 1996, 2001, 2006. Population Studies 69(1), 105–120.
+  url: https://doi.org/10.1080/00324728.2014.954597
+  status: PAYWALLED — no open-access copy found (Unpaywall/Semantic Scholar/OpenAlex, 2026-09-04); memberships NOT transcribed
+fallback_status: rung1_2008_lists
+primary_year: 2006
+vintage: US Census IDB (2008), 17 bins/sex, 80+ open
+vintage_sensitivity_row: omitted — IDB-2008 totals unavailable
+cluster_meaning:
+  A: expansive (DTM stage 1)
+  B: stage 2–3
+  C: stage 3–4 (incl. Gulf male-surplus states in 1996/2006)
+  D: stage 4 (aged)
+years:
+  1996:
+    n_countries_paper: 215
+    n_mapped: 214
+    unmapped:
+    - Netherlands Antilles
+    merged_into_one_entity: []
+    clusters:
+      A:
+      - AFG
+      - AGO
+      - BDI
+      - BEN
+      - BFA
+      - BLZ
+      - BOL
+      - BTN
+      - BWA
+      - CAF
+      - CIV
+      - CMR
+      - COD
+      - COG
+      - COM
+      - CPV
+      - DJI
+      - ERI
+      - ESH
+      - ETH
+      - FSM
+      - GAB
+      - GHA
+      - GIN
+      - GMB
+      - GNB
+      - GNQ
+      - GTM
+      - HND
+      - HTI
+      - IRQ
+      - JOR
+      - KEN
+      - KHM
+      - KIR
+      - LAO
+      - LBR
+      - LSO
+      - MDG
+      - MDV
+      - MHL
+      - MLI
+      - MOZ
+      - MRT
+      - MWI
+      - MYT
+      - NAM
+      - NER
+      - NGA
+      - NIC
+      - NPL
+      - NRU
+      - PAK
+      - PNG
+      - PRY
+      - RWA
+      - SDN
+      - SEN
+      - SLB
+      - SLE
+      - SLV
+      - SOM
+      - STP
+      - SWZ
+      - SYR
+      - TCD
+      - TGO
+      - TJK
+      - TLS
+      - TON
+      - TZA
+      - UGA
+      - VUT
+      - WSM
+      - YEM
+      - ZMB
+      - ZWE
+      B:
+      - AZE
+      - BGD
+      - BHS
+      - BRA
+      - COL
+      - CRI
+      - DMA
+      - DOM
+      - DZA
+      - ECU
+      - EGY
+      - FJI
+      - GRD
+      - GUY
+      - IDN
+      - IND
+      - IRN
+      - JAM
+      - KGZ
+      - KNA
+      - LBN
+      - LBY
+      - LCA
+      - MAR
+      - MEX
+      - MMR
+      - MNG
+      - MSR
+      - MYS
+      - NCL
+      - OMN
+      - PAN
+      - PER
+      - PHL
+      - PYF
+      - SAU
+      - SUR
+      - SYC
+      - TKM
+      - TUN
+      - TUR
+      - TUV
+      - UZB
+      - VCT
+      - VEN
+      - VNM
+      - ZAF
+      C:
+      - AIA
+      - ALB
+      - ARE
+      - ARG
+      - ARM
+      - ATG
+      - BHR
+      - BRB
+      - BRN
+      - CHL
+      - CHN
+      - CUB
+      - GRL
+      - ISR
+      - KAZ
+      - KOR
+      - KWT
+      - LKA
+      - MAC
+      - MUS
+      - PLW
+      - PRK
+      - QAT
+      - SHN
+      - SPM
+      - TCA
+      - THA
+      - TTO
+      - TWN
+      - VGB
+      D:
+      - ABW
+      - AND
+      - AUS
+      - AUT
+      - BEL
+      - BGR
+      - BIH
+      - BLR
+      - BMU
+      - CAN
+      - CHE
+      - CYM
+      - CYP
+      - CZE
+      - DEU
+      - DNK
+      - ESP
+      - EST
+      - FIN
+      - FRA
+      - FRO
+      - GBR
+      - GEO
+      - GGY
+      - GIB
+      - GRC
+      - HKG
+      - HRV
+      - HUN
+      - IMN
+      - IRL
+      - ISL
+      - ITA
+      - JEY
+      - JPN
+      - LIE
+      - LTU
+      - LUX
+      - LVA
+      - MCO
+      - MDA
+      - MKD
+      - MLT
+      - MNE
+      - NLD
+      - NOR
+      - NZL
+      - POL
+      - PRT
+      - ROU
+      - RUS
+      - SGP
+      - SMR
+      - SRB
+      - SVK
+      - SVN
+      - SWE
+      - UKR
+      - URY
+      - USA
+    raw_names:
+      A:
+      - Afghanistan
+      - Ethiopia
+      - Gambia, The
+      - Guinea
+      - Eritrea
+      - Sudan
+      - Angola
+      - Nigeria
+      - Mozambique
+      - Sierra Leone
+      - Comoros
+      - Guinea-Bissau
+      - Cote d'Ivoire
+      - Djibouti
+      - Belize
+      - Ghana
+      - Pakistan
+      - Central African Republic
+      - Equatorial Guinea
+      - Gabon
+      - Cameroon
+      - Senegal
+      - Guatemala
+      - Laos
+      - Haiti
+      - Somalia
+      - Cambodia
+      - Tajikistan
+      - Cape Verde
+      - Bhutan
+      - Paraguay
+      - Bolivia
+      - Namibia
+      - Nepal
+      - Liberia
+      - El Salvador
+      - Lesotho
+      - Papua New Guinea
+      - Vanuatu
+      - East Timor
+      - Kiribati
+      - Nauru
+      - Botswana
+      - Zimbabwe
+      - Marshall Islands
+      - Micronesia, Federated States of
+      - Honduras
+      - Swaziland
+      - Nicaragua
+      - Kenya
+      - Rwanda
+      - Iraq
+      - Syria
+      - Jordan
+      - Samoa
+      - Tonga
+      - Benin
+      - Tanzania
+      - Zambia
+      - Togo
+      - Solomon Islands
+      - Burkina Faso
+      - Mali
+      - Sao Tome and Principe
+      - Yemen
+      - Uganda
+      - Burundi
+      - Western Sahara
+      - Congo (Kinshasa)
+      - Malawi
+      - Congo (Brazzaville)
+      - Madagascar
+      - Mauritania
+      - Niger
+      - Maldives
+      - Chad
+      - Mayotte
+      B:
+      - Algeria
+      - Libya
+      - Ecuador
+      - Morocco
+      - Philippines
+      - Jamaica
+      - Mongolia
+      - Vietnam
+      - Kyrgyzstan
+      - Turkmenistan
+      - Uzbekistan
+      - Bangladesh
+      - Iran
+      - Grenada
+      - Oman
+      - Saudi Arabia
+      - Azerbaijan
+      - Tuvalu
+      - Dominica
+      - Saint Kitts and Nevis
+      - Bahamas, The
+      - Colombia
+      - New Caledonia
+      - Costa Rica
+      - French Polynesia
+      - Panama
+      - Dominican Republic
+      - Peru
+      - India
+      - Venezuela
+      - Egypt
+      - Mexico
+      - Malaysia
+      - Fiji
+      - South Africa
+      - Brazil
+      - Turkey
+      - Indonesia
+      - Burma
+      - Tunisia
+      - Guyana
+      - Saint Lucia
+      - Saint Vincent and the Grenadines
+      - Seychelles
+      - Suriname
+      - Lebanon
+      - Montserrat
+      C:
+      - Albania
+      - Chile
+      - Trinidad and Tobago
+      - Argentina
+      - Israel
+      - Armenia
+      - Kazakhstan
+      - Anguilla
+      - China
+      - Mauritius
+      - Sri Lanka
+      - Thailand
+      - Barbados
+      - Korea, South
+      - Taiwan
+      - Cuba
+      - Saint Helena
+      - Korea, North
+      - Netherlands Antilles
+      - Saint Pierre and Miquelon
+      - Antigua and Barbuda
+      - Brunei
+      - Turks and Caicos Islands
+      - Greenland
+      - Palau
+      - Virgin Islands, British
+      - Macau S.A.R.
+      - Bahrain
+      - Kuwait
+      - Qatar
+      - United Arab Emirates
+      D:
+      - Andorra
+      - Hong Kong S.A.R.
+      - Singapore
+      - Aruba
+      - Cayman Islands
+      - Australia
+      - Canada
+      - United States
+      - Bermuda
+      - Liechtenstein
+      - Austria
+      - Guernsey
+      - Italy
+      - San Marino
+      - Germany
+      - Jersey
+      - Luxembourg
+      - Switzerland
+      - Netherlands
+      - Denmark
+      - Norway
+      - United Kingdom
+      - Isle of Man
+      - Sweden
+      - Monaco
+      - Belarus
+      - Russia
+      - Georgia
+      - Lithuania
+      - Estonia
+      - Latvia
+      - Ukraine
+      - Bosnia and Herzegovina
+      - Belgium
+      - France
+      - Finland
+      - Gibraltar
+      - Croatia
+      - Slovenia
+      - Bulgaria
+      - Japan
+      - Czech Republic
+      - Hungary
+      - Greece
+      - Portugal
+      - Spain
+      - Cyprus
+      - Iceland
+      - New Zealand
+      - Ireland
+      - Uruguay
+      - Faroe Islands
+      - Macedonia
+      - Montenegro
+      - Moldova
+      - Malta
+      - Poland
+      - Slovakia
+      - Romania
+      - Serbia
+  2001:
+    n_countries_paper: 222
+    n_mapped: 220
+    unmapped:
+    - Netherlands Antilles
+    merged_into_one_entity:
+    - PSE
+    clusters:
+      A:
+      - AFG
+      - AGO
+      - BDI
+      - BEN
+      - BFA
+      - BLZ
+      - CAF
+      - CIV
+      - CMR
+      - COD
+      - COG
+      - COM
+      - DJI
+      - ERI
+      - ESH
+      - ETH
+      - GAB
+      - GHA
+      - GIN
+      - GMB
+      - GNB
+      - GNQ
+      - GTM
+      - HND
+      - HTI
+      - IRQ
+      - KEN
+      - LAO
+      - LBR
+      - MDG
+      - MDV
+      - MHL
+      - MLI
+      - MOZ
+      - MRT
+      - MWI
+      - MYT
+      - NAM
+      - NER
+      - NGA
+      - NPL
+      - OMN
+      - PAK
+      - PSE
+      - RWA
+      - SDN
+      - SEN
+      - SLB
+      - SLE
+      - SOM
+      - STP
+      - SWZ
+      - TCD
+      - TGO
+      - TZA
+      - UGA
+      - WSM
+      - YEM
+      - ZMB
+      B:
+      - ALB
+      - ARM
+      - ASM
+      - AZE
+      - BGD
+      - BHS
+      - BOL
+      - BRA
+      - BTN
+      - BWA
+      - COL
+      - CPV
+      - CRI
+      - DMA
+      - DOM
+      - DZA
+      - ECU
+      - EGY
+      - FJI
+      - FSM
+      - GRD
+      - GUY
+      - IDN
+      - IND
+      - IRN
+      - JAM
+      - JOR
+      - KAZ
+      - KGZ
+      - KHM
+      - KIR
+      - KNA
+      - KWT
+      - LBN
+      - LBY
+      - LCA
+      - LSO
+      - MAR
+      - MEX
+      - MMR
+      - MNG
+      - MSR
+      - MYS
+      - NCL
+      - NIC
+      - NRU
+      - PAN
+      - PER
+      - PHL
+      - PNG
+      - PRY
+      - PYF
+      - SAU
+      - SLV
+      - SUR
+      - SYC
+      - SYR
+      - TJK
+      - TKM
+      - TLS
+      - TON
+      - TTO
+      - TUN
+      - TUR
+      - TUV
+      - UZB
+      - VCT
+      - VEN
+      - VNM
+      - VUT
+      - ZAF
+      - ZWE
+      C:
+      - AIA
+      - ARE
+      - ARG
+      - ATG
+      - BHR
+      - BRB
+      - BRN
+      - CHL
+      - CHN
+      - CUB
+      - CYP
+      - FRO
+      - GRL
+      - GUM
+      - IRL
+      - ISL
+      - ISR
+      - KOR
+      - LKA
+      - MKD
+      - MNP
+      - MUS
+      - NZL
+      - PLW
+      - PRI
+      - PRK
+      - QAT
+      - SHN
+      - SPM
+      - TCA
+      - THA
+      - TWN
+      - URY
+      - VGB
+      - VIR
+      D:
+      - ABW
+      - AND
+      - AUS
+      - AUT
+      - BEL
+      - BGR
+      - BIH
+      - BLR
+      - BMU
+      - CAN
+      - CHE
+      - CYM
+      - CZE
+      - DEU
+      - DNK
+      - ESP
+      - EST
+      - FIN
+      - FRA
+      - GBR
+      - GEO
+      - GGY
+      - GIB
+      - GRC
+      - HKG
+      - HRV
+      - HUN
+      - IMN
+      - ITA
+      - JEY
+      - JPN
+      - LIE
+      - LTU
+      - LUX
+      - LVA
+      - MAC
+      - MCO
+      - MDA
+      - MLT
+      - MNE
+      - NLD
+      - NOR
+      - POL
+      - PRT
+      - ROU
+      - RUS
+      - SGP
+      - SMR
+      - SRB
+      - SVK
+      - SVN
+      - SWE
+      - UKR
+      - USA
+    raw_names:
+      A:
+      - Afghanistan
+      - Gambia, The
+      - Guinea
+      - Angola
+      - Ethiopia
+      - Madagascar
+      - Eritrea
+      - Sierra Leone
+      - Maldives
+      - West Bank
+      - Comoros
+      - Mozambique
+      - Djibouti
+      - Liberia
+      - Mayotte
+      - Somalia
+      - Oman
+      - Benin
+      - Tanzania
+      - Zambia
+      - Burkina Faso
+      - Congo (Kinshasa)
+      - Burundi
+      - Malawi
+      - Sao Tome and Principe
+      - Mali
+      - Yemen
+      - Chad
+      - Congo (Brazzaville)
+      - Mauritania
+      - Western Sahara
+      - Niger
+      - Gaza Strip
+      - Uganda
+      - Belize
+      - Honduras
+      - Ghana
+      - Namibia
+      - Nepal
+      - Pakistan
+      - Samoa
+      - Cote d'Ivoire
+      - Iraq
+      - Kenya
+      - Rwanda
+      - Marshall Islands
+      - Cameroon
+      - Senegal
+      - Laos
+      - Nigeria
+      - Guinea-Bissau
+      - Solomon Islands
+      - Sudan
+      - Central African Republic
+      - Equatorial Guinea
+      - Gabon
+      - Guatemala
+      - Haiti
+      - Togo
+      - Swaziland
+      B:
+      - Albania
+      - Saint Kitts and Nevis
+      - Azerbaijan
+      - Dominica
+      - Tuvalu
+      - Armenia
+      - Kazakhstan
+      - Trinidad and Tobago
+      - Bahamas, The
+      - Colombia
+      - Costa Rica
+      - Indonesia
+      - Panama
+      - New Caledonia
+      - Dominican Republic
+      - India
+      - Egypt
+      - Malaysia
+      - Mexico
+      - Peru
+      - Venezuela
+      - Fiji
+      - South Africa
+      - Brazil
+      - Turkey
+      - French Polynesia
+      - Burma
+      - Tunisia
+      - Guyana
+      - Saint Vincent and the Grenadines
+      - Saint Lucia
+      - Suriname
+      - Seychelles
+      - Lebanon
+      - Montserrat
+      - Kuwait
+      - Saudi Arabia
+      - Algeria
+      - Mongolia
+      - Vietnam
+      - Kyrgyzstan
+      - Uzbekistan
+      - Iran
+      - Bangladesh
+      - Grenada
+      - Jordan
+      - Libya
+      - American Samoa
+      - Bhutan
+      - Paraguay
+      - Kiribati
+      - Papua New Guinea
+      - Bolivia
+      - Lesotho
+      - El Salvador
+      - Philippines
+      - Turkmenistan
+      - Ecuador
+      - Morocco
+      - Vanuatu
+      - Jamaica
+      - Botswana
+      - Nicaragua
+      - Syria
+      - Tajikistan
+      - Zimbabwe
+      - Cambodia
+      - Tonga
+      - Cape Verde
+      - East Timor
+      - Nauru
+      - Micronesia, Federated States of
+      C:
+      - Anguilla
+      - China
+      - Chile
+      - Mauritius
+      - Sri Lanka
+      - Thailand
+      - Barbados
+      - Korea, South
+      - Taiwan
+      - Virgin Islands, British
+      - Cuba
+      - Saint Helena
+      - Argentina
+      - Israel
+      - Cyprus
+      - Iceland
+      - Ireland
+      - Puerto Rico
+      - Macedonia
+      - New Zealand
+      - Uruguay
+      - Faroe Islands
+      - Korea, North
+      - Netherlands Antilles
+      - Saint Pierre and Miquelon
+      - Virgin Islands
+      - Antigua and Barbuda
+      - Brunei
+      - Guam
+      - Turks and Caicos Islands
+      - Bahrain
+      - Palau
+      - Greenland
+      - Qatar
+      - Northern Mariana Islands
+      - United Arab Emirates
+      D:
+      - Andorra
+      - Hong Kong S.A.R.
+      - Singapore
+      - Macau S.A.R.
+      - Aruba
+      - Cayman Islands
+      - Bermuda
+      - Liechtenstein
+      - Australia
+      - United States
+      - Canada
+      - Belarus
+      - Russia
+      - Estonia
+      - Latvia
+      - Ukraine
+      - Bosnia and Herzegovina
+      - Georgia
+      - Lithuania
+      - Malta
+      - Serbia
+      - Poland
+      - Slovakia
+      - Romania
+      - Moldova
+      - Montenegro
+      - Austria
+      - Switzerland
+      - Belgium
+      - Luxembourg
+      - Netherlands
+      - Jersey
+      - Germany
+      - Italy
+      - San Marino
+      - Denmark
+      - Sweden
+      - Guernsey
+      - Isle of Man
+      - France
+      - United Kingdom
+      - Norway
+      - Finland
+      - Gibraltar
+      - Monaco
+      - Bulgaria
+      - Czech Republic
+      - Hungary
+      - Croatia
+      - Slovenia
+      - Greece
+      - Spain
+      - Portugal
+      - Japan
+  2006:
+    n_countries_paper: 222
+    n_mapped: 220
+    unmapped:
+    - Netherlands Antilles
+    merged_into_one_entity:
+    - PSE
+    clusters:
+      A:
+      - AFG
+      - AGO
+      - BDI
+      - BEN
+      - BFA
+      - BGD
+      - BLZ
+      - BOL
+      - BTN
+      - BWA
+      - CAF
+      - CIV
+      - CMR
+      - COD
+      - COG
+      - COM
+      - CPV
+      - DJI
+      - ERI
+      - ESH
+      - ETH
+      - FSM
+      - GAB
+      - GHA
+      - GIN
+      - GMB
+      - GNB
+      - GNQ
+      - GRD
+      - GTM
+      - HND
+      - HTI
+      - IRQ
+      - JAM
+      - JOR
+      - KEN
+      - KHM
+      - KIR
+      - LAO
+      - LBR
+      - LBY
+      - LSO
+      - MDG
+      - MDV
+      - MHL
+      - MLI
+      - MOZ
+      - MRT
+      - MWI
+      - MYT
+      - NAM
+      - NER
+      - NGA
+      - NIC
+      - NPL
+      - NRU
+      - OMN
+      - PAK
+      - PHL
+      - PNG
+      - PRY
+      - PSE
+      - RWA
+      - SAU
+      - SDN
+      - SEN
+      - SLB
+      - SLE
+      - SLV
+      - SOM
+      - STP
+      - SWZ
+      - SYR
+      - TCD
+      - TGO
+      - TJK
+      - TKM
+      - TLS
+      - TON
+      - TZA
+      - UGA
+      - WSM
+      - YEM
+      - ZMB
+      - ZWE
+      B:
+      - ARE
+      - ASM
+      - AZE
+      - BHS
+      - BRA
+      - BRN
+      - COL
+      - CRI
+      - DOM
+      - DZA
+      - ECU
+      - EGY
+      - FJI
+      - GUM
+      - GUY
+      - IDN
+      - IND
+      - IRN
+      - KGZ
+      - KWT
+      - LBN
+      - LCA
+      - MAR
+      - MEX
+      - MMR
+      - MNG
+      - MNP
+      - MSR
+      - MYS
+      - NCL
+      - PAN
+      - PER
+      - PYF
+      - SUR
+      - SYC
+      - TCA
+      - TUN
+      - TUR
+      - TUV
+      - UZB
+      - VCT
+      - VEN
+      - VNM
+      - VUT
+      - ZAF
+      C:
+      - ABW
+      - AIA
+      - ALB
+      - ARG
+      - ARM
+      - ATG
+      - AUS
+      - BHR
+      - BMU
+      - BRB
+      - CHL
+      - CHN
+      - CUB
+      - CYM
+      - CYP
+      - DMA
+      - FRO
+      - GRL
+      - HKG
+      - IRL
+      - ISL
+      - ISR
+      - KAZ
+      - KNA
+      - KOR
+      - LKA
+      - MAC
+      - MKD
+      - MUS
+      - NZL
+      - PLW
+      - PRI
+      - PRK
+      - QAT
+      - SGP
+      - SHN
+      - SPM
+      - THA
+      - TTO
+      - TWN
+      - URY
+      - USA
+      - VGB
+      - VIR
+      D:
+      - AND
+      - AUT
+      - BEL
+      - BGR
+      - BIH
+      - BLR
+      - CAN
+      - CHE
+      - CZE
+      - DEU
+      - DNK
+      - ESP
+      - EST
+      - FIN
+      - FRA
+      - GBR
+      - GEO
+      - GGY
+      - GIB
+      - GRC
+      - HRV
+      - HUN
+      - IMN
+      - ITA
+      - JEY
+      - JPN
+      - LIE
+      - LTU
+      - LUX
+      - LVA
+      - MCO
+      - MDA
+      - MLT
+      - MNE
+      - NLD
+      - NOR
+      - POL
+      - PRT
+      - ROU
+      - RUS
+      - SMR
+      - SRB
+      - SVK
+      - SVN
+      - SWE
+      - UKR
+    raw_names:
+      A:
+      - Afghanistan
+      - Angola
+      - Gambia, The
+      - Madagascar
+      - Guinea
+      - Mauritania
+      - Western Sahara
+      - Sierra Leone
+      - Djibouti
+      - Liberia
+      - Comoros
+      - Mozambique
+      - Maldives
+      - West Bank
+      - Mayotte
+      - Somalia
+      - Oman
+      - Benin
+      - Tanzania
+      - Ethiopia
+      - Eritrea
+      - Central African Republic
+      - Haiti
+      - Togo
+      - Guatemala
+      - Cameroon
+      - Laos
+      - Equatorial Guinea
+      - Gabon
+      - Guinea-Bissau
+      - Nigeria
+      - Senegal
+      - Cote d'Ivoire
+      - Iraq
+      - Solomon Islands
+      - Sudan
+      - Kenya
+      - Rwanda
+      - Burkina Faso
+      - Burundi
+      - Congo (Brazzaville)
+      - Congo (Kinshasa)
+      - Gaza Strip
+      - Sao Tome and Principe
+      - Niger
+      - Chad
+      - Mali
+      - Uganda
+      - Malawi
+      - Yemen
+      - Zambia
+      - Bangladesh
+      - Marshall Islands
+      - Belize
+      - Honduras
+      - Ghana
+      - Nepal
+      - Pakistan
+      - Samoa
+      - Bhutan
+      - Paraguay
+      - Kiribati
+      - Papua New Guinea
+      - Bolivia
+      - Jamaica
+      - El Salvador
+      - Philippines
+      - Turkmenistan
+      - Botswana
+      - Lesotho
+      - Namibia
+      - Cambodia
+      - Tonga
+      - Nicaragua
+      - Tajikistan
+      - Syria
+      - Cape Verde
+      - East Timor
+      - Micronesia, Federated States of
+      - Nauru
+      - Swaziland
+      - Zimbabwe
+      - Grenada
+      - Jordan
+      - Libya
+      - Saudi Arabia
+      B:
+      - Algeria
+      - Mongolia
+      - Iran
+      - Azerbaijan
+      - Vietnam
+      - Brazil
+      - Turkey
+      - French Polynesia
+      - Burma
+      - Guyana
+      - Saint Vincent and the Grenadines
+      - Tunisia
+      - Brunei
+      - Saint Lucia
+      - Suriname
+      - Seychelles
+      - Lebanon
+      - Montserrat
+      - American Samoa
+      - Turks and Caicos Islands
+      - Bahamas, The
+      - Costa Rica
+      - New Caledonia
+      - Guam
+      - Colombia
+      - Indonesia
+      - Panama
+      - Mexico
+      - Peru
+      - Dominican Republic
+      - Malaysia
+      - Venezuela
+      - Egypt
+      - India
+      - Fiji
+      - Ecuador
+      - Morocco
+      - Vanuatu
+      - Kyrgyzstan
+      - Uzbekistan
+      - South Africa
+      - Tuvalu
+      - Northern Mariana Islands
+      - Kuwait
+      - United Arab Emirates
+      C:
+      - Albania
+      - Saint Kitts and Nevis
+      - Dominica
+      - Argentina
+      - Israel
+      - Anguilla
+      - Virgin Islands, British
+      - Chile
+      - Sri Lanka
+      - Mauritius
+      - Thailand
+      - Armenia
+      - Kazakhstan
+      - Trinidad and Tobago
+      - Antigua and Barbuda
+      - Palau
+      - Bahrain
+      - Greenland
+      - Qatar
+      - Aruba
+      - Bermuda
+      - Cayman Islands
+      - Virgin Islands
+      - Australia
+      - United States
+      - Cyprus
+      - Iceland
+      - Puerto Rico
+      - Macedonia
+      - Faroe Islands
+      - Ireland
+      - New Zealand
+      - Uruguay
+      - Barbados
+      - Korea, South
+      - Taiwan
+      - Saint Helena
+      - China
+      - Cuba
+      - Korea, North
+      - Netherlands Antilles
+      - Saint Pierre and Miquelon
+      - Hong Kong S.A.R.
+      - Singapore
+      - Macau S.A.R.
+      D:
+      - Andorra
+      - Jersey
+      - Austria
+      - Switzerland
+      - Guernsey
+      - Germany
+      - Italy
+      - San Marino
+      - Japan
+      - Monaco
+      - Belgium
+      - United Kingdom
+      - France
+      - Isle of Man
+      - Denmark
+      - Norway
+      - Finland
+      - Gibraltar
+      - Sweden
+      - Bosnia and Herzegovina
+      - Canada
+      - Luxembourg
+      - Netherlands
+      - Liechtenstein
+      - Belarus
+      - Russia
+      - Ukraine
+      - Georgia
+      - Estonia
+      - Latvia
+      - Lithuania
+      - Moldova
+      - Montenegro
+      - Poland
+      - Slovakia
+      - Bulgaria
+      - Czech Republic
+      - Hungary
+      - Croatia
+      - Slovenia
+      - Malta
+      - Serbia
+      - Romania
+      - Greece
+      - Spain
+      - Portugal
