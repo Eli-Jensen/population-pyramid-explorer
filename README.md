@@ -19,12 +19,15 @@ Status: **M0 in progress** (data pipeline, metrics, evaluation harness). Plan in
 
 ## Develop
 
+Everything runs through the `Makefile` (`make help` lists targets):
+
 ```bash
-uv sync                      # python deps
-uv run scripts/fetch_data.py --from ~/Projects/pyramid-econ/data/raw/wpp2024
-uv run scripts/build_data.py
-uv run pytest
-cd web && npm ci && npm run dev
+make setup            # python (uv) + web (npm) dependencies
+make data             # copy/fetch raw inputs (WPP 2024, Togo update, LOCATIONS, Maddison, PWT, WDI)
+make build            # rebuild the DuckDB store, corpus, web shards and build report
+make test             # pytest
+make query Q="JPN 2026"
+make web              # vite dev server
 ```
 
 ## Data & attribution

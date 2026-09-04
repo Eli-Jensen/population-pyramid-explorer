@@ -1,0 +1,102 @@
+# population-pyramid-explorer — the only command surface.
+# Every target echoes the command it runs so the underlying tools stay learnable.
+SHELL := /bin/zsh
+UV    := uv run
+NPM   := npm --prefix web
+WPP_FROM ?= $(HOME)/Projects/pyramid-econ/data/raw/wpp2024
+Q ?=
+
+.DEFAULT_GOAL := help
+.PHONY: help setup setup-embed data build build-nopatch build-emb test test-slow test-all render embed eval m0 labels backtest \
+        query sql web web-check web-test web-build smoke deploy deploy-status check-upstream clean distclean
+
+help: ## list targets
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[1m%-16s\033[0m %s\n", $$1, $$2}'
+
+setup: ## python (dev group) + web deps
+	uv sync --group dev
+	$(NPM) ci
+
+setup-embed: ## python embed group (torch, transformers, scikit-learn)
+	uv sync --group dev --group embed
+
+data: ## fetch/copy raw inputs (WPP 2024 + Togo update + LOCATIONS; Maddison, PWT, WDI, WEO) — sha256-verified, idempotent
+	$(UV) scripts/fetch_data.py --from $(WPP_FROM)
+	$(UV) scripts/fetch_econ.py
+
+build: ## rebuild DuckDB + corpus + web shards + build report
+	$(UV) scripts/build_data.py
+
+build-nopatch: ## same, without the Togo interim update
+	$(UV) scripts/build_data.py --no-patches
+
+build-emb: ## same, also exporting the image-embedding spaces (needs `make embed`)
+	$(UV) scripts/build_data.py --emb evals/embeddings/siglip2-base-naflex.pca64.npy --emb evals/embeddings/dinov2-base.pca64.npy
+
+test: ## pytest (default marks; skips slow + network)
+	$(UV) pytest -q
+
+test-slow: ## full-corpus evaluations
+	$(UV) pytest -q -m slow
+
+test-all: ## everything incl. network
+	$(UV) pytest -q -m "slow or network or not (slow or network)" --override-ini addopts=""
+
+render: ## canonical pyramid renders for the image experiment
+	$(UV) scripts/render_canonical.py --kind canon2 --size 336
+	$(UV) scripts/render_canonical.py --kind canon2 --size 294
+	$(UV) scripts/render_canonical.py --kind canon1 --size 294
+
+embed: ## embed renders with SigLIP 2 + DINOv2 (local, MPS) and load them into the DB
+	$(UV) --group embed scripts/embed_images.py --model siglip2-base-naflex --model dinov2-base --db
+
+eval: ## similarity evaluation protocol → evals/RESULTS.md + evals/verdicts.json
+	$(UV) scripts/eval_similarity.py --full
+
+m0: data build test render embed eval ## the whole M0 chain, in order
+
+labels: ## retrieve/transcribe external label sets → evals/labels/
+	$(UV) scripts/fetch_labels.py
+
+backtest: ## economic-lens backtest suite → evals/econ/RESULTS.md (refuses without a committed PREREG.md)
+	$(UV) scripts/fetch_etf.py
+	$(UV) scripts/backtest_lookalikes.py
+	$(UV) scripts/panel_shape_growth.py
+	$(UV) scripts/disconnect_table.py
+	$(UV) scripts/decide_econ.py
+
+query: ## twins/opposites/time-shift for a query, e.g. make query Q="JPN 2026 --mode today"
+	$(UV) scripts/query.py $(Q)
+
+sql: ## read-only SQL against the DuckDB file, e.g. make sql Q="SELECT count(*) FROM pyramid"
+	$(UV) scripts/sql.py "$(Q)"
+
+web: ## vite dev server (prefer the Browser pane launch config "dev")
+	$(NPM) run dev
+
+web-check: ## svelte-check + tsc
+	$(NPM) run check
+
+web-test: ## vitest
+	$(NPM) run test
+
+web-build: ## production build (+ 404.html fallback)
+	$(NPM) run build
+
+smoke: ## print the SMOKE.md checklist
+	@cat SMOKE.md 2>/dev/null || echo "SMOKE.md arrives with M1"
+
+deploy: web-check web-test web-build ## push main → GitHub Pages via .github/workflows/deploy.yml
+	git push origin main
+
+deploy-status: ## watch the latest Pages deploy
+	gh run watch
+
+check-upstream: ## has WPP / Maddison / PWT / WDI / any instrument changed upstream?
+	$(UV) scripts/check_upstream.py
+
+clean: ## remove rebuildable outputs
+	rm -rf data/processed data/renders data/out web/dist
+
+distclean: clean ## also raw data, venv, node_modules
+	rm -rf data/raw .venv web/node_modules

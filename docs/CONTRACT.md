@@ -1,11 +1,13 @@
 # Module contract (M0) — the interfaces every agent builds against
 
+> **AMENDED 2026-09-04 after plan approval (see the AMENDMENTS section at the end; it overrides anything above it that conflicts).** Repo/package renamed to `population-pyramid-explorer` / `pyramid_explorer`. DuckDB is the pipeline store; `trend`/`path` metrics exist; commands are `make` targets.
+
 Read this before touching any file. `docs/PLAN.md` (with the DECISIONS block at the top) is the
 specification; this file pins the *interfaces* so modules written in parallel fit together.
 If you must deviate, change this file in the same commit and say so in your report.
 
 ## 0. Ground rules
-- Python 3.12, `uv`. All deps are already declared in `pyproject.toml`; **do not edit pyproject.toml**
+- Python 3.12, `uv`. All deps are already declared in `pyproject.toml` (incl. `duckdb>=1.4`); **do not edit pyproject.toml**
   (the `embed` group has torch/transformers/scikit-learn; use `uv run --group embed …` for embedding code).
 - Every module has a docstring, type hints, and pytest tests under `tests/`. Tests must run in `uv run pytest`
   without network (`@pytest.mark.network` for anything that fetches; `@pytest.mark.slow` for full-corpus runs;
@@ -187,3 +189,43 @@ def pca64(E: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]   # (Z flo
 - **B metrics**: `features.py`, `metrics.py`, `search.py`, `scripts/query.py`, `tests/test_{features,metrics,search}.py`
 - **C render/embed**: `render.py`, `embed.py`, `scripts/{render_canonical,embed_images}.py`, `tests/test_{render,processors}.py`, `evals/image_embeddings.md`, `evals/embeddings/*.meta.json`
 - **D eval protocol**: `scripts/{fetch_labels,eval_similarity}.py`, `evals/{protocol.md,canonical_groups.yaml,time_shift.yaml,labels/*}`, `tests/test_protocol.py`
+
+
+---
+
+# AMENDMENTS (2026-09-04, approved plan `~/.claude/plans/moonlit-wandering-cocoa.md`) — these override the sections above
+
+## A. Database (DuckDB) — owner A1
+- `src/pyramid_explorer/schema.sql` (committed DDL + views + macros) and `src/pyramid_explorer/db.py` (the ONLY module importing duckdb). File `data/processed/explorer.duckdb` (gitignored) is **always rebuilt from scratch** by `scripts/build_data.py`; it is a pure function of manifest-pinned raw files + `pipeline/*.yaml` + code. No ORM, no migrations: `build_meta.schema_version` mismatch ⇒ rebuild.
+- **Files under `data/processed/` (CONTRACT §1) are EXPORTS of the DB**, written by `db.export_processed(con)`; every other module keeps reading those files (B/C/D untouched). Extra exports: `indicators.parquet` (`entity_id, year, indicator_id, source_id, value, is_forecast` — redistributable sources only), `coverage.parquet`, `entity_years.parquet`.
+- Rule: **numpy implements metrics; SQL asks questions** (coverage, joins, provenance, ad-hoc kNN, cross-checks in tests). Brute-force `array_cosine_distance` over `FLOAT[64]` (2 ms at 42k rows) — no vector index.
+- Tables (see the plan §5 for the full DDL): `source` (id, family, name, url, vintage, licence, **redistributable**, attribution, sha256, bytes, fetched_at), `patch`, `build_meta`, `location` (all 326 UN rows), `entity`, `entity_alias`, `entity_membership`, `sovereignty` (curated `pipeline/sovereignty.yaml`, may be empty), `pop_age5` (PATCHED, long, canonical) + `pop_age5_vanilla`, `pyramid` (materialised wide: row, entity_id, year, total, `s42 DOUBLE[42]`, `cdf42 DOUBLE[42]`), `corpus_u16`, `sigma`, `indicator`, `indicator_value`, `source_entity_map` (WEO `UVK→XKX`, `WBG→PSE`…), `source_orphan` (codes with no entity, never silently dropped), `coverage` (derived: entity × series × source: first/last year, n_obs, n_gaps, last_actual), `embedding_model`, `embedding` (`FLOAT[768]`), `embedding_pca64` (`FLOAT[64]`), eval mirrors; views `corpus_entity`, `corpus_row` (**the row index is derived here: `entity_idx*151 + (year-1950)`, never stored by hand**), `indicator_public` (the ONLY relation export may read indicators from), `entity_years`; macros `l1`, `w1s`, `blend_d` (cross-check only).
+- `db.py` API: `connect(path=None, *, read_only=False, rebuild=False)`, `ingest_sources`, `ingest_locations`, `insert_entities`, `ingest_sovereignty`, `ingest_pop_age5(con, vanilla, patched, patch)`, `ingest_wpp_indicators`, `ingest_indicators(con, family, source_id, long_df) -> {rows, orphans}`, `refresh_derived` (builds `pyramid` + `coverage`, runs SQL sanity checks: member sums 0.01 % on vanilla, patch identity), `write_u16`, `write_sigma`, `ingest_embeddings(con, model, full_npy, pca_npy, meta_json, keys)` (refuses on data_hash mismatch), `ingest_evals`; loaders `load_entities`, `load_corpus -> (s42, keys)`, `load_cdf`, `load_u16`, `load_embeddings(con, model, dim=64)`, `load_indicator`, `coverage`, `entity_years`, `knn(con, entity_id, year, *, model, k=10, where='TRUE')`; `export_processed`, `write_build_meta`, `diff_against(con, old_db)`. Arrow round-trip for ARRAY columns: `to_arrow_table().column(c).combine_chunks().flatten().to_numpy().reshape(-1, d)`.
+- `scripts/build_data.py` order: connect(rebuild) → ingest_sources (sha256 vs `pipeline/manifest.json`) → ingest_locations → `wpp.load_raw_population(patched=False)` → `entities.build_entities` → insert_entities → ingest_sovereignty → `patches.apply_togo_patch` → ingest_pop_age5 → ingest_wpp_indicators → ingest_indicators for maddison/pwt/wdi/weo (each skipped with a WARNING if its raw file is absent) → refresh_derived → load_corpus → `quantise.shares_to_u16` → write_u16 → build_meta(data_hash = sha256(u16 bytes)) → `metrics.fit_sigma` → write_sigma → `--emb` ingest → export_processed → `bands.build_bands` → `export.write_web_data(...)` (signature unchanged) → build report (+ coverage summary, `--diff-against`). Flags: `[--no-patches] [--no-gdp] [--weo-vintage V] [--no-full-emb] [--emb NPY ...] [--diff-against DB]`.
+- `shapes.build_pyramids/build_corpus/load_corpus` become thin wrappers over `db.*` (same files in/out); `entities.load_entities` reads the DB when present, else `entities.json`. New `scripts/sql.py "SELECT …"` (read-only). **Guard:** IMF WEO rows carry `source.redistributable = FALSE`; `tests/test_db.py::test_weo_never_exported` scans `data/processed/*.parquet`, `web/public/data/**`, `web/src/data/*.json` for WEO indicator ids / `NGDP`.
+- Entity dict (§2) gains OPTIONAL keys (emitted from M3, not M0): `"coverage": {"gdppc_maddison": [1950, 2022], …}`, `"independent_since": 2011 | null`.
+
+## B. Trend (trajectory) metrics — owner B
+- `metrics.distances('trend', q, X, *, L=10, X_prev=None, q_prev=None, sigma)`: `Δ_q = s42(q,T) − s42(q,T−L)`, `Δ_c = s42(c,τ) − s42(c,τ−L)`, `d = ‖Δ_q − Δ_c‖₂ / σ_trend@L`. Implementation detail: callers pass the corpus and the row offset (`row − L` within the same entity; rows with `year − L < 1950` are masked out). `'path'`: mean of `d_blend` over aligned offsets `s ∈ {0, 5, …, L}`. `fit_sigma` gains `trend@5`, `trend@10`, `trend@20` (medians over random same-year country pairs ≥ 100k). `sigma.json` keys: `"trend@10": {"2": σ, "1": σ}` etc.
+- `search.Query` gains `trend: str | None = None` (`'motion' | 'path'`), `L: int = 10`, and `mode` accepts `'today'` (sugar for `range [current_year, current_year]`). `candidate_mask` additionally requires `year − L ≥ 1950` when `trend` is set. `similar/different/best_year_per_entity` honour `trend`.
+- `bands.build_bands` adds `same[trend@L]`, `cross[trend@L]`, `best[trend@L]` tables for L ∈ {5, 10, 20}.
+- `scripts/query.py` flags: `--mode same|near|range|any|today`, `--trend motion|path`, `--L 5|10|20`, `--metric`, `--sex`, `--k`, `--div`, `--minpop`, `--era obs|all`, `--scope c|all`.
+- Evaluation (D): temporal continuity for `trend@10` (adjacent windows of the same country must be nearest, self excluded), reported next to the snapshot metrics.
+
+## C. Econ data loaders — owner F (new)
+- `src/pyramid_explorer/data/{maddison,pwt,wdi,imf}.py` in the pyramid-econ style (`imf.fetch_vintage` copied from `~/Projects/pyramid-econ/src/pyramid_econ/data/imf.py`; `pwt.py` keeps `pop` and `rgdpe`). Each exposes `fetch() -> Path` (raw file under `data/raw/econ/`, sha256 recorded in `pipeline/econ_manifest.json`) and `load_long() -> DataFrame[code, year, indicator_id, value, is_forecast]` with upstream codes untouched (remapping happens in `db.ingest_indicators` via `pipeline/econ_iso3.yaml` / `source_entity_map`).
+- Sources: Maddison 2023 (`https://dataverse.nl/api/access/datafile/421302`, sheet "Full data": countrycode, year, gdppc, pop; CC BY 4.0), PWT 11.0 (`~/Projects/pyramid-econ/data/raw/pwt/pwt110.xlsx` or dataverse 554105; sheet Data: countrycode, year, rgdpna, rgdpe, pop, hc, emp; CC BY 4.0), WDI (API v2 no key: `NY.GDP.PCAP.PP.KD`, `NY.GDP.MKTP.KD.ZG`, `SP.POP.TOTL`, `SP.POP.1564.TO.ZS`, `NY.GDP.TOTL.RT.ZS`; CC BY 4.0; verify licence page), WB OGHIST income classes (xlsx), IMF WEO 2025-04 (copy `~/Projects/pyramid-econ/data/processed/weo_202504.parquet`; **redistributable = FALSE**). Indicator ids: `gdppc_maddison`, `pop_maddison`, `rgdpna_pwt`, `rgdpe_pwt`, `pop_pwt`, `hc_pwt`, `gdppc_ppp_wdi`, `gdp_growth_wdi`, `pop_wdi`, `wa_share_wdi`, `rents_wdi`, `income_class_wb`, `gdppc_ppp_weo`, `real_gdp_growth_weo`, …
+- `scripts/fetch_econ.py` (all sources, idempotent), `tests/test_econ_data.py` (remap fixtures; every mapped code ∈ entity ids; orphans recorded; windows on a toy series).
+- ISO3 remaps (`pipeline/econ_iso3.yaml`): WEO `UVK→XKX`, `WBG→PSE`; WDI `XKX` ok, `PSE` ok, `CHI` (Channel Islands) → drop; Maddison drop `{CSK, SUN, YUG}` and any non-WPP code → `source_orphan` (assert against a fixed allowlist).
+
+## D. Scripts / commands (replaces §6's command column with Makefile targets)
+`make setup | setup-embed | data | build | build-nopatch | build-emb | test | test-slow | test-all | render | embed | eval | m0 | labels | backtest | query Q="…" | sql Q="…" | web | web-check | web-test | web-build | smoke | deploy | deploy-status | check-upstream | clean | distclean` — see `Makefile`. Docs and agent reports reference targets, not raw commands. Scripts added vs §6: `fetch_econ.py` (F), `sql.py` (A1), `m0.py` is replaced by `make m0`.
+
+## E. Ownership (replaces §7)
+- **A1 ingest + DB**: `data/wpp.py`, `entities.py`, `patches.py`, `shapes.py`, `db.py`, `schema.sql`, `pipeline/{manifest.json,names.yaml,locations.parquet,sources.yaml,sovereignty.yaml}`, `scripts/{fetch_data,sql}.py`, `tests/test_{entities,patches,shapes,wpp,db}.py`.
+- **A2 export**: `quantise.py`, `delta.py`, `bands.py`, `export.py`, `scripts/build_data.py`, `tests/test_{quantise,delta,bands,export}.py`.
+- **B metrics + search + trend**: `features.py`, `metrics.py`, `search.py`, `scripts/query.py`, `tests/test_{features,metrics,search}.py`.
+- **C render + embed**: `render.py`, `embed.py`, `scripts/{render_canonical,embed_images}.py`, `tests/test_{render,processors}.py`, `evals/image_embeddings.md`, `evals/embeddings/*.meta.json`.
+- **D eval protocol**: `scripts/{fetch_labels,eval_similarity}.py`, `evals/{protocol.md,canonical_groups.yaml,time_shift.yaml,labels/*}`, `tests/test_protocol.py`.
+- **F econ data**: `data/{maddison,pwt,wdi,imf}.py`, `pipeline/{econ_manifest.json,econ_iso3.yaml}`, `scripts/fetch_econ.py`, `tests/test_econ_data.py`. (`db.ingest_indicators` is A1's; F calls it.)
+- Shared read-only inputs for everyone: the provisional corpus in `data/processed/` (`corpus_s42.npy`, `corpus_keys.parquet`, `entities.json` — 237 countries, unpatched, `locid = -1`, entities marked `PROVISIONAL`), `docs/PLAN.md`, this file.
