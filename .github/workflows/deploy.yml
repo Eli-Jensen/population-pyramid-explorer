@@ -32,6 +32,8 @@ jobs:
           path: web/dist
   deploy:
     needs: build
+    # Pages is enabled at M1 (repo variable PAGES_ENABLED=true); until then only the build job runs as CI.
+    if: github.event_name == 'workflow_dispatch' || vars.PAGES_ENABLED == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
