@@ -8,7 +8,7 @@ ECON_FROM ?= $(HOME)/Projects/pyramid-econ
 Q ?=
 
 .DEFAULT_GOAL := help
-.PHONY: help setup setup-embed data build build-nopatch build-emb test test-slow test-all render embed eval m0 labels backtest \
+.PHONY: help setup setup-embed setup-econ data build build-nopatch build-emb test test-slow test-all render embed eval m0 labels backtest \
         query sql web web-check web-test web-build smoke deploy deploy-status check-upstream clean distclean
 
 help: ## list targets
@@ -20,6 +20,9 @@ setup: ## python (dev group) + web deps
 
 setup-embed: ## python embed group (torch, transformers, scikit-learn)
 	uv sync --group dev --group embed
+
+setup-econ: ## python econ group (yfinance, statsmodels) for the backtest
+	uv sync --group dev --group econ
 
 data: ## fetch/copy raw inputs (WPP 2024 + Togo update + LOCATIONS; Maddison, PWT, WDI + OGHIST, WEO) — sha256-verified, idempotent
 	$(UV) scripts/fetch_data.py --from $(WPP_FROM)
@@ -60,11 +63,11 @@ labels: ## retrieve/transcribe external label sets → evals/labels/
 	$(UV) scripts/fetch_labels.py
 
 backtest: ## economic-lens backtest suite → evals/econ/RESULTS.md (refuses without a committed PREREG.md)
-	$(UV) scripts/fetch_etf.py
-	$(UV) scripts/backtest_lookalikes.py
-	$(UV) scripts/panel_shape_growth.py
-	$(UV) scripts/disconnect_table.py
-	$(UV) scripts/decide_econ.py
+	$(UV) --group econ scripts/fetch_etf.py
+	$(UV) --group econ scripts/backtest_lookalikes.py
+	$(UV) --group econ scripts/panel_shape_growth.py
+	$(UV) --group econ scripts/disconnect_table.py
+	$(UV) --group econ scripts/decide_econ.py
 
 query: ## twins/opposites/time-shift for a query, e.g. make query Q="JPN 2026 --mode today"
 	$(UV) scripts/query.py $(Q)

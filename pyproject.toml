@@ -19,6 +19,7 @@ dependencies = [
 
 [dependency-groups]
 dev = ["pytest>=8", "pytest-xdist>=3.6"]
+econ = ["yfinance>=0.2.50", "statsmodels>=0.14"]
 embed = [
     "torch>=2.13,<2.15",
     "transformers>=5.13,<6",
