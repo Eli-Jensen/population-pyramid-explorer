@@ -13,5 +13,9 @@ export default defineConfig({
   test: {
     include: ['src/**/*.test.ts'],
     environment: 'node',
+    // Full-corpus integration tests scan 42k rows inside vitest's vm sandbox; CI runners are
+    // 5–10× slower than the dev machine, so give every test a generous ceiling.
+    testTimeout: 90_000,
+    hookTimeout: 90_000,
   },
 })

@@ -35,6 +35,7 @@ import {
 import { GRID } from './bands.ts';
 import type { Bands, Corpus, Embedding } from './types.ts';
 
+
 const publicDir = fileURLToPath(new URL('../../public/', import.meta.url));
 const fixturePath = fileURLToPath(new URL('../../../evals/fixtures/search_cases.json', import.meta.url));
 const haveData = existsSync(publicDir + meta.files.shares_d16z) && existsSync(fixturePath);
