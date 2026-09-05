@@ -1,12 +1,19 @@
 <script lang="ts">
   // Shell: routes via the pure router through the store (popstate + same-origin link interception),
-  // renders Home / Country / NotFound, keeps document.title in sync.
+  // renders Home / Country / Compare / About (lazy) / NotFound, keeps document.title in sync.
   import { onMount } from 'svelte';
   import { app } from './lib/state.svelte.ts';
   import { parse } from './lib/router.ts';
   import { BASE, href, navigateTo } from './lib/url.ts';
   import Home from './pages/Home.svelte';
   import Country from './pages/Country.svelte';
+  // Compare and About are lazy chunks: neither belongs in the country page's first paint (PLAN §7 budget ≤ 175 KB
+  // on the wire for /japan/2026). Vite splits them out; the import() runs the first time its route renders and the
+  // promise is memoised so route flips do not re-fetch.
+  let compareChunk: Promise<typeof import('./pages/Compare.svelte')> | null = null;
+  let aboutChunk: Promise<typeof import('./pages/About.svelte')> | null = null;
+  const loadCompare = () => (compareChunk ??= import('./pages/Compare.svelte'));
+  const loadAbout = () => (aboutChunk ??= import('./pages/About.svelte'));
   import NotFound from './pages/NotFound.svelte';
 
   onMount(() => app.init());
@@ -27,6 +34,8 @@
   const title = $derived.by(() => {
     const r = app.route;
     if (r.kind === 'country' && app.entity) return `${app.entity.short_name} ${app.year} · Population Pyramid Explorer`;
+    if (r.kind === 'compare' && app.entityA && app.entityB) return `${app.entityA.short_name} ${r.ya} vs ${app.entityB.short_name} ${r.yb} · Population Pyramid Explorer`;
+    if (r.kind === 'static') return `About · Population Pyramid Explorer`;
     if (r.kind === 'notfound') return 'Not found · Population Pyramid Explorer';
     return 'Population Pyramid Explorer';
   });
@@ -47,6 +56,18 @@
   <main class="mx-auto max-w-6xl px-4 py-4">
     {#if app.route.kind === 'country'}
       <Country />
+    {:else if app.route.kind === 'compare'}
+      {#await loadCompare()}
+        <p class="py-8 text-center text-sm text-muted" aria-busy="true">loading the compare page…</p>
+      {:then m}
+        <m.default />
+      {/await}
+    {:else if app.route.kind === 'static'}
+      {#await loadAbout()}
+        <p class="py-8 text-center text-sm text-muted" aria-busy="true">loading…</p>
+      {:then m}
+        <m.default />
+      {/await}
     {:else if app.route.kind === 'notfound'}
       <NotFound path={app.route.path} />
     {:else if app.route.kind === 'placeholder'}

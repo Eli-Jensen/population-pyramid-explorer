@@ -4,14 +4,14 @@
   import type { SearchOutput } from '../state.svelte.ts';
   import { byId } from '../entities.ts';
   import { divLabel, oppositesHeadline, strictStrip } from '../restate.ts';
-  import type { Div } from '../router.ts';
+  import type { Div, Metric, Sex } from '../router.ts';
   import ResultCard from './ResultCard.svelte';
 
   interface Props {
     results: SearchOutput | null;
     k: number;
     div: Div;
-    focal: { shares: Float32Array; name: string; year: number };
+    focal: { id: string; shares: Float32Array; name: string; year: number; metric?: Metric; sex?: Sex };
     loadingText: string | null;
     lastObserved: number;
     currentYear: number;

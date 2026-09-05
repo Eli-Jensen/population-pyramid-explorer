@@ -3,7 +3,11 @@
 // Routes (M1):            '/'                         → home
 //                         '/{slug}'                   → Redirect to '/{slug}/{currentYear}' (hub)
 //                         '/{slug}/{year}'            → CountryQuery (year 1950–2100)
-// Reserved (M3):          '/compare/…', '/about', '/evidence', '/eval/…' → Placeholder
+// Compare (M3):           '/compare/{a}/{ya}/{b}/{yb|best}' → CompareQuery (+ ?view=overlay|diff|side, ?from=best,
+//                         ?axis/?unit, ?era/?metric/?sex). `best` is INPUT sugar: the router keeps it (`yb: 'best'`);
+//                         the store resolves it against the corpus and replaceStates the concrete year + `?from=best`.
+// Static (M3):            '/about' → StaticQuery (pages/About.svelte)
+// Reserved:               '/evidence', '/eval/…' → Placeholder
 // Anything else           → NotFound.
 // Canonical form: no trailing slash, lowercase slug, canonical slug (aliases redirect), defaults elided,
 // query params in a fixed order. Non-canonical URLs return a Redirect (the app applies it with replaceState).
@@ -104,7 +108,44 @@ export interface CountryQuery extends DisplayOptions, SearchOptions {
   id: string; // entity id (ISO3 / agg-*)
   year: number;
 }
-export const PLACEHOLDER_ROUTES = ['compare', 'about', 'evidence', 'eval'] as const;
+// ---- compare (M3, PLAN §7 J4/J5) ---------------------------------------------------------------------------
+
+export const COMPARE_VIEWS = ['overlay', 'diff', 'side'] as const;
+export type CompareView = (typeof COMPARE_VIEWS)[number];
+export const DEFAULT_VIEW: CompareView = 'overlay';
+/** `yb` in the URL: a concrete year or the `best` sugar (resolved client-side by the store). */
+export type YearOrBest = number | 'best';
+
+/** `/compare/{a}/{ya}/{b}/{yb|best}` + display options + the metric/sex/era the pair distance is stated under. */
+export interface CompareQuery extends DisplayOptions {
+  kind: 'compare';
+  a: string; // entity id (A: filled)
+  ya: number;
+  b: string; // entity id (B: outlined)
+  yb: YearOrBest;
+  view: CompareView; // overlay (default, elided) · diff · side
+  /** 'best' once `yb` was produced by the best-year resolution — the "B → best year" button stays lit (PLAN §7). */
+  from: 'best' | null;
+  era: EraMode | null; // null = J8 default from A's year (the era the best-year search may use)
+  metric: Metric;
+  sex: Sex;
+}
+export interface CompareInput {
+  view?: CompareView;
+  from?: 'best' | null;
+  era?: EraMode | null;
+  metric?: Metric;
+  sex?: Sex;
+}
+
+export const STATIC_PAGES = ['about'] as const;
+export type StaticPage = (typeof STATIC_PAGES)[number];
+export interface StaticQuery {
+  kind: 'static';
+  page: StaticPage;
+}
+
+export const PLACEHOLDER_ROUTES = ['evidence', 'eval'] as const;
 export type PlaceholderRoute = (typeof PLACEHOLDER_ROUTES)[number];
 export interface PlaceholderQuery {
   kind: 'placeholder';
@@ -112,7 +153,7 @@ export interface PlaceholderQuery {
   segments: string[]; // path segments after the route name, lowercased
   search: string; // raw search string ('' or '?…'), untouched until the route is built
 }
-export type Query = HomeQuery | CountryQuery | PlaceholderQuery;
+export type Query = HomeQuery | CountryQuery | CompareQuery | StaticQuery | PlaceholderQuery;
 
 export interface Redirect {
   kind: 'redirect';
@@ -360,11 +401,81 @@ export function canonical(query: Query, base: string): string {
       if (!e) throw new Error(`canonical(): unknown entity ${query.id}`);
       return `${b}${e.slug}/${query.year}${optionsSearch(query)}`;
     }
+    case 'compare': {
+      const ea = resolve(query.a);
+      const eb = resolve(query.b);
+      if (!ea) throw new Error(`canonical(): unknown entity ${query.a}`);
+      if (!eb) throw new Error(`canonical(): unknown entity ${query.b}`);
+      return `${b}compare/${ea.slug}/${query.ya}/${eb.slug}/${query.yb}${compareSearch(query)}`;
+    }
+    case 'static':
+      return `${b}${query.page}`;
     case 'placeholder': {
       const path = [query.route, ...query.segments].join('/');
       return `${b}${path}${query.search}`;
     }
   }
+}
+
+/** '?axis=…&unit=…&view=diff&from=best&era=all&metric=l2&sex=1' or '' — fixed order, defaults elided. */
+export function compareSearch(q: Pick<CompareQuery, 'axis' | 'unit' | 'view' | 'from' | 'yb' | 'era' | 'metric' | 'sex'>): string {
+  const e = elideDefaults(q);
+  const parts: string[] = [];
+  if (e.axis) parts.push(`axis=${e.axis}`);
+  if (e.unit) parts.push(`unit=${e.unit}`);
+  if (q.view !== DEFAULT_VIEW) parts.push(`view=${q.view}`);
+  if (q.from === 'best' && q.yb !== 'best') parts.push('from=best'); // redundant while `best` is still unresolved
+  if (q.era) parts.push(`era=${q.era}`);
+  if (q.metric !== DEFAULT_SEARCH.metric) parts.push(`metric=${q.metric}`);
+  if (q.sex !== DEFAULT_SEARCH.sex) parts.push(`sex=${q.sex}`);
+  return parts.length ? '?' + parts.join('&') : '';
+}
+
+/** Parse the compare-page params (`view`, `from`, plus era/metric/sex; invalid → defaults). */
+export function parseCompareInput(search: string, opts: { visual?: boolean } = {}): CompareInput {
+  const sp = params(search);
+  let metric = pick(METRICS, sp.get('metric'), DEFAULT_SEARCH.metric);
+  if (metric === 'visual' && !(opts.visual ?? visualExposed())) metric = DEFAULT_SEARCH.metric;
+  return {
+    view: pick(COMPARE_VIEWS, sp.get('view'), DEFAULT_VIEW),
+    from: sp.get('from') === 'best' ? 'best' : null,
+    era: pickOrNull(['obs', 'all'] as const, sp.get('era')),
+    metric,
+    sex: pick(['2', '1'] as const, sp.get('sex'), DEFAULT_SEARCH.sex),
+  };
+}
+
+/**
+ * Build a compare query with defaults filled: `from=best` only survives with a concrete `yb`; `era` equal to the J8
+ * default for A's year becomes null (so `canonical()` needs no clock); `visual` only when the build exposes it.
+ */
+export function compareQuery(
+  a: string,
+  ya: number,
+  b: string,
+  yb: YearOrBest,
+  opts: Partial<DisplayOptions> & CompareInput = {},
+  curYear: number = currentYear(),
+  visual: boolean = visualExposed(),
+): CompareQuery {
+  let era = opts.era ?? null;
+  if (era === defaultEra(ya, curYear)) era = null;
+  let metric = opts.metric ?? DEFAULT_SEARCH.metric;
+  if (metric === 'visual' && !visual) metric = DEFAULT_SEARCH.metric;
+  return {
+    kind: 'compare',
+    a,
+    ya,
+    b,
+    yb,
+    ...DEFAULT_OPTIONS,
+    ...elideDefaults(opts),
+    view: opts.view ?? DEFAULT_VIEW,
+    from: opts.from === 'best' && yb !== 'best' ? 'best' : null,
+    era,
+    metric,
+    sex: opts.sex ?? DEFAULT_SEARCH.sex,
+  };
 }
 
 /**
@@ -406,6 +517,25 @@ export function parse(pathname: string, search: string, base: string, opts: Pars
   }
 
   const head = segs[0]!;
+  if (head === 'compare') {
+    // /compare/{a}/{ya}/{b}/{yb|best}
+    if (segs.length !== 5) return { kind: 'notfound', path: '/' + segs.join('/') };
+    const ea = resolve(segs[1]!);
+    const eb = resolve(segs[3]!);
+    if (!ea || !eb) return { kind: 'notfound', path: '/' + segs.join('/') };
+    const ya = yearOrNull(segs[2]!);
+    const ybSeg = segs[4]!;
+    const yb: YearOrBest | null = ybSeg === 'best' ? 'best' : yearOrNull(ybSeg);
+    if (ya === null || yb === null) return { kind: 'notfound', path: '/' + segs.join('/') };
+    const curYear = currentYear(opts.clock);
+    const q = compareQuery(ea.id, ya, eb.id, yb, { ...parseOptions(searchNorm), ...parseCompareInput(searchNorm) }, curYear);
+    return redirectIfNeeded(q, pathname + searchNorm, b);
+  }
+  if ((STATIC_PAGES as readonly string[]).includes(head)) {
+    if (segs.length !== 1) return { kind: 'notfound', path: '/' + segs.join('/') };
+    const q: StaticQuery = { kind: 'static', page: head as StaticPage };
+    return redirectIfNeeded(q, pathname + searchNorm, b);
+  }
   if ((PLACEHOLDER_ROUTES as readonly string[]).includes(head)) {
     const q: PlaceholderQuery = {
       kind: 'placeholder',
@@ -443,5 +573,7 @@ function redirectIfNeeded(q: Query, actual: string, base: string): Route {
 }
 
 /** Type guards. */
-export const isQuery = (r: Route): r is Query => r.kind === 'home' || r.kind === 'country' || r.kind === 'placeholder';
+export const isQuery = (r: Route): r is Query =>
+  r.kind === 'home' || r.kind === 'country' || r.kind === 'compare' || r.kind === 'static' || r.kind === 'placeholder';
 export const isCountry = (r: Route): r is CountryQuery => r.kind === 'country';
+export const isCompare = (r: Route): r is CompareQuery => r.kind === 'compare';

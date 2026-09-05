@@ -16,8 +16,10 @@
     median?: Float32Array | null; // 151 values for the sparkline
     oninput: (year: number) => void;
     oncommit: (year: number) => void;
+    id?: string; // element id of the range input (two scrubbers on the compare page need distinct ids)
+    label?: string; // aria-label of the group + input ('Year', 'Year of A: South Korea')
   }
-  let { year, currentYear, lastObserved, median = null, oninput, oncommit }: Props = $props();
+  let { year, currentYear, lastObserved, median = null, oninput, oncommit, id = 'year-range', label = 'Year' }: Props = $props();
 
   const N = YEAR_MAX - YEAR_MIN; // 150 steps
   const pos = (y: number) => ((y - YEAR_MIN) / N) * 100; // percent along the track
@@ -132,7 +134,7 @@
   const decades = Array.from({ length: 16 }, (_, i) => YEAR_MIN + i * 10);
 </script>
 
-<div class="scrubber select-none" role="group" aria-label="Year">
+<div class="scrubber select-none" role="group" aria-label={label}>
   <div class="flex flex-wrap items-center gap-2">
     <button
       type="button"
@@ -153,7 +155,7 @@
     <div class="ml-auto flex items-center gap-1">
       <button type="button" class="btn" onclick={() => step(-5)} aria-label="Back 5 years" disabled={year <= YEAR_MIN}>−5</button>
       <button type="button" class="btn" onclick={() => step(-1)} aria-label="Back 1 year" disabled={year <= YEAR_MIN}>−1</button>
-      <output class="min-w-14 text-center text-lg font-semibold tabular-nums" for="year-range" aria-live="off">{year}</output>
+      <output class="min-w-14 text-center text-lg font-semibold tabular-nums" for={id} aria-live="off">{year}</output>
       <button type="button" class="btn" onclick={() => step(1)} aria-label="Forward 1 year" disabled={year >= YEAR_MAX}>+1</button>
       <button type="button" class="btn" onclick={() => step(5)} aria-label="Forward 5 years" disabled={year >= YEAR_MAX}>+5</button>
     </div>
@@ -169,14 +171,14 @@
       {/each}
     </div>
     <input
-      id="year-range"
+      {id}
       class="scrub relative"
       type="range"
       min={YEAR_MIN}
       max={YEAR_MAX}
       step="1"
       value={year}
-      aria-label="Year"
+      aria-label={label}
       aria-valuetext={valueText}
       oninput={onRangeInput}
       onchange={onRangeChange}

@@ -1,0 +1,772 @@
+{
+ "built": "2026-09-04T22:52:19+00:00",
+ "git_head": "a5b987458d60f64e1f106739193d6cb2d7a116f2",
+ "stage": "M0 (no triplets)",
+ "informational": true,
+ "data_hash": "e2bf14d57600d364dbdbbcacf9b70c0fc3cf3c5dcb7e4b9d22eeb03c79e266d5",
+ "data_hash_definition": "sha256(corpus_u16 little-endian bytes)",
+ "emb_meta_hash": {
+  "dinov2-base": "efa86a100470b74556bc2d2844c9d68984c417824c7b566458e74308035cdce1",
+  "siglip2-base-naflex": "92f735c5679ac91f0888963facbfa571d0145eab62be847e6ce3898e8a2f5ad9"
+ },
+ "n_rows": 42280,
+ "n_entities": 280,
+ "n_countries": 237,
+ "n_queries": 300,
+ "n_anchors": 20,
+ "seed": 0,
+ "gates": {
+  "c1": 0.95,
+  "c5": 0.99,
+  "kc_agree": 0.7,
+  "hk_agree": 0.85,
+  "stage_agree": 0.9,
+  "lab_c1": 0.8,
+  "reject_hk": 0.6
+ },
+ "prereg": {
+  "continuity_gate": {
+   "c1": 0.95,
+   "c5": 0.99,
+   "span": "observed 1950–2023 query years",
+   "definition": "C1 = P(nearest neighbour is the same country within ±1 year), self excluded; C5 = the same within the 5 nearest"
+  },
+  "image_predictions": [
+   {
+    "id": "P1",
+    "prediction": "SigLIP2-naflex G1 continuity fails",
+    "gate": "C1 < 0.95 on 1950–2023 queries",
+    "measured_by": "this script (G1, self excluded, NN same entity with |Δy| ≤ 1) and D's protocol"
+   },
+   {
+    "id": "P2",
+    "prediction": "DINOv2-base G1 continuity fails",
+    "gate": "C1 < 0.95 on 1950–2023 queries",
+    "measured_by": "same"
+   },
+   {
+    "id": "P3",
+    "prediction": "both spaces are *related* to shape, not noise",
+    "gate": "Hahn-Klimroth class agreement ≥ 0.6 for both (D's G2b, same-year top-10)",
+    "measured_by": "`eval_similarity.py`"
+   },
+   {
+    "id": "P4",
+    "prediction": "neither space beats `blend` on the paired triplet test",
+    "gate": "McNemar on the 32 blend-vs-visual triplets at α = 0.05 not significant in visual's favour",
+    "measured_by": "M4 triplets"
+   },
+   {
+    "id": "P5",
+    "prediction": "Spearman(embedding cosine distance, blend) on random pairs ≈ 0.8 (0.7–0.9) for both",
+    "gate": "reported",
+    "measured_by": "this script"
+   },
+   {
+    "id": "P6",
+    "prediction": "top-10 overlap with `blend` (same-year, own entity excluded) < 0.35 for both",
+    "gate": "reported",
+    "measured_by": "this script"
+   },
+   {
+    "id": "P7",
+    "prediction": "PCA-64 (no whitening) preserves the ranking: Spearman(full-dim cosine, PCA-64 cosine) ≥ 0.98",
+    "gate": "reported",
+    "measured_by": "this script"
+   }
+  ],
+  "expected_visual_verdict": "lab",
+  "niche": "Visual may claim a win only on triplets whose anchor carries a detected cohort notch/bulge (paired sign test, α = 0.05); no other post-hoc claim is admissible."
+ },
+ "g1": [
+  {
+   "metric": "blend",
+   "c1_obs": 0.9933333333333333,
+   "c5_obs": 1.0,
+   "c1_proj": 1.0,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "l2",
+   "c1_obs": 0.99,
+   "c5_obs": 0.9966666666666667,
+   "c1_proj": 1.0,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "w1",
+   "c1_obs": 0.7933333333333333,
+   "c5_obs": 0.93,
+   "c1_proj": 0.65,
+   "c5_proj": 0.8,
+   "gate": false
+  },
+  {
+   "metric": "l2s",
+   "c1_obs": 0.99,
+   "c5_obs": 0.9966666666666667,
+   "c1_proj": 0.9933333333333333,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "hel",
+   "c1_obs": 1.0,
+   "c5_obs": 1.0,
+   "c1_proj": 1.0,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "feat",
+   "c1_obs": 0.8633333333333333,
+   "c5_obs": 0.9533333333333334,
+   "c1_proj": 0.9333333333333333,
+   "c5_proj": 0.99,
+   "gate": false
+  },
+  {
+   "metric": "w1sex",
+   "c1_obs": 0.95,
+   "c5_obs": 0.9966666666666667,
+   "c1_proj": 0.9166666666666666,
+   "c5_proj": 0.997,
+   "gate": true
+  },
+  {
+   "metric": "w1bal",
+   "c1_obs": 0.9966666666666667,
+   "c5_obs": 0.9966666666666667,
+   "c1_proj": 0.9766666666666667,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "clr",
+   "c1_obs": 0.9866666666666667,
+   "c5_obs": 0.99,
+   "c1_proj": 0.9966666666666667,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "trend",
+   "c1_obs": 0.99,
+   "c5_obs": 1.0,
+   "c1_proj": 0.9966666666666667,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "path",
+   "c1_obs": 1.0,
+   "c5_obs": 1.0,
+   "c1_proj": 1.0,
+   "c5_proj": 1.0,
+   "gate": true
+  },
+  {
+   "metric": "visual:dinov2-base",
+   "c1_obs": 0.5133333333333333,
+   "c5_obs": 0.7333333333333333,
+   "c1_proj": 0.5866666666666667,
+   "c5_proj": 0.83,
+   "gate": false
+  },
+  {
+   "metric": "visual:siglip2-base-naflex",
+   "c1_obs": 0.55,
+   "c5_obs": 0.7766666666666666,
+   "c1_proj": 0.7233333333333334,
+   "c5_proj": 0.89,
+   "gate": false
+  }
+ ],
+ "g2": [
+  {
+   "metric": "blend",
+   "kc2006": 0.8575916230366493,
+   "kc1996": 0.879,
+   "kc2001": 0.817,
+   "hk_family": 0.8680000000000001,
+   "hk_fine": 0.7090000000000001,
+   "stage": 0.927,
+   "rieti_best_year": 1994,
+   "yoshida_hits": "1/1/0",
+   "yoshida_pass": false,
+   "g4_pass": true,
+   "gate": true,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": true,
+    "G2c": true,
+    "G2d": true,
+    "G2e": false,
+    "G4": true,
+    "G2": true
+   }
+  },
+  {
+   "metric": "l2",
+   "kc2006": 0.8518324607329844,
+   "kc1996": 0.888,
+   "kc2001": 0.825,
+   "hk_family": 0.8715,
+   "hk_fine": 0.7340000000000001,
+   "stage": 0.922,
+   "rieti_best_year": 1998,
+   "yoshida_hits": "1/2/1",
+   "yoshida_pass": false,
+   "g4_pass": true,
+   "gate": false,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": true,
+    "G2c": true,
+    "G2d": false,
+    "G2e": false,
+    "G4": true,
+    "G2": false
+   }
+  },
+  {
+   "metric": "w1",
+   "kc2006": 0.8596858638743458,
+   "kc1996": 0.885,
+   "kc2001": 0.805,
+   "hk_family": 0.8505000000000001,
+   "hk_fine": 0.679,
+   "stage": 0.9534999999999999,
+   "rieti_best_year": 1993,
+   "yoshida_hits": "2/2/0",
+   "yoshida_pass": false,
+   "g4_pass": true,
+   "gate": true,
+   "gates": {
+    "G1": false,
+    "G2a": true,
+    "G2b": true,
+    "G2c": true,
+    "G2d": true,
+    "G2e": false,
+    "G4": true,
+    "G2": true
+   }
+  },
+  {
+   "metric": "l2s",
+   "kc2006": 0.8502617801047122,
+   "kc1996": 0.895,
+   "kc2001": 0.819,
+   "hk_family": 0.8795000000000001,
+   "hk_fine": 0.7275,
+   "stage": 0.932,
+   "rieti_best_year": 1994,
+   "yoshida_hits": "1/2/1",
+   "yoshida_pass": false,
+   "g4_pass": true,
+   "gate": true,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": true,
+    "G2c": true,
+    "G2d": true,
+    "G2e": false,
+    "G4": true,
+    "G2": true
+   }
+  },
+  {
+   "metric": "hel",
+   "kc2006": 0.8528795811518325,
+   "kc1996": 0.878,
+   "kc2001": 0.816,
+   "hk_family": 0.853,
+   "hk_fine": 0.7075,
+   "stage": 0.9144999999999999,
+   "rieti_best_year": 1994,
+   "yoshida_hits": "1/1/1",
+   "yoshida_pass": false,
+   "g4_pass": true,
+   "gate": true,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": true,
+    "G2c": true,
+    "G2d": true,
+    "G2e": false,
+    "G4": true,
+    "G2": true
+   }
+  },
+  {
+   "metric": "feat",
+   "kc2006": 0.7994764397905758,
+   "kc1996": 0.864,
+   "kc2001": 0.809,
+   "hk_family": 0.8805000000000001,
+   "hk_fine": 0.7069999999999999,
+   "stage": 0.8965000000000001,
+   "rieti_best_year": 1981,
+   "yoshida_hits": "1/1/1",
+   "yoshida_pass": false,
+   "g4_pass": false,
+   "gate": false,
+   "gates": {
+    "G1": false,
+    "G2a": true,
+    "G2b": true,
+    "G2c": false,
+    "G2d": false,
+    "G2e": false,
+    "G4": false,
+    "G2": false
+   }
+  },
+  {
+   "metric": "w1sex",
+   "kc2006": 0.8403141361256544,
+   "kc1996": 0.849,
+   "kc2001": 0.794,
+   "hk_family": 0.8495,
+   "hk_fine": 0.6805,
+   "stage": 0.935,
+   "rieti_best_year": 1994,
+   "yoshida_hits": "1/0/0",
+   "yoshida_pass": false,
+   "g4_pass": false,
+   "gate": false,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": false,
+    "G2c": true,
+    "G2d": true,
+    "G2e": false,
+    "G4": false,
+    "G2": false
+   }
+  },
+  {
+   "metric": "w1bal",
+   "kc2006": 0.8649214659685864,
+   "kc1996": 0.874,
+   "kc2001": 0.811,
+   "hk_family": 0.8545000000000001,
+   "hk_fine": 0.6825,
+   "stage": 0.9419999999999998,
+   "rieti_best_year": 1993,
+   "yoshida_hits": "1/1/0",
+   "yoshida_pass": false,
+   "g4_pass": false,
+   "gate": true,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": true,
+    "G2c": true,
+    "G2d": true,
+    "G2e": false,
+    "G4": false,
+    "G2": true
+   }
+  },
+  {
+   "metric": "clr",
+   "kc2006": 0.7539267015706806,
+   "kc1996": 0.735,
+   "kc2001": 0.708,
+   "hk_family": 0.787,
+   "hk_fine": 0.6190000000000001,
+   "stage": 0.857,
+   "rieti_best_year": 1994,
+   "yoshida_hits": "1/2/0",
+   "yoshida_pass": false,
+   "g4_pass": true,
+   "gate": false,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": false,
+    "G2c": false,
+    "G2d": true,
+    "G2e": false,
+    "G4": true,
+    "G2": false
+   }
+  },
+  {
+   "metric": "trend",
+   "kc2006": 0.6151832460732986,
+   "kc1996": 0.639,
+   "kc2001": 0.626,
+   "hk_family": 0.68,
+   "hk_fine": 0.585,
+   "stage": 0.6665000000000001,
+   "rieti_best_year": 1980,
+   "yoshida_hits": "0/0/0",
+   "yoshida_pass": false,
+   "g4_pass": false,
+   "gate": false,
+   "gates": {
+    "G1": true,
+    "G2a": false,
+    "G2b": false,
+    "G2c": false,
+    "G2d": false,
+    "G2e": false,
+    "G4": false,
+    "G2": false
+   }
+  },
+  {
+   "metric": "path",
+   "kc2006": 0.8544502617801046,
+   "kc1996": 0.865,
+   "kc2001": 0.816,
+   "hk_family": 0.853,
+   "hk_fine": 0.6915,
+   "stage": 0.9165000000000001,
+   "rieti_best_year": 1994,
+   "yoshida_hits": "1/0/0",
+   "yoshida_pass": false,
+   "g4_pass": true,
+   "gate": true,
+   "gates": {
+    "G1": true,
+    "G2a": true,
+    "G2b": true,
+    "G2c": true,
+    "G2d": true,
+    "G2e": false,
+    "G4": true,
+    "G2": true
+   }
+  },
+  {
+   "metric": "visual:dinov2-base",
+   "kc2006": 0.7340314136125654,
+   "kc1996": 0.796,
+   "kc2001": 0.772,
+   "hk_family": 0.8615,
+   "hk_fine": 0.6895,
+   "stage": 0.8284999999999999,
+   "rieti_best_year": 2012,
+   "yoshida_hits": "1/0/0",
+   "yoshida_pass": false,
+   "g4_pass": false,
+   "gate": false,
+   "gates": {
+    "G1": false,
+    "G2a": true,
+    "G2b": true,
+    "G2c": false,
+    "G2d": false,
+    "G2e": false,
+    "G4": false,
+    "G2": false
+   }
+  },
+  {
+   "metric": "visual:siglip2-base-naflex",
+   "kc2006": 0.7151832460732985,
+   "kc1996": 0.772,
+   "kc2001": 0.732,
+   "hk_family": 0.8469999999999999,
+   "hk_fine": 0.6765000000000001,
+   "stage": 0.8320000000000001,
+   "rieti_best_year": 1990,
+   "yoshida_hits": "0/3/0",
+   "yoshida_pass": false,
+   "g4_pass": false,
+   "gate": false,
+   "gates": {
+    "G1": false,
+    "G2a": true,
+    "G2b": false,
+    "G2c": false,
+    "G2d": true,
+    "G2e": false,
+    "G4": false,
+    "G2": false
+   }
+  }
+ ],
+ "verdicts": {
+  "blend": {
+   "verdict": "default",
+   "provisional": false,
+   "shipped": "default"
+  },
+  "l2": {
+   "verdict": "advanced",
+   "provisional": false,
+   "shipped": "advanced"
+  },
+  "w1": {
+   "verdict": "rejected",
+   "provisional": false,
+   "shipped": "rejected"
+  },
+  "l2s": {
+   "verdict": "menu",
+   "provisional": true,
+   "shipped": "menu"
+  },
+  "hel": {
+   "verdict": "menu",
+   "provisional": true,
+   "shipped": "menu"
+  },
+  "feat": {
+   "verdict": "lab",
+   "provisional": false,
+   "shipped": "lab"
+  },
+  "w1sex": {
+   "verdict": "lab",
+   "provisional": false,
+   "shipped": "lab"
+  },
+  "w1bal": {
+   "verdict": "lab",
+   "provisional": false,
+   "shipped": "lab"
+  },
+  "clr": {
+   "verdict": "advanced",
+   "provisional": false,
+   "shipped": "lab",
+   "shipped_note": "capped at lab — no percentile tables are shipped for this evaluation-only metric"
+  },
+  "trend": {
+   "verdict": "menu",
+   "provisional": true,
+   "shipped": "menu",
+   "scope": "trend-mode"
+  },
+  "path": {
+   "verdict": "menu",
+   "provisional": true,
+   "shipped": "menu",
+   "scope": "trend-mode"
+  },
+  "visual:dinov2-base": {
+   "verdict": "rejected",
+   "provisional": false,
+   "shipped": "rejected"
+  },
+  "visual:siglip2-base-naflex": {
+   "verdict": "rejected",
+   "provisional": false,
+   "shipped": "rejected"
+  }
+ },
+ "verdicts_stale_in_build": false,
+ "exposed_visual": {
+  "model": "siglip2-base-naflex",
+  "metric": "visual:siglip2-base-naflex",
+  "C1_obs": 0.55,
+  "alternates": [
+   "dinov2-base"
+  ],
+  "rule": "better observed-span G1 C1"
+ },
+ "image_spaces": [
+  {
+   "model": "dinov2-base",
+   "metric": "visual:dinov2-base",
+   "verdict": "rejected",
+   "c1": 0.5133333333333333,
+   "c5": 0.7333333333333333,
+   "c1_proj": 0.5866666666666667,
+   "c1_full_dim": 0.529,
+   "c1_pca64_embed_script": 0.466,
+   "hk_family": 0.8615,
+   "kc2006": 0.7340314136125654,
+   "stage": 0.8284999999999999,
+   "spearman_vs_blend": 0.835,
+   "spearman_vs_l2": 0.824,
+   "top10_overlap": 0.309,
+   "top10_overlap_anyyear": 0.08199999999999999,
+   "predictions_scored": [
+    {
+     "id": "P1/P2",
+     "test": "C1 < 0.95",
+     "observed": 0.529,
+     "met": true
+    },
+    {
+     "id": "P5",
+     "test": "ρ(cos, blend) ∈ [0.7, 0.9]",
+     "observed": 0.835,
+     "met": true
+    },
+    {
+     "id": "P6",
+     "test": "top-10 overlap with blend < 0.35",
+     "observed": 0.309,
+     "met": true
+    },
+    {
+     "id": "P7",
+     "test": "ρ(full, pca64) ≥ 0.98",
+     "observed": 0.947,
+     "met": false
+    }
+   ],
+   "expected_verdict": "lab",
+   "prediction_met": false
+  },
+  {
+   "model": "siglip2-base-naflex",
+   "metric": "visual:siglip2-base-naflex",
+   "verdict": "rejected",
+   "c1": 0.55,
+   "c5": 0.7766666666666666,
+   "c1_proj": 0.7233333333333334,
+   "c1_full_dim": 0.605,
+   "c1_pca64_embed_script": 0.517,
+   "hk_family": 0.8469999999999999,
+   "kc2006": 0.7151832460732985,
+   "stage": 0.8320000000000001,
+   "spearman_vs_blend": 0.703,
+   "spearman_vs_l2": 0.677,
+   "top10_overlap": 0.302,
+   "top10_overlap_anyyear": 0.075,
+   "predictions_scored": [
+    {
+     "id": "P1/P2",
+     "test": "C1 < 0.95",
+     "observed": 0.605,
+     "met": true
+    },
+    {
+     "id": "P5",
+     "test": "ρ(cos, blend) ∈ [0.7, 0.9]",
+     "observed": 0.703,
+     "met": true
+    },
+    {
+     "id": "P6",
+     "test": "top-10 overlap with blend < 0.35",
+     "observed": 0.302,
+     "met": true
+    },
+    {
+     "id": "P7",
+     "test": "ρ(full, pca64) ≥ 0.98",
+     "observed": 0.8,
+     "met": false
+    }
+   ],
+   "expected_verdict": "lab",
+   "prediction_met": false
+  }
+ ],
+ "blend_w1_share": {
+  "2": {
+   "obs": 0.4686213510129217,
+   "nowcast": 0.5016722380600316,
+   "proj": 0.5339615648524432,
+   "all": 0.5033763272917486
+  },
+  "1": {
+   "obs": 0.4502597336268028,
+   "nowcast": 0.5096268154588075,
+   "proj": 0.5620846460149577,
+   "all": 0.5034311555168914
+  }
+ },
+ "beta_sweep": [
+  {
+   "beta": 0.0,
+   "jaccard_vs_strict": 1.0,
+   "mean_raw_rank": 3.0,
+   "mean_regions": 1.865,
+   "identical_to_beta2": 0.0,
+   "n": 200
+  },
+  {
+   "beta": 0.25,
+   "jaccard_vs_strict": 0.7473809523809523,
+   "mean_raw_rank": 4.872,
+   "mean_regions": 1.915,
+   "identical_to_beta2": 0.0,
+   "n": 200
+  },
+  {
+   "beta": 0.5,
+   "jaccard_vs_strict": 0.6196428571428572,
+   "mean_raw_rank": 5.785,
+   "mean_regions": 1.835,
+   "identical_to_beta2": 0.01,
+   "n": 200
+  },
+  {
+   "beta": 1.0,
+   "jaccard_vs_strict": 0.48958333333333337,
+   "mean_raw_rank": 9.556999999999999,
+   "mean_regions": 1.7,
+   "identical_to_beta2": 0.125,
+   "n": 200
+  },
+  {
+   "beta": 2.0,
+   "jaccard_vs_strict": 0.36855158730158727,
+   "mean_raw_rank": 14.23,
+   "mean_regions": 2.0,
+   "identical_to_beta2": 1.0,
+   "n": 200
+  },
+  {
+   "beta": 4.0,
+   "jaccard_vs_strict": 0.3518849206349206,
+   "mean_raw_rank": 15.708999999999998,
+   "mean_regions": 2.025,
+   "identical_to_beta2": 0.785,
+   "n": 200
+  },
+  {
+   "beta": 8.0,
+   "jaccard_vs_strict": 0.3317460317460317,
+   "mean_raw_rank": 16.473,
+   "mean_regions": 2.14,
+   "identical_to_beta2": 0.67,
+   "n": 200
+  }
+ ],
+ "div_presets": {
+  "strict": 0.0,
+  "balanced": 0.5,
+  "spread": 2.0
+ },
+ "hk_family_counts_2024": {
+  "bell": 6,
+  "diamond": 92,
+  "inverted_plunger": 1,
+  "inverted_pyramid": 1,
+  "other": 3,
+  "pyramid": 97
+ },
+ "labels_sha256": {
+  "hahn_klimroth_2025.yaml": "6bddac9b05d100e2",
+  "korenjak_cerne.yaml": "d0901dc7a68a124f",
+  "rieti.yaml": "f9bf2421c7375e0b",
+  "thresholds_stage.yaml": "48d818d972c1ef6d",
+  "yoshida_epitome.yaml": "cd6cca3cbfd3163d"
+ },
+ "notes": [
+  "Verdicts are informational (DECISION 4): both the numeric default and the exposed image space ship; 'Visual' is labelled experimental in the metric menu.",
+  "Stage: M0 (no triplets) — the human-triplet test (M4) has not run; 'menu' verdicts marked provisional await it.",
+  "G2(e) Yoshida epitomes is reported, not gated (protocol.md §4 amendment: the paper's own metric fails its targets on WPP 2024 rows because Bolivia and Puerto Rico were revised between WPP 2015 and WPP 2024).",
+  "Korenjak-Černe labels: fallback rung 'rung1_2008_lists' (2015 memberships paywalled; 2008 lists, IDB-2008 vintage); vintage-sensitivity row omitted — IDB-2008 totals unavailable.",
+  "The opposites coverage target (≥ 3 shape classes and ≥ 3 UN regions among 5 opposites) fails for every metric and is structural: the diversity term works over shape distance, and the farthest quartile from an old anchor is entirely young pyramids, so no β buys regional variety."
+ ]
+}

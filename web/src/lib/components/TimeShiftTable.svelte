@@ -2,11 +2,13 @@
   // Time-shift panel (PLAN §6, J5): "{Name} {year} across time" — for every other country in scope the year
   // that best matches the focal pyramid, Δy, d and the band against the `best` null. Collapsed <details>;
   // opening fetches the corpus (tier 3) once. First 10 rows + "show all"; a best year sitting on the era edge
-  // reads "not reached by {year}" instead of posing as a match. Rows link to /{slug}/{year} (compare is M3).
+  // reads "not reached by {year}" instead of posing as a match. Rows link to the compare page
+  // /compare/{focal}/{year}/{c}/{y*}?from=best (M3, PLAN §7 J5) — the pair IS a best-year match, so the compare
+  // page bands it against the same `best` null and its "B → best year" button starts lit.
   import type { TimeShiftRow } from '../engine.ts';
   import type { CorpusStatus } from '../state.svelte.ts';
   import { byId, flagEmoji } from '../entities.ts';
-  import { countryQuery } from '../router.ts';
+  import { compareQuery, type Metric, type Sex } from '../router.ts';
   import { href } from '../url.ts';
   import { BAND_LABEL, dyLabel } from '../restate.ts';
 
@@ -16,11 +18,13 @@
     ontoggle: (open: boolean) => void;
     status: CorpusStatus;
     error: string | null;
-    focal: { name: string; year: number };
+    focal: { id: string; name: string; year: number; metric?: Metric; sex?: Sex };
     eraEdge: number; // upper edge of the allowed years (2026 for observed, 2100 for all)
     corpusBytes: number;
+    currentYear: number;
   }
-  let { rows, open, ontoggle, status, error, focal, eraEdge, corpusBytes }: Props = $props();
+  let { rows, open, ontoggle, status, error, focal, eraEdge, corpusBytes, currentYear }: Props = $props();
+  const link = (r: TimeShiftRow) => href(compareQuery(focal.id, focal.year, r.id, r.bestYear, { from: 'best', metric: focal.metric, sex: focal.sex, era: eraEdge >= 2100 ? 'all' : 'obs' }, currentYear));
 
   let showAll = $state(false);
   const visible = $derived(rows ? (showAll ? rows : rows.slice(0, 10)) : []);
@@ -55,7 +59,7 @@
               {@const e = byId(r.id)}
               {@const note = edgeNote(r)}
               <tr class="border-t border-border">
-                <td class="py-1 pr-3"><span class="inline-block w-5" aria-hidden="true">{e ? flagEmoji(e) : ''}</span><a class="hover:underline" href={href(countryQuery(r.id, r.bestYear))}>{e?.short_name ?? r.id}</a></td>
+                <td class="py-1 pr-3"><span class="inline-block w-5" aria-hidden="true">{e ? flagEmoji(e) : ''}</span><a class="hover:underline" href={link(r)} title="Compare {focal.name} {focal.year} with {e?.short_name ?? r.id} {r.bestYear} (overlay)">{e?.short_name ?? r.id}</a></td>
                 <td class="py-1 pr-3 tabular-nums">{#if note}<span class="text-muted" title="the best match sits on the edge of the allowed years — the true best may lie beyond">{note}</span>{:else}{r.bestYear}{/if}</td>
                 <td class="py-1 pr-3 tabular-nums text-fg-2">{r.dy === 0 ? '±0 y' : dyLabel(r.dy).slice(1, -1)}</td>
                 <td class="py-1 pr-3 tabular-nums">{r.d.toFixed(3)}</td>

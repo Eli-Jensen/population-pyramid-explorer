@@ -3,7 +3,7 @@
   // year, |Δy| ≥ 5). Loading skeleton while the shards / corpus are on their way; empty state when the
   // constraints leave no candidate.
   import type { SearchOutput } from '../state.svelte.ts';
-  import { countryQuery } from '../router.ts';
+  import { countryQuery, type Metric, type Sex } from '../router.ts';
   import { href } from '../url.ts';
   import { BAND_LABEL, dyLabel, fmtPercentile } from '../restate.ts';
   import ResultCard from './ResultCard.svelte';
@@ -12,7 +12,7 @@
   interface Props {
     results: SearchOutput | null;
     k: number;
-    focal: { id: string; shares: Float32Array; name: string; year: number };
+    focal: { id: string; shares: Float32Array; name: string; year: number; metric?: Metric; sex?: Sex };
     loadingText: string | null; // skeleton caption, null when nothing is loading
     lastObserved: number;
     currentYear: number;

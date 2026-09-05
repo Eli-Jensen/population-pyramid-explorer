@@ -63,11 +63,14 @@ const cases: Case[] = [
   { path: '/population-pyramid-explorer', base: PAGES, want: { kind: 'redirect', to: PAGES } },
   { path: '/Population-Pyramid-Explorer/japan/2026', base: PAGES, want: { kind: 'redirect', to: `${PAGES}japan/2026` } },
   { path: '/japan/2026', base: PAGES, want: { kind: 'notfound' } }, // outside the base
-  // reserved future routes
-  { path: '/about', want: { kind: 'placeholder', route: 'about' } },
+  // static page (M3) + reserved future routes
+  { path: '/about', want: { kind: 'static', page: 'about' } },
+  { path: '/About/', want: { kind: 'redirect', to: '/about' } },
+  { path: '/about/more', want: { kind: 'notfound' } },
   { path: '/evidence/', want: { kind: 'redirect', to: '/evidence' } },
-  { path: '/compare/japan/2026/italy/2026', want: { kind: 'placeholder', route: 'compare', segments: ['japan', '2026', 'italy', '2026'] } },
-  { path: `${PAGES}compare/japan/2026/italy/best`, base: PAGES, search: '?view=diff', want: { kind: 'placeholder', route: 'compare', search: '?view=diff' } },
+  // compare (M3) — the detailed table is below
+  { path: '/compare/japan/2026/italy/2026', want: { kind: 'compare', a: 'JPN', ya: 2026, b: 'ITA', yb: 2026, view: 'overlay', from: null } },
+  { path: `${PAGES}compare/japan/2026/italy/best`, base: PAGES, search: '?view=diff', want: { kind: 'compare', yb: 'best', view: 'diff', from: null } },
 ];
 
 describe('router.parse', () => {
@@ -293,5 +296,105 @@ describe('normaliseSearch / searchParams / effectiveEra', () => {
     expect(countryQuery('JPN', 2050, { era: 'all' }, 2026).era).toBeNull();
     expect(countryQuery('JPN', 2050, { era: 'all' }, 2051).era).toBe('all');
     expect(canonical(countryQuery('JPN', 2050, { era: 'obs', mode: 'any' }, 2026), '/')).toBe('/japan/2050?mode=any&era=obs');
+  });
+});
+
+// ---------------------------------------------------------------------------------------------- M3 compare route
+
+import { compareQuery, compareSearch, parseCompareInput } from './router.ts';
+
+type CCase = { path: string; search?: string; base?: string; clock?: () => Date; want: Record<string, unknown> };
+const compareCases: CCase[] = [
+  // canonical pairs
+  { path: '/compare/japan/2026/italy/2026', want: { kind: 'compare', a: 'JPN', ya: 2026, b: 'ITA', yb: 2026, view: 'overlay', from: null, era: null, metric: 'blend', sex: '2' } },
+  { path: '/compare/south-korea/2026/japan/2008', want: { kind: 'compare', a: 'KOR', ya: 2026, b: 'JPN', yb: 2008 } },
+  { path: '/compare/japan/2026/japan/1990', want: { kind: 'compare', a: 'JPN', b: 'JPN', ya: 2026, yb: 1990 } }, // own trajectory
+  { path: '/compare/world/2026/japan/2026', want: { kind: 'compare', a: 'agg-900', b: 'JPN' } },
+  // aliases / case / trailing slash → canonical slugs, same query
+  { path: '/compare/KOR/2026/jpn/2008', want: { kind: 'redirect', to: '/compare/south-korea/2026/japan/2008' } },
+  { path: '/Compare/Korea/2026/Japan/2008/', want: { kind: 'redirect', to: '/compare/south-korea/2026/japan/2008' } },
+  { path: '/compare/united-states-of-america/2026/agg-900/2026', want: { kind: 'redirect', to: '/compare/united-states/2026/world/2026' } },
+  // best: kept unresolved by the router (the store resolves it); from=best is redundant while yb is best
+  { path: '/compare/south-korea/2026/japan/best', want: { kind: 'compare', yb: 'best', from: null } },
+  { path: '/compare/south-korea/2026/japan/BEST', want: { kind: 'redirect', to: '/compare/south-korea/2026/japan/best' } },
+  { path: '/compare/south-korea/2026/japan/best', search: '?from=best', want: { kind: 'redirect', to: '/compare/south-korea/2026/japan/best' } },
+  // from=best on a concrete year: canonical, kept (the resolved form the store writes)
+  { path: '/compare/south-korea/2026/japan/2008', search: '?from=best', want: { kind: 'compare', yb: 2008, from: 'best' } },
+  { path: '/compare/south-korea/2026/japan/2008', search: '?from=elsewhere', want: { kind: 'redirect', to: '/compare/south-korea/2026/japan/2008' } },
+  // view: default elided, others kept, invalid dropped
+  { path: '/compare/japan/2026/italy/2026', search: '?view=overlay', want: { kind: 'redirect', to: '/compare/japan/2026/italy/2026' } },
+  { path: '/compare/japan/2026/italy/2026', search: '?view=diff', want: { kind: 'compare', view: 'diff' } },
+  { path: '/compare/japan/2026/italy/2026', search: '?view=side', want: { kind: 'compare', view: 'side' } },
+  { path: '/compare/japan/2026/italy/2026', search: '?view=3d', want: { kind: 'redirect', to: '/compare/japan/2026/italy/2026' } },
+  // display options ride along; fixed order axis, unit, view, from, era, metric, sex
+  { path: '/compare/japan/2026/italy/2026', search: '?unit=abs&axis=noclip', want: { kind: 'redirect', to: '/compare/japan/2026/italy/2026?axis=noclip&unit=abs' } },
+  { path: '/compare/south-korea/2026/japan/2008', search: '?sex=1&metric=l2&from=best&view=diff', want: { kind: 'redirect', to: '/compare/south-korea/2026/japan/2008?view=diff&from=best&metric=l2&sex=1' } },
+  { path: '/compare/japan/2026/italy/2026', search: '?metric=blend&sex=2', want: { kind: 'redirect', to: '/compare/japan/2026/italy/2026' } },
+  { path: '/compare/japan/2026/italy/2026', search: '?metric=clr', want: { kind: 'redirect', to: '/compare/japan/2026/italy/2026' } },
+  // era: J8 default from A's year is elided
+  { path: '/compare/japan/2026/italy/best', search: '?era=obs', clock: clock2026, want: { kind: 'redirect', to: '/compare/japan/2026/italy/best' } },
+  { path: '/compare/japan/2026/italy/best', search: '?era=all', clock: clock2026, want: { kind: 'compare', era: 'all' } },
+  { path: '/compare/japan/2050/italy/best', search: '?era=all', clock: clock2026, want: { kind: 'redirect', to: '/compare/japan/2050/italy/best' } },
+  { path: '/compare/japan/2050/italy/best', search: '?era=obs', clock: clock2026, want: { kind: 'compare', era: 'obs' } },
+  // validation
+  { path: '/compare/japan/2026/italy', want: { kind: 'notfound' } },
+  { path: '/compare/japan/2026/italy/2026/extra', want: { kind: 'notfound' } },
+  { path: '/compare/japan/best/italy/2026', want: { kind: 'notfound' } }, // best is for B only
+  { path: '/compare/japan/1949/italy/2026', want: { kind: 'notfound' } },
+  { path: '/compare/japan/2026/italy/2101', want: { kind: 'notfound' } },
+  { path: '/compare/japan/2026/narnia/2026', want: { kind: 'notfound' } },
+  { path: '/compare', want: { kind: 'notfound' } },
+  // base prefix
+  { path: `${PAGES}compare/JPN/2026/ITA/2026`, base: PAGES, want: { kind: 'redirect', to: `${PAGES}compare/japan/2026/italy/2026` } },
+  { path: `${PAGES}compare/japan/2026/italy/best`, base: PAGES, want: { kind: 'compare', yb: 'best' } },
+];
+
+describe('router.parse — M3 compare', () => {
+  for (const c of compareCases) {
+    it(`${c.base ?? '/'} ${c.path}${c.search ?? ''}`, () => {
+      expect(parse(c.path, c.search ?? '', c.base ?? '/', { clock: c.clock ?? clock2026 })).toMatchObject(c.want);
+    });
+  }
+
+  it('every compare redirect target is a fixed point', () => {
+    for (const c of compareCases) {
+      const clock = c.clock ?? clock2026;
+      const got = parse(c.path, c.search ?? '', c.base ?? '/', { clock });
+      if (got.kind !== 'redirect') continue;
+      const [p, s = ''] = got.to.split('?');
+      expect(parse(p!, s ? '?' + s : '', c.base ?? '/', { clock })).toEqual(got.query);
+    }
+  });
+
+  it('a canonical compare URL round-trips through canonical()', () => {
+    const url = '/compare/south-korea/2026/japan/2008?axis=pin10&unit=abs&view=side&from=best&era=all&metric=l2&sex=1';
+    const [p, s] = url.split('?');
+    const r = parse(p!, '?' + s, '/', { clock: clock2026 });
+    expect(r.kind).toBe('compare');
+    if (r.kind === 'compare') expect(canonical(r, '/')).toBe(url);
+  });
+
+  it('compareQuery: from=best needs a concrete yb; era default elided against A\'s year; visual gated', () => {
+    expect(compareQuery('KOR', 2026, 'JPN', 'best', { from: 'best' }, 2026).from).toBeNull();
+    expect(compareQuery('KOR', 2026, 'JPN', 2008, { from: 'best' }, 2026).from).toBe('best');
+    expect(compareQuery('KOR', 2026, 'JPN', 2008, { era: 'obs' }, 2026).era).toBeNull();
+    expect(compareQuery('KOR', 2050, 'JPN', 2008, { era: 'obs' }, 2026).era).toBe('obs');
+    expect(compareQuery('KOR', 2026, 'JPN', 2008, { metric: 'visual' }, 2026, false).metric).toBe('blend');
+    expect(compareQuery('KOR', 2026, 'JPN', 2008, { metric: 'visual' }, 2026, true).metric).toBe('visual');
+    expect(canonical(compareQuery('kor', 2026, 'jpn', 2008, { from: 'best' }, 2026), PAGES)).toBe(`${PAGES}compare/south-korea/2026/japan/2008?from=best`);
+    expect(canonical(compareQuery('KOR', 2026, 'JPN', 'best', {}, 2026), '/')).toBe('/compare/south-korea/2026/japan/best');
+  });
+
+  it('compareSearch / parseCompareInput are inverse on the non-default set', () => {
+    const q = compareQuery('KOR', 2026, 'JPN', 2008, { view: 'diff', from: 'best', era: 'all', metric: 'w1', sex: '1', unit: 'abs' }, 2026);
+    const s = compareSearch(q);
+    expect(s).toBe('?unit=abs&view=diff&from=best&era=all&metric=w1&sex=1');
+    expect(parseCompareInput(s)).toEqual({ view: 'diff', from: 'best', era: 'all', metric: 'w1', sex: '1' });
+    expect(parseCompareInput('')).toEqual({ view: 'overlay', from: null, era: null, metric: 'blend', sex: '2' });
+  });
+
+  it('/about is a static query with a canonical form', () => {
+    expect(canonical({ kind: 'static', page: 'about' }, PAGES)).toBe(`${PAGES}about`);
+    expect(parse(`${PAGES}about`, '', PAGES)).toEqual({ kind: 'static', page: 'about' });
   });
 });

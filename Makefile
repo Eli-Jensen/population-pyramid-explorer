@@ -33,8 +33,9 @@ data: ## fetch/copy raw inputs (WPP 2024 + Togo update + LOCATIONS; Maddison, PW
 	$(UV) scripts/fetch_data.py --from $(WPP_FROM)
 	$(UV) scripts/fetch_econ.py --from $(ECON_FROM)
 
-build: ## rebuild DuckDB + corpus + web shards + build report
+build: ## rebuild DuckDB + corpus + web shards + build report (+ web/src/data/evals.json for the About page)
 	$(UV) scripts/build_data.py
+	$(UV) scripts/export_evals.py
 
 build-nopatch: ## same, without the Togo interim update
 	$(UV) scripts/build_data.py --no-patches

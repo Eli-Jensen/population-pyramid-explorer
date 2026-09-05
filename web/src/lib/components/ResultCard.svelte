@@ -1,10 +1,11 @@
 <script lang="ts">
   // One twin / opposite (PLAN §6 J3, §5): mini pyramid with the focal ghosted, name + year (+ Δy and a
   // projected badge for cross-year hits), band chip with percentile, raw rank for opposites, decomposition
-  // sparkline and the two explanation sentences. The whole card links to /{slug}/{year}; the overlay
-  // (`?vs=`) and the compare page are M3, so the link title says so.
+  // sparkline and the two explanation sentences. The mini pyramid and the title link to the compare page
+  // /compare/{focal}/{year}/{cand}/{candYear} (M3, PLAN §7) under the metric/sex that ranked the card; a small
+  // secondary link opens the candidate's own page.
   import type { CardData } from '../state.svelte.ts';
-  import { countryQuery } from '../router.ts';
+  import { compareQuery, countryQuery, type Metric, type Sex } from '../router.ts';
   import { href } from '../url.ts';
   import { flagEmoji } from '../entities.ts';
   import { BAND_HINT, BAND_LABEL, cardTitle, fmtPercentile } from '../restate.ts';
@@ -14,7 +15,7 @@
   interface Props {
     card: CardData;
     kind: 'twin' | 'opposite';
-    focal: { shares: Float32Array; name: string; year: number };
+    focal: { id: string; shares: Float32Array; name: string; year: number; metric?: Metric; sex?: Sex };
     lastObserved: number;
     currentYear: number;
   }
@@ -31,7 +32,8 @@
     const bins = [...dec.topBinsL2.map(([b]) => b), ...dec.topBinsW1.map(([b]) => b)];
     return dec.sex === '2' ? bins : bins.flatMap((b) => [b, b + 21]);
   });
-  const link = $derived(href(countryQuery(e.id, r.year)));
+  const link = $derived(href(compareQuery(focal.id, focal.year, e.id, r.year, { metric: focal.metric, sex: focal.sex }, currentYear)));
+  const pageLink = $derived(href(countryQuery(e.id, r.year)));
   const bandChip = $derived(`${BAND_LABEL[r.band]}${r.percentile !== null ? ` · ${fmtPercentile(r.percentile)}` : ''}`);
   const bandTitle = $derived(
     r.percentile !== null
@@ -41,14 +43,15 @@
 </script>
 
 <article class="card flex gap-3 p-3" aria-label="{title}: {kind === 'twin' ? 'similar to' : 'different from'} {focal.name} {focal.year}">
-  <a href={link} title="Open {title} (overlay comparison arrives in a later milestone)" class="shrink-0 rounded-md focus-visible:outline-2">
+  <a href={link} title="Compare {focal.name} {focal.year} with {title} (overlay)" class="shrink-0 rounded-md focus-visible:outline-2">
     <MiniPyramid shares={card.shares} ghost={focal.shares} size={104} label="Pyramid of {title}, with {focal.name} {focal.year} outlined behind it" />
   </a>
   <div class="min-w-0 flex-1 text-sm">
     <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
       <span class="inline-block w-5 text-base leading-none" aria-hidden="true">{flagEmoji(e)}</span>
-      <a href={link} class="font-medium text-fg hover:underline">{title}</a>
+      <a href={link} class="font-medium text-fg hover:underline" title="Compare {focal.name} {focal.year} with {title} (overlay)">{title}</a>
       {#if eraBadge}<span class="chip">{eraBadge}</span>{/if}
+      <a href={pageLink} class="text-xs text-muted hover:underline" title="Open the {e.short_name} {r.year} page">page →</a>
     </div>
     <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
       <span class="chip band-{r.band}" title={bandTitle}>{bandChip}</span>

@@ -14,6 +14,14 @@
 // Results are a `$derived.by` over the engine seam (lib/engine.ts) keyed on `searchYear`, a copy of the year
 // that trails the slider by 30 ms while dragging (`setYear(commit:false)` schedules it), so a drag costs one
 // scan per 30 ms, not one per input event.
+//
+// M3 (PLAN §7 J4/J5): the compare route `/compare/{a}/{ya}/{b}/{yb|best}` rides on the same store. Both pyramids
+// paint from their ENTITY shards (scrubbing either side needs no fetch); the pair card (d, band, explanation, feature
+// table) is computed on a view that holds A's year (the z-score reference) and B's row — the corpus when it is loaded,
+// otherwise the two YEAR shards (yb as candidates, ya as reference), keyed on `pairYears`, the debounced copy of the
+// two years. `best` is resolved client-side: the corpus (tier 3) is fetched once, `y* = argmin_y d(A_ya, B_y)` over
+// the allowed era (the time-shift table's rule, lib/compare.ts), then the URL is replaceState'd to the concrete year
+// + `?from=best` so the button stays lit and Copy-link never emits `best` (J6).
 
 import {
   byId,
@@ -44,12 +52,16 @@ import {
 import { features as computeFeatures, type Features } from './math/features.ts';
 import { axisFor, maxBinPct, type AxisChoice, type AxisMode } from './math/scale.ts';
 import {
+  compareQuery,
   countryQuery,
   DEFAULT_SEARCH,
   effectiveEra,
+  isCompare,
   isCountry,
   visualExposed,
   type Axis,
+  type CompareInput,
+  type CompareQuery,
   type CountryQuery,
   type DisplayOptions,
   type EraMode,
@@ -58,6 +70,20 @@ import {
   type SearchInput,
   type SearchOptions,
 } from './router.ts';
+import {
+  bestYearFor,
+  bestYearWindow,
+  compareAxis,
+  compareBandsDefaultSuffice,
+  isConcrete,
+  nextYears,
+  pairData,
+  pairSearchQuery,
+  swapQuery,
+  type BestYear,
+  type CompareAxis,
+  type PairData,
+} from './compare.ts';
 import {
   engine as productionEngine,
   type BandResult,
@@ -205,6 +231,14 @@ export class AppState {
   embedding = $state.raw<Embedding | null>(null);
   embeddingStatus = $state<CorpusStatus>('idle');
   timeShiftOpen = $state(false);
+
+  // M3 compare
+  shardA = $state<EntityShard | null>(null);
+  shardB = $state<EntityShard | null>(null);
+  /** Debounced copy of the compare years the pair card follows (null while `yb` is still `best`). */
+  pairYears = $state<{ ya: number; yb: number } | null>(null);
+  /** Lock-offset toggle of the two scrubbers (UI state, not in the URL). */
+  lockOffset = $state(false);
 
   readonly lastObservedYear = meta.last_observed_year;
   readonly visualModel: string | null = meta.verdicts?.exposed_visual?.model ?? null;
@@ -394,6 +428,99 @@ export class AppState {
     return eng.isolationPercentile(iso, e.id);
   });
 
+  // ---- M3 derived: compare page --------------------------------------------------------------------------
+
+  compare = $derived<CompareQuery | null>(isCompare(this.route) ? this.route : null);
+  entityA = $derived<Entity | null>(this.compare ? (byId(this.compare.a) ?? null) : null);
+  entityB = $derived<Entity | null>(this.compare ? (byId(this.compare.b) ?? null) : null);
+  /** A's pyramid at ya: entity shard first (scrubbing), the ya year shard as a first-paint fallback. */
+  pyramidA = $derived.by<PyramidView | null>(() => {
+    const c = this.compare;
+    if (!c) return null;
+    if (this.shardA?.id === c.a) return pyramidFromEntityShard(this.shardA, c.ya);
+    void this.shardsVersion;
+    const ys = this.yearCache.get(c.ya);
+    return ys ? pyramidFromYearShard(ys, c.a) : null;
+  });
+  /** B's pyramid at yb (null while `best` is unresolved). */
+  pyramidB = $derived.by<PyramidView | null>(() => {
+    const c = this.compare;
+    if (!c || c.yb === 'best') return null;
+    if (this.shardB?.id === c.b) return pyramidFromEntityShard(this.shardB, c.yb);
+    void this.shardsVersion;
+    const ys = this.yearCache.get(c.yb);
+    return ys ? pyramidFromYearShard(ys, c.b) : null;
+  });
+  /** Axis = max of the pair's fits, widened only if a drawn year overflows (caption reads `widened`). */
+  pairAxis = $derived<CompareAxis | null>(
+    this.compare
+      ? compareAxis(toAxisMode(this.compare.axis), this.entityA?.axis_pct ?? 10, this.entityB?.axis_pct ?? 10, this.pyramidA?.shares ?? null, this.pyramidB?.shares ?? null)
+      : null,
+  );
+  /** The corpus is needed to resolve `best` (and to confirm a pasted `from=best`). */
+  compareNeedsCorpus = $derived(!!this.compare && (this.compare.yb === 'best' || this.compare.from === 'best'));
+  compareNeedsAllBands = $derived(!!this.compare && !compareBandsDefaultSuffice(this.compare));
+  compareNeedsEmbedding = $derived(this.compare?.metric === 'visual' && this.visualModel !== null);
+  compareBandsReady = $derived(this.compareNeedsAllBands ? this.bandsAll !== null : this.bandsDefault !== null);
+
+  /** View for the pair card: the corpus when loaded, else year shards (yb = candidates, ya = reference). */
+  pairView = $derived.by<CorpusView | null>(() => {
+    const c = this.compare;
+    const ys = this.pairYears;
+    const eng = this.engine;
+    if (!c || !ys || !eng) return null;
+    if (this.corpus) return eng.fromCorpus(this.corpus);
+    void this.shardsVersion;
+    const main = this.yearCache.get(ys.yb);
+    const ref = this.yearCache.get(ys.ya);
+    if (!main || !ref) return null;
+    return eng.fromShards(main, main.year === ref.year ? [] : [ref]);
+  });
+
+  private pairRun = $derived.by<{ pair: PairData | null; error: string | null }>(() => {
+    const c = this.compare;
+    const ys = this.pairYears;
+    const view = this.pairView;
+    const eng = this.engine;
+    if (!c || !ys || !view || !eng) return { pair: null, error: null };
+    if (this.compareNeedsEmbedding && !this.embedding) return { pair: null, error: null };
+    const q = { ...c, ya: ys.ya, yb: ys.yb };
+    try {
+      const pair = pairData(eng, view, q, this.bands, {
+        currentYear: this.currentYear,
+        lastObserved: this.lastObservedYear,
+        emb: this.compareNeedsEmbedding ? this.embedding!.values : undefined,
+        visualModel: this.visualModel ?? undefined,
+      });
+      return { pair, error: null };
+    } catch (e) {
+      return { pair: null, error: e instanceof Error ? e.message : String(e) };
+    }
+  });
+  /** d, band, explanation, feature table for (A_ya, B_yb) — trails the scrubbers by `debounceMs`. */
+  pair = $derived<PairData | null>(this.pairRun.pair);
+  pairError = $derived<string | null>(this.pairRun.error);
+
+  /** B's best year for A's current year (corpus only): drives the `best` resolution and the button's lit state. */
+  bestB = $derived.by<BestYear | null>(() => {
+    const c = this.compare;
+    const eng = this.engine;
+    if (!c || !eng || !this.corpus || !this.compareNeedsCorpus) return null;
+    if (this.compareNeedsEmbedding && !this.embedding) return null;
+    const view = eng.fromCorpus(this.corpus);
+    const rowA = view.rowOf(c.a, c.ya);
+    if (rowA < 0) return null;
+    try {
+      const sq = pairSearchQuery(c, this.currentYear);
+      const d = eng.distances(view, sq, { queryRow: rowA, emb: this.compareNeedsEmbedding ? this.embedding!.values : undefined, visualModel: this.visualModel ?? undefined });
+      return bestYearFor(d, view, c.b, c.ya, bestYearWindow(c.ya, c.era, this.currentYear, this.lastObservedYear));
+    } catch {
+      return null;
+    }
+  });
+  /** "B → best year" stays lit while the URL says `from=best` and the resolved year (once known) matches. */
+  bestLit = $derived(!!this.compare && this.compare.from === 'best' && (this.bestB === null || this.bestB.year === this.compare.yb));
+
   constructor(opts: AppStateOptions = {}) {
     this.clock = opts.clock ?? systemClock;
     this.data = opts.data ?? dataSource;
@@ -500,6 +627,88 @@ export class AppState {
     if (open) void this.loadSearchData();
   }
 
+  // ---- M3 compare actions ----------------------------------------------------------------------------------
+
+  /**
+   * Move one scrubber of the compare page. Lock-offset moves the other side too (Δ kept). Any year change drops
+   * `from=best` (the resolved year is no longer the best for the new A). History as `setYear`: replaceState while
+   * dragging, one pushState on release relative to the pre-drag URL.
+   */
+  setCompareYear(side: 'a' | 'b', y: number, { commit = true }: { commit?: boolean } = {}) {
+    const c = this.compare;
+    if (!c) return;
+    const ybConcrete = c.yb === 'best' ? null : c.yb;
+    let ya = c.ya;
+    let yb: number | 'best' = c.yb;
+    if (ybConcrete === null) {
+      // B still unresolved: only A can move; keep resolving for the new A
+      if (side === 'b') return;
+      ya = clampYear(y);
+    } else {
+      const ys = nextYears({ ya: c.ya, yb: ybConcrete }, side, y, this.lockOffset);
+      ya = ys.ya;
+      yb = ys.yb;
+    }
+    const next = compareQuery(c.a, ya, c.b, yb, { ...c, from: null }, this.currentYear);
+    if (!commit) {
+      this.dragFrom ??= currentHref(this.env);
+      this.route = next;
+      navigate(next, { replace: true, ...this.env });
+      this.scheduleSearchYear();
+      return;
+    }
+    this.route = next;
+    if (this.dragFrom !== null) {
+      navigateTo(this.dragFrom, { replace: true, ...this.env });
+      this.dragFrom = null;
+    }
+    navigate(next, { ...this.env });
+    this.syncSearchYear();
+    void this.load();
+  }
+
+  /** View / display option / metric tweak on the compare page (replaceState). Metric, sex or era changes drop `from=best`. */
+  setCompareOptions(o: Partial<DisplayOptions> & CompareInput) {
+    const c = this.compare;
+    if (!c) return;
+    const invalidatesBest = (o.metric !== undefined && o.metric !== c.metric) || (o.sex !== undefined && o.sex !== c.sex) || (o.era !== undefined && o.era !== c.era);
+    const next = compareQuery(c.a, c.ya, c.b, c.yb, { ...c, ...o, from: invalidatesBest ? null : (o.from ?? c.from) }, this.currentYear);
+    this.dragFrom = null;
+    this.route = next;
+    navigate(next, { replace: true, ...this.env });
+    this.syncSearchYear();
+    void this.load();
+  }
+
+  /** A ↔ B (pushState). No-op while `yb` is `best`. */
+  swapCompare() {
+    const c = this.compare;
+    if (!c) return;
+    const next = swapQuery(c, this.currentYear);
+    if (!next) return;
+    this.go(next);
+  }
+
+  /** "B → best year": push `/…/{b}/best`, then resolve to the concrete year + `?from=best` (replaceState). */
+  compareBest() {
+    const c = this.compare;
+    if (!c) return;
+    this.go(compareQuery(c.a, c.ya, c.b, 'best', { ...c, from: null }, this.currentYear));
+  }
+
+  setLockOffset(on: boolean) {
+    this.lockOffset = on;
+  }
+
+  /** Replace one side of the pair (picker), keeping its year (pushState). */
+  setCompareEntity(side: 'a' | 'b', id: string) {
+    const c = this.compare;
+    const e = byId(id);
+    if (!c || !e) return;
+    const next = side === 'a' ? compareQuery(e.id, c.ya, c.b, c.yb, { ...c, from: null }, this.currentYear) : compareQuery(c.a, c.ya, e.id, c.yb, { ...c, from: null }, this.currentYear);
+    this.go(next);
+  }
+
   /** Navigate to any query (pushState) — for the picker / links handled in-app. */
   go(q: Query) {
     this.dragFrom = null;
@@ -515,6 +724,12 @@ export class AppState {
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
     this.debounceTimer = null;
     this.searchYear = this.year;
+    this.syncPairYears();
+  }
+
+  private syncPairYears() {
+    const c = this.compare;
+    this.pairYears = c && c.yb !== 'best' ? { ya: c.ya, yb: c.yb } : null;
   }
 
   private scheduleSearchYear() {
@@ -522,7 +737,9 @@ export class AppState {
     this.debounceTimer = setTimeout(() => {
       this.debounceTimer = null;
       this.searchYear = this.year;
-      void this.loadSearchData();
+      this.syncPairYears();
+      if (this.compare) void this.loadCompareData();
+      else void this.loadSearchData();
     }, this.debounceMs);
   }
 
@@ -554,6 +771,7 @@ export class AppState {
   private async load(): Promise<void> {
     const q = this.query;
     const gen = ++this.gen;
+    if (this.compare) return this.loadCompareData(gen);
     if (!q) {
       this.loading = false;
       return;
@@ -645,6 +863,99 @@ export class AppState {
       );
     }
     await Promise.allSettled(tasks);
+  }
+
+  /**
+   * M3: everything the compare page needs — both entity shards (paint + scrubbing), the two year shards (pair card
+   * without the corpus), bands, and the corpus / embedding when `best` must be resolved (or the metric is Visual).
+   * Idempotent; `best` is resolved as soon as the corpus is in hand.
+   */
+  private async loadCompareData(gen: number = this.gen): Promise<void> {
+    const c = this.compare;
+    if (!c) return;
+    const cachedA = this.entityCache.get(c.a);
+    const cachedB = this.entityCache.get(c.b);
+    if (cachedA) this.shardA = cachedA;
+    if (cachedB) this.shardB = cachedB;
+    this.loading = !cachedA;
+    this.error = null;
+    const tasks: Promise<unknown>[] = [];
+    const shard = (id: string, side: 'a' | 'b') =>
+      this.data.entityShard(id).then((s) => {
+        this.entityCache.set(id, s);
+        if (gen !== this.gen) return;
+        if (side === 'a') {
+          this.shardA = s;
+          this.loading = false;
+        } else this.shardB = s;
+      });
+    if (!cachedA) tasks.push(shard(c.a, 'a'));
+    if (!cachedB && c.b !== c.a) tasks.push(shard(c.b, 'b'));
+    else if (c.b === c.a && cachedA) this.shardB = cachedA;
+    if (c.b === c.a && !cachedA) tasks.push(this.data.entityShard(c.a).then((s) => gen === this.gen && (this.shardB = s)));
+    // year shards for the pair view (skipped once the corpus is loaded)
+    const ys = this.pairYears;
+    if (ys && !this.corpus) for (const y of new Set([ys.ya, ys.yb])) if (!this.yearCache.has(y)) tasks.push(this.fetchYear(y));
+    if (!this.bandsDefault && this.data.bandsDefault) tasks.push(this.data.bandsDefault().then((b) => (this.bandsDefault = b)));
+    if (this.compareNeedsAllBands && !this.bandsAll && this.data.bands) tasks.push(this.data.bands().then((b) => (this.bandsAll = b)));
+    if (this.compareNeedsCorpus && !this.corpus && this.corpusStatus !== 'loading' && this.data.corpus) {
+      this.corpusStatus = 'loading';
+      this.corpusError = null;
+      tasks.push(
+        this.data.corpus().then(
+          (co) => {
+            this.corpus = co;
+            this.corpusStatus = 'ready';
+          },
+          (e: unknown) => {
+            this.corpusStatus = 'error';
+            this.corpusError = e instanceof Error ? e.message : String(e);
+          },
+        ),
+      );
+    }
+    if (this.compareNeedsEmbedding && !this.embedding && this.embeddingStatus !== 'loading' && this.data.embedding && this.visualModel) {
+      this.embeddingStatus = 'loading';
+      tasks.push(
+        this.data.embedding(this.visualModel).then(
+          (e) => {
+            this.embedding = e;
+            this.embeddingStatus = 'ready';
+          },
+          () => (this.embeddingStatus = 'error'),
+        ),
+      );
+    }
+    const results = await Promise.allSettled(tasks);
+    if (gen !== this.gen) return;
+    const failed = results.find((r): r is PromiseRejectedResult => r.status === 'rejected');
+    if (failed && !this.pyramidA) {
+      this.error = failed.reason instanceof Error ? failed.reason.message : String(failed.reason);
+      this.loading = false;
+    }
+    this.resolveBest();
+  }
+
+  /**
+   * `best` → the concrete year + `?from=best` (replaceState, J5/J6); a pasted `from=best` whose year is NOT the
+   * best for A drops the flag (replaceState). Needs the corpus; a no-op until it lands.
+   */
+  private resolveBest() {
+    const c = this.compare;
+    if (!c || !this.corpus) return;
+    const best = this.bestB;
+    if (c.yb === 'best') {
+      if (!best) return; // no allowed year of B — the page explains
+      const next = compareQuery(c.a, c.ya, c.b, best.year, { ...c, from: 'best' }, this.currentYear);
+      this.route = next;
+      navigate(next, { replace: true, ...this.env });
+      this.syncPairYears();
+      void this.loadCompareData();
+    } else if (c.from === 'best' && best && best.year !== c.yb) {
+      const next = compareQuery(c.a, c.ya, c.b, c.yb, { ...c, from: null }, this.currentYear);
+      this.route = next;
+      navigate(next, { replace: true, ...this.env });
+    }
   }
 
   /** Card data for one result: shares, per-bin delta, decomposition + sentences (or the trend reason). */

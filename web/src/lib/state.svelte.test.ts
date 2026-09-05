@@ -527,3 +527,159 @@ describe('AppState M2 — debounce while scrubbing', () => {
     expect(s.searchYear).toBe(2010);
   });
 });
+
+// ---------------------------------------------------------------------------------------------------- M3 compare
+
+describe('AppState M3 — compare route', () => {
+  it('same-year pair: both entity shards + the year shard + default bands; no corpus; pair computed', async () => {
+    const { s, log, calls } = makeM2('/compare/japan/2026/italy/2026');
+    s.init();
+    expect(s.compare).toMatchObject({ a: 'JPN', ya: 2026, b: 'ITA', yb: 2026, view: 'overlay', from: null });
+    expect(s.query).toBeNull(); // not a country page
+    expect(s.pairYears).toEqual({ ya: 2026, yb: 2026 });
+    expect(s.compareNeedsCorpus).toBe(false);
+    expect(s.compareNeedsAllBands).toBe(false);
+    await flush();
+    expect(log.sort()).toEqual(['B:default', 'E:ITA', 'E:JPN', 'Y:2026']);
+    expect(s.pyramidA?.id).toBe('JPN');
+    expect(s.pyramidB?.id).toBe('ITA');
+    expect(s.pairAxis?.axisPct).toBeGreaterThanOrEqual(10);
+    expect(s.pair).not.toBeNull();
+    expect(s.pair?.explanation.because).toBe('alike');
+    expect(s.pair?.dy).toBe(0);
+    expect(s.pair?.bandKind).toBe('same');
+    expect(calls).toContain('fromShards:2026');
+    expect(calls.some((c) => c.startsWith('stats:2026'))).toBe(true);
+    expect(s.corpusStatus).toBe('idle');
+    s.dispose();
+  });
+
+  it('cross-year pair: both year shards (yb candidates + ya reference) and the full bands file', async () => {
+    const { s, log, calls } = makeM2('/compare/south-korea/2026/japan/2008');
+    s.init();
+    expect(s.compareNeedsAllBands).toBe(true);
+    await flush();
+    expect(log.sort()).toEqual(['B:all', 'B:default', 'E:JPN', 'E:KOR', 'Y:2008', 'Y:2026']);
+    expect(s.pair?.dy).toBe(-18); // reading the lazy derived builds the view
+    expect(calls).toContain('fromShards:2008,2026');
+    expect(s.pair?.bandKind).toBe('cross');
+    expect(s.pyramidB?.year).toBe(2008);
+    s.dispose();
+  });
+
+  it('best: fetches the corpus, resolves y* and replaceStates the concrete year + ?from=best; the button is lit', async () => {
+    const { s, b, log } = makeM2('/compare/japan/2026/italy/best');
+    s.init();
+    expect(s.compare?.yb).toBe('best');
+    expect(s.pairYears).toBeNull();
+    expect(s.pyramidB).toBeNull();
+    expect(s.compareNeedsCorpus).toBe(true);
+    await flush();
+    await flush();
+    expect(log).toContain('C');
+    // fake distances = row index + 1 → Italy's earliest allowed year wins (1950, on the era edge)
+    expect(b.href()).toBe('/compare/japan/2026/italy/1950?from=best');
+    expect(b.log.at(-1)).toEqual({ op: 'replace', url: '/compare/japan/2026/italy/1950?from=best' });
+    expect(s.compare).toMatchObject({ yb: 1950, from: 'best' });
+    expect(s.bestB).toMatchObject({ year: 1950, dy: -76, boundaryHit: true });
+    expect(s.bestLit).toBe(true);
+    expect(s.pairYears).toEqual({ ya: 2026, yb: 1950 });
+    await flush();
+    expect(s.pair?.bandKind).toBe('best');
+    // moving B off the best year drops from=best (one pushState) and unlights the button
+    b.log.length = 0;
+    s.setCompareYear('b', 1960);
+    expect(b.log).toEqual([{ op: 'push', url: '/compare/japan/2026/italy/1960' }]);
+    expect(s.bestLit).toBe(false);
+    expect(s.compareNeedsCorpus).toBe(false);
+    // "B → best year" again: push best, resolve synchronously (corpus in hand) → replace to the concrete year
+    b.log.length = 0;
+    s.compareBest();
+    await flush();
+    expect(b.log.map((l) => l.op)).toEqual(['push', 'replace']);
+    expect(b.href()).toBe('/compare/japan/2026/italy/1950?from=best');
+    expect(s.bestLit).toBe(true);
+    s.dispose();
+  });
+
+  it('a pasted from=best whose year is not the best drops the flag once the corpus is in', async () => {
+    const { s, b } = makeM2('/compare/japan/2026/italy/2000?from=best');
+    s.init();
+    expect(s.compare?.from).toBe('best');
+    expect(s.bestLit).toBe(true); // provisional until the corpus says otherwise
+    await flush();
+    await flush();
+    expect(b.href()).toBe('/compare/japan/2026/italy/2000');
+    expect(s.compare?.from).toBeNull();
+    expect(s.bestLit).toBe(false);
+    s.dispose();
+  });
+
+  it('scrubbing: replaceState while dragging, one pushState on release; lock-offset moves both years', async () => {
+    const { s, b } = makeM2('/compare/south-korea/2026/japan/2008');
+    s.init();
+    await flush();
+    b.log.length = 0;
+    s.setCompareYear('a', 2027, { commit: false });
+    s.setCompareYear('a', 2028, { commit: false });
+    expect(b.log.map((l) => l.op)).toEqual(['replace', 'replace']);
+    expect(s.compare).toMatchObject({ ya: 2028, yb: 2008 });
+    expect(s.pairYears).toEqual({ ya: 2026, yb: 2008 }); // trails the slider
+    s.setCompareYear('a', 2030, { commit: true });
+    expect(b.log.slice(2)).toEqual([{ op: 'replace', url: '/compare/south-korea/2026/japan/2008' }, { op: 'push', url: '/compare/south-korea/2030/japan/2008' }]);
+    expect(s.pairYears).toEqual({ ya: 2030, yb: 2008 });
+    b.back();
+    expect(s.compare).toMatchObject({ ya: 2026, yb: 2008 });
+    // lock: Δ = −18 kept, clamped as a pair
+    s.setLockOffset(true);
+    s.setCompareYear('b', 2020);
+    expect(s.compare).toMatchObject({ ya: 2038, yb: 2020 });
+    s.setCompareYear('a', 1950);
+    expect(s.compare).toMatchObject({ ya: 1968, yb: 1950 });
+    expect(b.href()).toBe('/compare/south-korea/1968/japan/1950');
+    s.dispose();
+  });
+
+  it('swap, view / option tweaks (replace), metric change drops from=best, entity replace', async () => {
+    const { s, b } = makeM2('/compare/south-korea/2026/japan/2008?from=best');
+    s.init();
+    b.log.length = 0;
+    s.setCompareOptions({ view: 'diff' });
+    expect(b.log).toEqual([{ op: 'replace', url: '/compare/south-korea/2026/japan/2008?view=diff&from=best' }]);
+    s.setCompareOptions({ unit: 'abs', axis: 'noclip' });
+    expect(b.href()).toBe('/compare/south-korea/2026/japan/2008?axis=noclip&unit=abs&view=diff&from=best');
+    s.setCompareOptions({ metric: 'l2' });
+    expect(b.href()).toBe('/compare/south-korea/2026/japan/2008?axis=noclip&unit=abs&view=diff&metric=l2');
+    expect(s.compare?.from).toBeNull();
+    b.log.length = 0;
+    s.swapCompare();
+    expect(b.log).toEqual([{ op: 'push', url: '/compare/japan/2008/south-korea/2026?axis=noclip&unit=abs&view=diff&metric=l2' }]);
+    expect(s.pairYears).toEqual({ ya: 2008, yb: 2026 });
+    s.setCompareEntity('b', 'ITA');
+    expect(b.href()).toBe('/compare/japan/2008/italy/2026?axis=noclip&unit=abs&view=diff&metric=l2');
+    // era tweak survives canonicalisation only when it differs from the J8 default of A's year
+    s.setCompareOptions({ era: 'all' });
+    expect(b.href()).toContain('era=all');
+    s.setCompareOptions({ era: 'obs' });
+    expect(b.href()).not.toContain('era=');
+    s.dispose();
+  });
+
+  it('respects the GitHub Pages base and canonicalises aliases with replaceState', async () => {
+    const b = fakeBrowser('/population-pyramid-explorer/compare/KOR/2026/jpn/best');
+    const log: string[] = [];
+    const data = fakeData(log);
+    const s = new AppState({
+      clock: clock2026,
+      data: { ...data, bandsDefault: async () => fakeBands(), bands: async () => fakeBands(), corpus: async () => fakeCorpus() },
+      engine: fakeEngine([]),
+      env: { base: '/population-pyramid-explorer/', history: b.history, location: b.location, target: b.target },
+    });
+    s.init();
+    expect(b.log[0]).toEqual({ op: 'replace', url: '/population-pyramid-explorer/compare/south-korea/2026/japan/best' });
+    await flush();
+    await flush();
+    expect(b.href()).toBe('/population-pyramid-explorer/compare/south-korea/2026/japan/1950?from=best');
+    s.dispose();
+  });
+});

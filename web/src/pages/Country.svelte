@@ -25,6 +25,9 @@
   import Twins from '../lib/components/Twins.svelte';
   import Opposites from '../lib/components/Opposites.svelte';
   import TimeShiftTable from '../lib/components/TimeShiftTable.svelte';
+  import ExportMenu, { type CsvItem } from '../lib/components/ExportMenu.svelte';
+  import ShareButton from '../lib/components/ShareButton.svelte';
+  import { footerText, pyramidToCsv, resultsToCsv, type ResultsCsvRow } from '../lib/export.ts';
 
   const entity = $derived(app.entity);
   const year = $derived(app.year);
@@ -92,10 +95,44 @@
     if (app.needsEmbedding && !app.embedding) return app.embeddingStatus === 'error' ? 'could not load the image embedding' : `loading the image embedding… ${embMb} MB`;
     return 'loading this year…';
   });
+  // the compare links of the cards carry the metric / sex that ranked them (trend cards fall back to Shape)
   const focal = $derived(
-    entity && pyramid ? { id: entity.id, shares: pyramid.shares, name: entity.short_name, year: results?.q.year ?? year } : null,
+    entity && pyramid
+      ? { id: entity.id, shares: pyramid.shares, name: entity.short_name, year: results?.q.year ?? year, metric: query?.trend ? undefined : query?.metric, sex: query?.sex }
+      : null,
   );
   const metricLabel = $derived(query?.trend ? `trend (${query.trend}, ${query.L} y)` : METRIC_LABEL[query?.metric ?? 'blend']);
+
+  // ---- M3: export + share (PLAN §7 J6/J7). The chart is exported from the live SVG inside the pyramid card. ----
+  let chartCard = $state<HTMLDivElement | null>(null);
+  const chartSvg = () => chartCard?.querySelector('svg') ?? null;
+  const exportBase = $derived(entity ? [entity.short_name, year, 'pyramid'] : ['pyramid']);
+  const exportFooter = $derived(entity && pyramid ? footerText(entity.short_name, year, pyramid.total) : undefined);
+  const pyramidCsv = $derived<CsvItem[]>(
+    entity && pyramid
+      ? [{ label: 'CSV (this pyramid)', suffix: 'shares', text: () => pyramidToCsv({ id: entity.id, name: entity.short_name, year, shares: pyramid.shares, total: pyramid.total }) }]
+      : [],
+  );
+  const shareTitle = $derived(entity ? `${entity.short_name} ${year} · Population Pyramid Explorer` : 'Population Pyramid Explorer');
+  /** Results CSVs (PLAN §7: rank, raw_rank, id, year, d, band, Δy): twins, opposites and the open time-shift table. */
+  const resultsCsv = $derived.by<CsvItem[]>(() => {
+    const items: CsvItem[] = [];
+    const rows = (cards: { result: { id: string; year: number; d: number; rankRaw: number; dy: number; band: string } ; entity: { short_name: string } }[]): ResultsCsvRow[] =>
+      cards.map((c, i) => ({ rank: i + 1, raw_rank: c.result.rankRaw, id: c.result.id, name: c.entity.short_name, year: c.result.year, d: c.result.d, band: c.result.band, dy: c.result.dy }));
+    if (results) {
+      items.push({ label: 'Most similar (CSV)', suffix: 'similar', text: () => resultsToCsv(rows(results.twins)) });
+      items.push({ label: 'Most different (CSV)', suffix: 'different', text: () => resultsToCsv(rows(results.opposites)) });
+    }
+    const ts = app.timeShift;
+    if (ts && ts.length) {
+      items.push({
+        label: 'Time-shift table (CSV)',
+        suffix: 'time-shift',
+        text: () => resultsToCsv(ts.map((r, i) => ({ rank: i + 1, raw_rank: i + 1, id: r.id, name: byId(r.id)?.short_name ?? r.id, year: r.bestYear, d: r.d, band: r.band, dy: r.dy }))),
+      });
+    }
+    return items;
+  });
 </script>
 
 {#if entity && query}
@@ -149,10 +186,12 @@
             {/each}
           </select>
         </label>
+        <ExportMenu basename={exportBase} svg={chartSvg} footer={exportFooter} csv={pyramidCsv} title="Download this pyramid as PNG (2×, with source footer), SVG or CSV" />
+        <ShareButton title={shareTitle} compact />
       </div>
 
       {#if pyramid}
-        <div class="card p-2 sm:p-3">
+        <div class="card p-2 sm:p-3" bind:this={chartCard}>
           <Pyramid
             shares={pyramid.shares}
             total={pyramid.total}
@@ -212,6 +251,11 @@
     {#if app.searchError}
       <p class="card mt-3 border-red-500/40 text-sm" role="alert">The search could not run: {app.searchError}</p>
     {/if}
+    {#if resultsCsv.length}
+      <div class="mt-2 flex flex-wrap items-center justify-end gap-2 text-sm">
+        <ExportMenu basename={[entity.short_name, year]} csv={resultsCsv} label="⤓ CSV" title="Download the result lists as CSV (rank, raw rank, id, name, year, d, band, Δy)" />
+      </div>
+    {/if}
     {#if focal}
       <Twins {results} k={query.k} {focal} {loadingText} lastObserved={app.lastObservedYear} currentYear={app.currentYear} />
       <Opposites {results} k={query.k} div={query.div} {focal} {loadingText} lastObserved={app.lastObservedYear} currentYear={app.currentYear} />
@@ -229,9 +273,10 @@
         ontoggle={(o) => app.setTimeShiftOpen(o)}
         status={app.corpusStatus}
         error={app.corpusError}
-        focal={{ name: entity.short_name, year }}
+        focal={{ id: entity.id, name: entity.short_name, year, metric: query.trend ? undefined : query.metric, sex: query.sex }}
         eraEdge={eraEdge(app.searchEra, app.currentYear, app.lastObservedYear)}
         corpusBytes={meta.sizes.shares_d16z}
+        currentYear={app.currentYear}
       />
     {/if}
   </section>
