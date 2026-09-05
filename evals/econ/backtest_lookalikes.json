@@ -66,8 +66,8 @@
    "1995": "no US-listed single-country ETF existed at entry (first WEBS 1996-03)"
   },
   "run": {
-   "generated_at": "2026-09-05T02:04:13+00:00",
-   "git_rev": "93a7c2b",
+   "generated_at": "2026-09-05T02:45:32+00:00",
+   "git_rev": "65bcfd2",
    "seed": 20260904,
    "B": 5000,
    "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"

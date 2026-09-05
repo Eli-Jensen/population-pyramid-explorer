@@ -52,8 +52,8 @@
    "Prototype self-matching (P_train is drawn from the sample's own country-years, as §4 specifies): the in-sample coefficient on D is reported together with three refits (drop exact self-matches; drop rows whose outcome window shares years with an own-country prototype window; smallest-non-zero floor) and is not treated as evidence — only the fixed holdout, which contains no self-match, is"
   ],
   "run": {
-   "generated_at": "2026-09-05T02:04:15+00:00",
-   "git_rev": "93a7c2b",
+   "generated_at": "2026-09-05T02:45:34+00:00",
+   "git_rev": "65bcfd2",
    "seed": 20260904,
    "B": 0,
    "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"

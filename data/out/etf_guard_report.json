@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-05T02:04:21+00:00",
+ "generated_at": "2026-09-05T02:45:40+00:00",
  "thresholds": {
   "min_bars": 250,
   "first_bar_slack_days": 45,
@@ -1337,7 +1337,7 @@
   }
  },
  "run": {
-  "at": "2026-09-05T02:03:47+00:00",
+  "at": "2026-09-05T02:45:06+00:00",
   "today": "2026-09-04",
   "dead_series_policy": "ok",
   "n_tickers": 55,

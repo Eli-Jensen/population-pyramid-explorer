@@ -20,8 +20,8 @@
    "Disconnect table (PREREG §5): the VT proxy of §3.5 is pre-registered only for the T = 2000 and T = 2005 windows; the fund windows CHN 1990 (FXI 2004-10-08→2020-12-31: 2000 rule); KOR 1975 (EWY 2000-05-12→2005-12-30: 2000 rule); KOR 1990 (EWY 2000-05-12→2020-12-31: 2000 rule); TWN 1970 (EWT 2000-06-23→2000-12-29: 2000 rule); THA 1985 (THD 2008-04-01→2015-12-31: 2005 rule); IND 2005 (EPI 2008-02-26→2025-12-31: 2005 rule) begin before VT's first bar (2008-06-26) on other dates, so vt_benchmark applied the nearest pre-registered weights (2000 rule for entries before 2005, else the 2005 rule) until VT's first bar — an extension of §3.5, flagged vt_proxy on every such number."
   ],
   "run": {
-   "generated_at": "2026-09-05T02:04:21+00:00",
-   "git_rev": "93a7c2b",
+   "generated_at": "2026-09-05T02:45:40+00:00",
+   "git_rev": "65bcfd2",
    "seed": 20260904,
    "B": 0,
    "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"

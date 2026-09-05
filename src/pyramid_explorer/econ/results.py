@@ -6,6 +6,7 @@ the same window on every market number); ``scripts/decide_econ.py`` runs the den
 """
 from __future__ import annotations
 
+import json
 from typing import Any
 
 import numpy as np
@@ -499,15 +500,114 @@ GROWTH_VINTAGE_PARAGRAPH = (
 )
 
 
+VINTAGE_NOT_PERFORMED = ("was not performed in this run: the WPP 2010 / WPP 2000 archive files were not obtained, so this paragraph stands as the caveat.")
+
+
+def load_vintage_check(path=None) -> dict | None:
+    """``evals/econ/vintage/vintage_check.json`` (written by ``scripts/vintage_check.py``) when it exists and parses as a
+    document with ``per_T``; None otherwise.  Guarded: a missing, unreadable or malformed file never breaks the render."""
+    from pathlib import Path
+    from pyramid_explorer.paths import ECON_EVALS
+
+    p = Path(path) if path is not None else ECON_EVALS / "vintage" / "vintage_check.json"
+    try:
+        if not p.exists():
+            return None
+        doc = json.loads(p.read_text())
+    except (OSError, ValueError):
+        return None
+    return doc if isinstance(doc, dict) and isinstance(doc.get("per_T"), dict) and doc["per_T"] else None
+
+
+def _j(c: dict | None) -> str:
+    j = (c or {}).get("jaccard")
+    return "n/a" if j is None else f"{float(j):.2f}"
+
+
+def vintage_summary(doc: dict) -> str:
+    """One paragraph for RESULTS.md §7 from the vintage-check document: which archives stood in at which T, the k = 10 and
+    k = 5 Jaccard overlaps per rule and T, whether the pre-registered ≥ 0.6 expectation held, how large the revisions were
+    and which candidates the archive could not supply.  Wording stays inside the sentence-bank rules (no deny-listed words)."""
+    per_T = doc.get("per_T") or {}
+    Ts = sorted(per_T, key=int, reverse=True)
+    m = doc.get("_meta") or {}
+    thr = float(m.get("threshold_jaccard_k10", (doc.get("summary") or {}).get("threshold", 0.6)))
+    by_rev: dict[str, list[str]] = {}
+    for t in Ts:
+        by_rev.setdefault(str(per_T[t].get("revision", "?")), []).append(t)
+    revs = "; ".join(f"WPP {r} for T = {', '.join(sorted(ts))}" for r, ts in sorted(by_rev.items(), reverse=True))
+    labels = {"B": "Query B (primary)", "A_anchor_wpp2024": "Query A, China-1990 anchor from WPP 2024", "A_anchor_archive": "Query A, anchor from the archive too"}
+    parts = []
+    for k in ("10", "5"):
+        cells = []
+        for name in ("B", "A_anchor_wpp2024", "A_anchor_archive"):
+            vals = [f"{t}: {_j(((per_T[t].get('queries') or {}).get(name) or {}).get('k', {}).get(k))}" for t in Ts if name in (per_T[t].get("queries") or {})]
+            if vals:
+                cells.append(f"{labels[name]} — " + ", ".join(vals))
+        parts.append(f"k = {k}: " + "; ".join(cells))
+    summ = doc.get("summary") or {}
+    n_cells, n_met = summ.get("cells"), summ.get("cells_met")
+    not_met = summ.get("not_met") or []
+    b_ok = summ.get("B_k10_met_at_every_T")
+    verdict = (f"The pre-registered expectation (k = 10 Jaccard ≥ {thr:.1f} at every T where an archive exists) was "
+               + (f"met by Query B at every T" if b_ok else "NOT met by Query B at every T")
+               + (f" and held in {n_met} of {n_cells} (rule, T) cells overall" if n_cells else "")
+               + (f"; below the threshold: {', '.join(not_met)}" if not_met else "") + ".")
+    rc_bits = []
+    for name, short in (("B", "Query B"), ("A_anchor_wpp2024", "Query A")):
+        vals = []
+        for t in Ts:
+            rc = ((per_T[t].get("queries") or {}).get(name) or {}).get("rank_continuity") or {}
+            if rc.get("spearman") is not None:
+                vals.append(f"{t}: ρ {rc['spearman']:.2f}, WPP 2024 members at archive ranks ≤ {rc.get('max_archive_rank')}")
+        if vals:
+            rc_bits.append(f"{short} — " + "; ".join(vals))
+    rev_bits = []
+    for t in Ts:
+        rs = per_T[t].get("revision_size") or {}
+        if rs.get("n"):
+            rev_bits.append(f"T = {t}: median L2 {rs['l2_median']:.4f} = {rs['l2_sigma_median']:.2f} σ_l2, max {rs['l2_max']:.4f} ({rs['l2_max_iso3']}), "
+                            f"median blend distance between the two vintages {rs['d_blend_median']:.2f}, n = {rs['n']}")
+    unm = [f"{t}: {', '.join(per_T[t]['unmapped_candidates'])}" for t in Ts if per_T[t].get("unmapped_candidates")]
+    pred = sorted({f"{p['iso3']} ← {p['name']}" for t in Ts for p in (per_T[t].get("predecessors_used_in_candidates") or [])})
+    self_ok = m.get("self_check_passed")
+    robust = doc.get("robustness") or {}
+    rob_txt = ""
+    if robust:
+        rb = []
+        for key, d in sorted(robust.items()):
+            c = ((d.get("queries") or {}).get("B") or {}).get("k", {}).get("10")
+            rb.append(f"T = {d.get('T')} on WPP {d.get('revision')}: Query B k = 10 Jaccard {_j(c)}")
+        rob_txt = " Robustness rows (next revision as the input) — " + "; ".join(rb) + "."
+    return ("**Vintage check (PREREG §8) — performed.** `scripts/vintage_check.py`"
+            + (f" ({m['generated_at'][:10]})" if m.get("generated_at") else "")
+            + f" rebuilt the T cross-sections from the UN's archived revisions ({revs}) and re-ran the selection rules against the main run's "
+            "candidate sets, prototype sets (WPP 2024 pyramids, as pre-registered) and σ; only the candidates' 42-share vectors changed, and "
+            "Query A is reported with China's 1990 anchor from WPP 2024 and from the archive. "
+            + ("The re-implementation reproduced every recorded WPP 2024 lookalike set exactly before the archive was substituted. " if self_ok else
+               ("" if self_ok is None else "WARNING: the re-implementation did not reproduce every recorded WPP 2024 set; the overlaps below are not comparable. "))
+            + "Jaccard overlap of the WPP 2024 and archive lookalike sets — " + " · ".join(parts) + ". " + verdict
+            + (" Rank continuity (additional, not pre-registered; Spearman ρ of the selection statistic between the two vintages over the common candidates): "
+               + " · ".join(rc_bits) + "." if rc_bits else "")
+            + (" Revision size on the candidate cross-section (‖s42_archive − s42_2024‖₂): " + "; ".join(rev_bits) + "." if rev_bits else "")
+            + (" Candidates the archive does not carry (dropped from the archive side): " + "; ".join(unm) + "." if unm else "")
+            + (" Predecessor rows used: " + "; ".join(pred) + "." if pred else "")
+            + rob_txt + " Sources, hashes, mapping and the per-country revision tables: `evals/econ/vintage/RESULTS_vintage.md`.")
+
+
 def _sec_vintage(ctx: dict) -> str:
-    status = ctx.get("vintage_status") or ("was not performed in this run: the WPP 2010 / WPP 2000 archive files were not obtained, so this paragraph stands as the caveat.")
+    doc = ctx["vintage_check"] if "vintage_check" in ctx else load_vintage_check()
+    status = ctx.get("vintage_status") or (
+        "was performed with the WPP 2010 / WPP 2000 CSV archives (`scripts/vintage_check.py`); the result follows below." if doc else VINTAGE_NOT_PERFORMED)
     n4 = ((ctx.get("backtest") or {}).get("rows") or {}).get("N4|10|10|growth") or {}
     n4_txt = ""
     if n4.get("stats"):
         p1 = ((n4.get("nulls") or {}).get("N1") or {}).get("p_mean_excess")
         n4_txt = f" ({_f((n4['stats'] or {}).get('mean_excess'), 2, True)} pp/yr vs the candidate median, p_N1 {_p(p1)}, k = 10, h = 10)"
-    return ("## 7. Vintage statement (PREREG §8)\n\n" + VINTAGE_PARAGRAPH.format(vintage_status=status) + "\n\n"
-            + GROWTH_VINTAGE_PARAGRAPH.format(n4=n4_txt) + "\n")
+    out = "## 7. Vintage statement (PREREG §8)\n\n" + VINTAGE_PARAGRAPH.format(vintage_status=status) + "\n\n"
+    if doc:
+        out += vintage_summary(doc) + "\n\n"
+    return out + GROWTH_VINTAGE_PARAGRAPH.format(n4=n4_txt) + "\n"
 
 
 def _sec_notes(ctx: dict) -> str:
@@ -527,7 +627,8 @@ def _sec_notes(ctx: dict) -> str:
 def render_results(ctx: dict) -> str:
     """The whole RESULTS.md.  ``ctx`` keys: prereg_commit, run {generated_at, git_rev, seed, B}, sources (list of
     dicts), universe (yaml dict), guard (dict | None), backtest, panel, disconnect, decision, implementation_notes,
-    deviations, vintage_status."""
+    deviations, vintage_status, and optionally ``vintage_check`` (the vintage_check.json document, or None to suppress the
+    §7 summary; when the key is absent the file is loaded from evals/econ/vintage/ if it exists)."""
     parts = [_sec_header(ctx), _sec_data(ctx), _sec_universe(ctx), _sec_predictions(ctx), _sec_exp1(ctx), _sec_exp2(ctx),
              _sec_exp3(ctx), _sec_vintage(ctx), _sec_decision(ctx), _sec_notes(ctx)]   # PREREG §10 order
     return "\n".join(parts)

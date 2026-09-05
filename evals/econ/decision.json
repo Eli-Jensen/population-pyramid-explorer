@@ -465,30 +465,30 @@
   "L0": "what happened next: always allowed"
  },
  "run": {
-  "generated_at": "2026-09-05T02:04:22+00:00",
-  "git_rev": "93a7c2b",
+  "generated_at": "2026-09-05T02:45:40+00:00",
+  "git_rev": "65bcfd2",
   "seed": 20260904,
   "B": 5000,
   "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"
  },
  "inputs": {
   "backtest_run": {
-   "generated_at": "2026-09-05T02:04:13+00:00",
-   "git_rev": "93a7c2b",
+   "generated_at": "2026-09-05T02:45:32+00:00",
+   "git_rev": "65bcfd2",
    "seed": 20260904,
    "B": 5000,
    "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"
   },
   "panel_run": {
-   "generated_at": "2026-09-05T02:04:15+00:00",
-   "git_rev": "93a7c2b",
+   "generated_at": "2026-09-05T02:45:34+00:00",
+   "git_rev": "65bcfd2",
    "seed": 20260904,
    "B": 0,
    "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"
   },
   "disconnect_run": {
-   "generated_at": "2026-09-05T02:04:21+00:00",
-   "git_rev": "93a7c2b",
+   "generated_at": "2026-09-05T02:45:40+00:00",
+   "git_rev": "65bcfd2",
    "seed": 20260904,
    "B": 0,
    "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"
