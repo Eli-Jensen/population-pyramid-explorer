@@ -1,0 +1,949 @@
+{
+ "_meta": {
+  "anchor": [
+   "CHN",
+   1990
+  ],
+  "span_years": 30,
+  "last_full_year": 2025,
+  "msci_source": "evals/econ/msci_citations.yaml (hand-transcribed facts, cited; never series)",
+  "msci_accessed": "2026-09-04",
+  "msci_as_of": "2026-08-31",
+  "vt_rule": "VT from 2008-06-24; VT proxy before (PREREG §3.5); 'none' where no proxy is defined for the window",
+  "percentile": "share of same-year countries ≥ 1 M at least as close to CHN 1990 (smaller = closer)",
+  "tfr_indicator": "tfr_wpp",
+  "min_annualise_years": 1.0,
+  "implementation_notes": [
+   "Disconnect fund windows under 1 full year (window_years rounded to two decimals < 1.00; a fund whose history starts inside the row's last calendar year, e.g. EWT for TWN 1970: 2000-06-23 → 2000-12-29, 0.52 y) are flagged too_short_to_annualise and shown as the raw total return over the span; the annualised figure stays in disconnect.json but is never printed as pp/yr. The row is never dropped."
+  ],
+  "deviations": [
+   "Disconnect table (PREREG §5): the VT proxy of §3.5 is pre-registered only for the T = 2000 and T = 2005 windows; the fund windows CHN 1990 (FXI 2004-10-08→2020-12-31: 2000 rule); KOR 1975 (EWY 2000-05-12→2005-12-30: 2000 rule); KOR 1990 (EWY 2000-05-12→2020-12-31: 2000 rule); TWN 1970 (EWT 2000-06-23→2000-12-29: 2000 rule); THA 1985 (THD 2008-04-01→2015-12-31: 2005 rule); IND 2005 (EPI 2008-02-26→2025-12-31: 2005 rule) begin before VT's first bar (2008-06-26) on other dates, so vt_benchmark applied the nearest pre-registered weights (2000 rule for entries before 2005, else the 2005 rule) until VT's first bar — an extension of §3.5, flagged vt_proxy on every such number."
+  ],
+  "run": {
+   "generated_at": "2026-09-05T02:04:21+00:00",
+   "git_rev": "93a7c2b",
+   "seed": 20260904,
+   "B": 0,
+   "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"
+  }
+ },
+ "rows": [
+  {
+   "iso3": "CHN",
+   "year": 1990,
+   "kind": "history",
+   "name": "China",
+   "pyramid": {
+    "median_age": 24.737032691033548,
+    "u15": 0.2879786232929241,
+    "wa": 0.6585698013118216,
+    "o65": 0.05345157539525394,
+    "s0_s20": 0.9946760578888187,
+    "tfr": 2.514
+   },
+   "distance": {
+    "d_blend_chn1990": 0.0,
+    "pct_same_year": 0.006578947368421052,
+    "pct_band": "the anchor itself",
+    "n_same_year": 152
+   },
+   "levels": {
+    "y_t": 1934.7663185011427,
+    "multiples": {
+     "10": 2.4366750707987475,
+     "20": 5.772795703870337,
+     "30": 9.386539078693104
+    },
+    "y_last_year": 2023,
+    "mult_last": 11.11417669776387,
+    "state": "ok"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI China Index",
+    "verified": true,
+    "since": "1992-12-31",
+    "clipped_to_index_history": true,
+    "ann_pct_gross_since": 1.55,
+    "ann_pct_net_since": 7.33,
+    "net_since": "2000-12-29",
+    "max_drawdown_pct_gross": 88.63,
+    "max_drawdown_period_gross": [
+     "1993-12-31",
+     "2001-09-12"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-china-index.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-china-index-usd-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "FXI",
+    "name": "iShares China Large-Cap ETF",
+    "issuer": "iShares (BlackRock)",
+    "inception": "2004-10-05",
+    "delisted": null,
+    "window_requested": [
+     "1990-12-31",
+     "2020-12-31"
+    ],
+    "entry_from_inception": true,
+    "status": "ok",
+    "window_years": 16.23,
+    "entry_used": "2004-10-08",
+    "exit_used": "2020-12-31",
+    "ann_log_return": 0.08043655105539392,
+    "cagr": 0.08376008102737353,
+    "total_log_return": 1.3054835719544837,
+    "total_return": 2.689472787965089,
+    "too_short_to_annualise": false,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.7267577734115183,
+    "spy": {
+     "ann_log_return": 0.09413511738690256,
+     "total_log_return": 1.5278110222301393,
+     "max_dd": -0.5518943971707635,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": 0.07914097793885055,
+     "total_log_return": 1.284456446876129,
+     "max_dd": -0.6643428338822166,
+     "status": "ok"
+    },
+    "vt": {
+     "ann_log_return": 0.07385267226587074,
+     "total_log_return": 1.1986273543931054,
+     "benchmark": "vt_proxy",
+     "proxy_rule": "2000",
+     "switch_date": "2008-06-26"
+    }
+   }
+  },
+  {
+   "iso3": "KOR",
+   "year": 1975,
+   "kind": "history",
+   "name": "South Korea",
+   "pyramid": {
+    "median_age": 19.864117518450886,
+    "u15": 0.38527495181980925,
+    "wa": 0.5786504194756681,
+    "o65": 0.0360746287045229,
+    "s0_s20": 1.4340750810613039,
+    "tfr": 3.3126
+   },
+   "distance": {
+    "d_blend_chn1990": 0.688201904296875,
+    "pct_same_year": 0.10273972602739725,
+    "pct_band": "nearest quarter",
+    "n_same_year": 146
+   },
+   "levels": {
+    "y_t": 4679.815969246964,
+    "multiples": {
+     "10": 1.7640189343115809,
+     "20": 5.279512069369988,
+     "30": 7.64858077755973
+    },
+    "y_last_year": 2023,
+    "mult_last": 11.194625811575056,
+    "state": "ok"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI Korea Index",
+    "verified": true,
+    "since": "1994-05-31",
+    "clipped_to_index_history": true,
+    "ann_pct_gross_since": 8.74,
+    "ann_pct_net_since": 13.61,
+    "net_since": "2000-12-29",
+    "max_drawdown_pct_gross": 82.15,
+    "max_drawdown_period_gross": [
+     "1994-10-31",
+     "1997-12-31"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-korea-index.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-korea-index-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "EWY",
+    "name": "iShares MSCI South Korea ETF",
+    "issuer": "iShares (BlackRock)",
+    "inception": "2000-05-09",
+    "delisted": null,
+    "window_requested": [
+     "1975-12-31",
+     "2005-12-30"
+    ],
+    "entry_from_inception": true,
+    "status": "ok",
+    "window_years": 5.63,
+    "entry_used": "2000-05-12",
+    "exit_used": "2005-12-30",
+    "ann_log_return": 0.15044584326990013,
+    "cagr": 0.16235235419581606,
+    "total_log_return": 0.8476866405186979,
+    "total_return": 1.3342406633379973,
+    "too_short_to_annualise": false,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.5077024567783434,
+    "spy": {
+     "ann_log_return": -0.008547174873519466,
+     "total_log_return": -0.04815903049884479,
+     "max_dd": -0.47274270497851967,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": null,
+     "total_log_return": null,
+     "max_dd": null,
+     "status": "no_fund_at_entry"
+    },
+    "vt": {
+     "ann_log_return": 0.01127925108075292,
+     "total_log_return": 0.06355290547348257,
+     "benchmark": "vt_proxy",
+     "proxy_rule": "2000",
+     "switch_date": null
+    }
+   }
+  },
+  {
+   "iso3": "KOR",
+   "year": 1990,
+   "kind": "history",
+   "name": "South Korea",
+   "pyramid": {
+    "median_age": 26.729932556287412,
+    "u15": 0.2582660610449866,
+    "wa": 0.6928808903069718,
+    "o65": 0.04885304864804167,
+    "s0_s20": 0.7465520113239626,
+    "tfr": 1.6025
+   },
+   "distance": {
+    "d_blend_chn1990": 0.38017594814300537,
+    "pct_same_year": 0.046052631578947366,
+    "pct_band": "nearest 5 %",
+    "n_same_year": 152
+   },
+   "levels": {
+    "y_t": 14580.443369040662,
+    "multiples": {
+     "10": 1.915706695981857,
+     "20": 2.8441802449282214,
+     "30": 3.4237682696697265
+    },
+    "y_last_year": 2023,
+    "mult_last": 3.5930861165712407,
+    "state": "ok"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI Korea Index",
+    "verified": true,
+    "since": "1994-05-31",
+    "clipped_to_index_history": true,
+    "ann_pct_gross_since": 8.74,
+    "ann_pct_net_since": 13.61,
+    "net_since": "2000-12-29",
+    "max_drawdown_pct_gross": 82.15,
+    "max_drawdown_period_gross": [
+     "1994-10-31",
+     "1997-12-31"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-korea-index.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-korea-index-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "EWY",
+    "name": "iShares MSCI South Korea ETF",
+    "issuer": "iShares (BlackRock)",
+    "inception": "2000-05-09",
+    "delisted": null,
+    "window_requested": [
+     "1990-12-31",
+     "2020-12-31"
+    ],
+    "entry_from_inception": true,
+    "status": "ok",
+    "window_years": 20.64,
+    "entry_used": "2000-05-12",
+    "exit_used": "2020-12-31",
+    "ann_log_return": 0.08247360988957213,
+    "cagr": 0.08597001419230188,
+    "total_log_return": 1.7020836997880757,
+    "total_return": 4.485365346410946,
+    "too_short_to_annualise": false,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.7414300555564496,
+    "spy": {
+     "ann_log_return": 0.065566351587276,
+     "total_log_return": 1.3531530684870265,
+     "max_dd": -0.5518943971707635,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": null,
+     "total_log_return": null,
+     "max_dd": null,
+     "status": "no_fund_at_entry"
+    },
+    "vt": {
+     "ann_log_return": 0.05270469734098147,
+     "total_log_return": 1.087715286944061,
+     "benchmark": "vt_proxy",
+     "proxy_rule": "2000",
+     "switch_date": "2008-06-26"
+    }
+   }
+  },
+  {
+   "iso3": "JPN",
+   "year": 1960,
+   "kind": "history",
+   "name": "Japan",
+   "pyramid": {
+    "median_age": 25.75651704547435,
+    "u15": 0.29833572400328484,
+    "wa": 0.6442378132160419,
+    "o65": 0.05742646278067343,
+    "s0_s20": 0.9186279042964517,
+    "tfr": 1.9808
+   },
+   "distance": {
+    "d_blend_chn1990": 0.578444242477417,
+    "pct_same_year": 0.021739130434782608,
+    "pct_band": "nearest 5 %",
+    "n_same_year": 138
+   },
+   "levels": {
+    "y_t": 6471.657294481444,
+    "multiples": {
+     "10": 2.39798767354961,
+     "20": 3.6506247976080495,
+     "30": 5.066385534469184
+    },
+    "y_last_year": 2023,
+    "mult_last": 6.700550785096036,
+    "state": "ok"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI Japan Index",
+    "verified": true,
+    "since": "1994-05-31",
+    "clipped_to_index_history": true,
+    "ann_pct_gross_since": 3.33,
+    "ann_pct_net_since": 3.1,
+    "net_since": "1994-05-31",
+    "max_drawdown_pct_gross": 62.83,
+    "max_drawdown_period_gross": [
+     "1989-02-28",
+     "2003-04-28"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-japan-index.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-japan-index-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "no US-listed single-country fund existed inside the window",
+    "ticker": "EWJ",
+    "inception": "1996-03-12",
+    "window_end": "1990-12-31"
+   }
+  },
+  {
+   "iso3": "TWN",
+   "year": 1970,
+   "kind": "history",
+   "name": "Taiwan",
+   "pyramid": {
+    "median_age": 18.78013243331842,
+    "u15": 0.40862634812633153,
+    "wa": 0.5638885056630283,
+    "o65": 0.02748514621064019,
+    "s0_s20": 1.6921813613324928,
+    "tfr": 3.9755
+   },
+   "distance": {
+    "d_blend_chn1990": 0.9518320560455322,
+    "pct_same_year": 0.3541666666666667,
+    "pct_band": "nearest half",
+    "n_same_year": 144
+   },
+   "levels": {
+    "y_t": 6102.024156610627,
+    "multiples": {
+     "10": 2.067809051140277,
+     "20": 3.8528179503439857,
+     "30": 6.450724161547869
+    },
+    "y_last_year": 2023,
+    "mult_last": 10.652916189311165,
+    "state": "ok"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI Taiwan Index",
+    "verified": true,
+    "since": "1994-05-31",
+    "clipped_to_index_history": true,
+    "ann_pct_gross_since": 9.35,
+    "ann_pct_net_since": 12.11,
+    "net_since": "2000-12-29",
+    "max_drawdown_pct_gross": 77.9,
+    "max_drawdown_period_gross": [
+     "1990-01-31",
+     "1990-09-28"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-taiwan-index.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-taiwan-index-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "EWT",
+    "name": "iShares MSCI Taiwan ETF",
+    "issuer": "iShares (BlackRock)",
+    "inception": "2000-06-20",
+    "delisted": null,
+    "window_requested": [
+     "1970-12-31",
+     "2000-12-29"
+    ],
+    "entry_from_inception": true,
+    "status": "ok",
+    "window_years": 0.52,
+    "entry_used": "2000-06-23",
+    "exit_used": "2000-12-29",
+    "ann_log_return": -1.0819004320972263,
+    "cagr": -0.6610492397316075,
+    "total_log_return": -0.5598334884774149,
+    "total_return": -0.42869581534111356,
+    "too_short_to_annualise": true,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.47433796754580837,
+    "spy": {
+     "ann_log_return": -0.17434389642528075,
+     "total_log_return": -0.09021491149727054,
+     "max_dd": -0.1675050324191396,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": null,
+     "total_log_return": null,
+     "max_dd": null,
+     "status": "no_fund_at_entry"
+    },
+    "vt": {
+     "ann_log_return": -0.17434389642528075,
+     "total_log_return": -0.09021491149727054,
+     "benchmark": "vt_proxy",
+     "proxy_rule": "2000",
+     "switch_date": null
+    }
+   }
+  },
+  {
+   "iso3": "THA",
+   "year": 1985,
+   "kind": "history",
+   "name": "Thailand",
+   "pyramid": {
+    "median_age": 21.938873675778797,
+    "u15": 0.34138167046101975,
+    "wa": 0.6233295830416876,
+    "o65": 0.03528874649729265,
+    "s0_s20": 1.0287660783570292,
+    "tfr": 2.4496
+   },
+   "distance": {
+    "d_blend_chn1990": 0.5094806551933289,
+    "pct_same_year": 0.0728476821192053,
+    "pct_band": "nearest 10 %",
+    "n_same_year": 151
+   },
+   "levels": {
+    "y_t": 4745.416721229539,
+    "multiples": {
+     "10": 2.0147729944797756,
+     "20": 2.3838500229840305,
+     "30": 3.7827087909646364
+    },
+    "y_last_year": 2023,
+    "mult_last": 4.694773333312491,
+    "state": "ok"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI Thailand Index",
+    "verified": true,
+    "since": "1994-05-31",
+    "clipped_to_index_history": true,
+    "ann_pct_gross_since": 2.29,
+    "ann_pct_net_since": 11.21,
+    "net_since": "2000-12-29",
+    "max_drawdown_pct_gross": 92.32,
+    "max_drawdown_period_gross": [
+     "1994-10-31",
+     "1998-08-31"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-thailand-index.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-thailand-index-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "THD",
+    "name": "iShares MSCI Thailand ETF",
+    "issuer": "iShares (BlackRock)",
+    "inception": "2008-03-26",
+    "delisted": null,
+    "window_requested": [
+     "1985-12-31",
+     "2015-12-31"
+    ],
+    "entry_from_inception": true,
+    "status": "ok",
+    "window_years": 7.75,
+    "entry_used": "2008-04-01",
+    "exit_used": "2015-12-31",
+    "ann_log_return": 0.04309541470032717,
+    "cagr": 0.04403750662414807,
+    "total_log_return": 0.3339083466171825,
+    "total_return": 0.3964151515366874,
+    "too_short_to_annualise": false,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.642177857625246,
+    "spy": {
+     "ann_log_return": 0.07279042187612961,
+     "total_log_return": 0.5639887581367469,
+     "max_dd": -0.5148145937702386,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": -0.026650086206844753,
+     "total_log_return": -0.2064880053808916,
+     "max_dd": -0.6428302720685415,
+     "status": "ok"
+    },
+    "vt": {
+     "ann_log_return": 0.03213879005651245,
+     "total_log_return": 0.2490151289799596,
+     "benchmark": "vt_proxy",
+     "proxy_rule": "2005",
+     "switch_date": "2008-06-26"
+    }
+   }
+  },
+  {
+   "iso3": "VNM",
+   "year": 2000,
+   "kind": "history",
+   "name": "Vietnam",
+   "pyramid": {
+    "median_age": 23.738290199450326,
+    "u15": 0.3149617102842111,
+    "wa": 0.6251960575424163,
+    "o65": 0.0598422321733724,
+    "s0_s20": 0.9152412477332819,
+    "tfr": 2.0277
+   },
+   "distance": {
+    "d_blend_chn1990": 0.4760877192020416,
+    "pct_same_year": 0.1032258064516129,
+    "pct_band": "nearest quarter",
+    "n_same_year": 155
+   },
+   "levels": {
+    "y_t": 2607.5136991257655,
+    "multiples": {
+     "10": 2.48729494471306,
+     "20": 4.587606057403503,
+     "30": null
+    },
+    "y_last_year": 2023,
+    "mult_last": 5.118663610226093,
+    "state": "clipped to last observed year 2023"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI Vietnam Index",
+    "verified": true,
+    "since": "2006-11-30",
+    "clipped_to_index_history": true,
+    "ann_pct_gross_since": 2.7,
+    "ann_pct_net_since": 2.7,
+    "net_since": "2006-11-30",
+    "max_drawdown_pct_gross": 78.36,
+    "max_drawdown_period_gross": [
+     "2007-02-27",
+     "2009-02-24"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-vietnam-index.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-vietnam-index-usd-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "VNM",
+    "name": "VanEck Vietnam ETF (formerly Market Vectors Vietnam ETF)",
+    "issuer": "VanEck",
+    "inception": "2009-08-11",
+    "delisted": null,
+    "window_requested": [
+     "2000-12-29",
+     "2025-12-31"
+    ],
+    "entry_from_inception": true,
+    "status": "ok",
+    "window_years": 16.38,
+    "entry_used": "2009-08-14",
+    "exit_used": "2025-12-31",
+    "ann_log_return": -0.0025939431111257974,
+    "cagr": -0.002590581747717202,
+    "total_log_return": -0.042490244035224216,
+    "total_return": -0.041600184409820606,
+    "too_short_to_annualise": false,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.6325008309684288,
+    "spy": {
+     "ann_log_return": 0.13487439097579784,
+     "total_log_return": 2.2093182237048556,
+     "max_dd": -0.3371726769000345,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": 0.04738897409560698,
+     "total_log_return": 0.7762579931937483,
+     "max_dd": -0.39822328128281814,
+     "status": "ok"
+    },
+    "vt": {
+     "ann_log_return": 0.10042055844149436,
+     "total_log_return": 1.6449451092551972,
+     "benchmark": "vt",
+     "proxy_rule": null,
+     "switch_date": null
+    }
+   }
+  },
+  {
+   "iso3": "IND",
+   "year": 2005,
+   "kind": "history",
+   "name": "India",
+   "pyramid": {
+    "median_age": 23.311488970253162,
+    "u15": 0.3356191970193165,
+    "wa": 0.6176340523010244,
+    "o65": 0.046746750679659534,
+    "s0_s20": 1.2462803973269259,
+    "tfr": 2.9584
+   },
+   "distance": {
+    "d_blend_chn1990": 0.3763975501060486,
+    "pct_same_year": 0.057692307692307696,
+    "pct_band": "nearest 10 %",
+    "n_same_year": 156
+   },
+   "levels": {
+    "y_t": 3157.962478769873,
+    "multiples": {
+     "10": 1.8828156965085656,
+     "20": null,
+     "30": null
+    },
+    "y_last_year": 2023,
+    "mult_last": 2.7623623445291603,
+    "state": "clipped to last observed year 2023"
+   },
+   "msci": {
+    "state": "ok",
+    "index_name": "MSCI India Index",
+    "verified": true,
+    "since": "1994-05-31",
+    "clipped_to_index_history": false,
+    "ann_pct_gross_since": 7.64,
+    "ann_pct_net_since": 10.05,
+    "net_since": "2000-12-29",
+    "max_drawdown_pct_gross": 72.6,
+    "max_drawdown_period_gross": [
+     "2008-01-07",
+     "2009-03-05"
+    ],
+    "url_gross": "https://www.msci.com/documents/10199/255599/msci-india-index-gross-usd.pdf",
+    "url_net": "https://www.msci.com/documents/10199/255599/msci-india-index-net.pdf",
+    "accessed": "2026-09-04",
+    "as_of": "2026-08-31"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "EPI",
+    "name": "WisdomTree India Earnings Fund",
+    "issuer": "WisdomTree",
+    "inception": "2008-02-22",
+    "delisted": null,
+    "window_requested": [
+     "2005-12-30",
+     "2025-12-31"
+    ],
+    "entry_from_inception": true,
+    "status": "ok",
+    "window_years": 17.85,
+    "entry_used": "2008-02-26",
+    "exit_used": "2025-12-31",
+    "ann_log_return": 0.04311251712415574,
+    "cagr": 0.04405536234876695,
+    "total_log_return": 0.769356294634489,
+    "total_return": 1.1583764480198075,
+    "too_short_to_annualise": false,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.6620793900163061,
+    "spy": {
+     "ann_log_return": 0.10809830979222657,
+     "total_log_return": 1.9290480033558735,
+     "max_dd": -0.5148145937702386,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": 0.02814003547785555,
+     "total_log_return": 0.502167696768412,
+     "max_dd": -0.6428302720685415,
+     "status": "ok"
+    },
+    "vt": {
+     "ann_log_return": 0.07589997147120116,
+     "total_log_return": 1.354458628471702,
+     "benchmark": "vt_proxy",
+     "proxy_rule": "2005",
+     "switch_date": "2008-06-26"
+    }
+   }
+  },
+  {
+   "iso3": "PHL",
+   "year": 2024,
+   "kind": "now",
+   "name": "Philippines",
+   "pyramid": {
+    "median_age": 26.755841513464826,
+    "u15": 0.2786806650721614,
+    "wa": 0.6663999854286384,
+    "o65": 0.05491934949920008,
+    "s0_s20": 0.8537576089778727,
+    "tfr": 1.8936
+   },
+   "distance": {
+    "d_blend_chn1990": 0.45537230372428894,
+    "pct_same_year": 0.09316770186335403,
+    "pct_band": "nearest 10 %",
+    "n_same_year": 161
+   },
+   "levels": {
+    "y_t": null,
+    "multiples": {},
+    "y_last_year": 2023,
+    "mult_last": null,
+    "state": "no level at 2024 (level series ends 2023)"
+   },
+   "msci": {
+    "state": "no MSCI figure transcribed",
+    "note": "now-row: no historical index figure needed"
+   },
+   "fund": {
+    "state": "ok",
+    "ticker": "EPHE",
+    "name": "iShares MSCI Philippines ETF",
+    "issuer": "iShares (BlackRock)",
+    "inception": "2010-09-28",
+    "delisted": null,
+    "window_requested": [
+     "2024-12-31",
+     "2025-12-31"
+    ],
+    "entry_from_inception": false,
+    "status": "ok",
+    "window_years": 1.0,
+    "entry_used": "2024-12-31",
+    "exit_used": "2025-12-31",
+    "ann_log_return": 0.015470101172650658,
+    "cagr": 0.015590382642859613,
+    "total_log_return": 0.015459512465482519,
+    "total_return": 0.01557962891062914,
+    "too_short_to_annualise": false,
+    "min_annualise_years": 1.0,
+    "max_dd": -0.16224572267805115,
+    "spy": {
+     "ann_log_return": 0.16324265953006128,
+     "total_log_return": 0.1631309260190893,
+     "max_dd": -0.18755234489427308,
+     "status": "ok"
+    },
+    "eem": {
+     "ann_log_return": 0.2927223121488317,
+     "total_log_return": 0.2925219546456498,
+     "max_dd": -0.1504190384462144,
+     "status": "ok"
+    },
+    "vt": {
+     "ann_log_return": 0.20253974271642416,
+     "total_log_return": 0.20240111181791876,
+     "benchmark": "vt",
+     "proxy_rule": null,
+     "switch_date": null
+    }
+   }
+  },
+  {
+   "iso3": "BGD",
+   "year": 2024,
+   "kind": "now",
+   "name": "Bangladesh",
+   "pyramid": {
+    "median_age": 26.666797089155267,
+    "u15": 0.27988930249878363,
+    "wa": 0.6551260617768493,
+    "o65": 0.06498463572436707,
+    "s0_s20": 1.03774773859132,
+    "tfr": 2.1384
+   },
+   "distance": {
+    "d_blend_chn1990": 0.45693495869636536,
+    "pct_same_year": 0.09937888198757763,
+    "pct_band": "nearest 10 %",
+    "n_same_year": 161
+   },
+   "levels": {
+    "y_t": null,
+    "multiples": {},
+    "y_last_year": 2023,
+    "mult_last": null,
+    "state": "no level at 2024 (level series ends 2023)"
+   },
+   "msci": {
+    "state": "no MSCI figure transcribed",
+    "note": "now-row: no historical index figure needed"
+   },
+   "fund": {
+    "state": "no US-listed single-country fund"
+   }
+  },
+  {
+   "iso3": "NPL",
+   "year": 2024,
+   "kind": "now",
+   "name": "Nepal",
+   "pyramid": {
+    "median_age": 26.04997376310151,
+    "u15": 0.28429170101479345,
+    "wa": 0.6506736572208095,
+    "o65": 0.06503464176439701,
+    "s0_s20": 0.9543384940547522,
+    "tfr": 1.9613
+   },
+   "distance": {
+    "d_blend_chn1990": 0.547476053237915,
+    "pct_same_year": 0.14285714285714285,
+    "pct_band": "nearest quarter",
+    "n_same_year": 161
+   },
+   "levels": {
+    "y_t": null,
+    "multiples": {},
+    "y_last_year": 2023,
+    "mult_last": null,
+    "state": "no level at 2024 (level series ends 2023)"
+   },
+   "msci": {
+    "state": "no MSCI figure transcribed",
+    "note": "now-row: no historical index figure needed"
+   },
+   "fund": {
+    "state": "no US-listed single-country fund"
+   }
+  },
+  {
+   "iso3": "LAO",
+   "year": 2024,
+   "kind": "now",
+   "name": "Laos",
+   "pyramid": {
+    "median_age": 25.630347446540007,
+    "u15": 0.30198398520634206,
+    "wa": 0.651358153140306,
+    "o65": 0.04665786165335189,
+    "s0_s20": 1.1082818062319677,
+    "tfr": 2.3965
+   },
+   "distance": {
+    "d_blend_chn1990": 0.30019107460975647,
+    "pct_same_year": 0.012422360248447204,
+    "pct_band": "nearest 5 %",
+    "n_same_year": 161
+   },
+   "levels": {
+    "y_t": null,
+    "multiples": {},
+    "y_last_year": 2023,
+    "mult_last": null,
+    "state": "no level at 2024 (level series ends 2023)"
+   },
+   "msci": {
+    "state": "no MSCI figure transcribed",
+    "note": "now-row: no historical index figure needed"
+   },
+   "fund": {
+    "state": "no US-listed single-country fund"
+   }
+  },
+  {
+   "iso3": "KHM",
+   "year": 2024,
+   "kind": "now",
+   "name": "Cambodia",
+   "pyramid": {
+    "median_age": 27.01901080159182,
+    "u15": 0.29793149193822704,
+    "wa": 0.640431491938227,
+    "o65": 0.06163701612354581,
+    "s0_s20": 1.2856472644777348,
+    "tfr": 2.5484
+   },
+   "distance": {
+    "d_blend_chn1990": 0.5146955847740173,
+    "pct_same_year": 0.11180124223602485,
+    "pct_band": "nearest quarter",
+    "n_same_year": 161
+   },
+   "levels": {
+    "y_t": null,
+    "multiples": {},
+    "y_last_year": 2023,
+    "mult_last": null,
+    "state": "no level at 2024 (level series ends 2023)"
+   },
+   "msci": {
+    "state": "no MSCI figure transcribed",
+    "note": "now-row: no historical index figure needed"
+   },
+   "fund": {
+    "state": "no US-listed single-country fund"
+   }
+  }
+ ]
+}

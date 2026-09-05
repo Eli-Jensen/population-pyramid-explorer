@@ -1,0 +1,399 @@
+# Manual NAV ladder for the delisted / liquidating funds of evals/econ/etf_universe.yaml (PREREG.md §6,
+# guard assertion 4). Hand-transcribed on 2026-09-04 from SEC filings (N-CSR financial highlights,
+# 485BPOS calendar-year bar charts tagged rr:AnnualReturnYYYY, 497 supplements, N-PORT Item B.5.a monthly
+# total returns) and issuer liquidation notices. Every number carries the URL that was actually read.
+#
+# Conventions
+#   tr_nav      : calendar-year NAV total return as a FRACTION (0.123 = +12.3 %), distributions reinvested
+#                 at NAV as the issuer computes it. Only FULL calendar years appear in `years`; null = not
+#                 found (E1's window_return treats it as 'manual_incomplete').
+#   method      : ncsr_fh      = "Total return" row of the fund's financial-highlights table (fiscal year =
+#                                calendar year; VanEck ETF Trust only)
+#                 485bpos_bar  = "Annual Total Returns (Years Ended December 31)" bar chart of the annual
+#                                prospectus update, read from the iXBRL tag rr:AnnualReturnYYYY
+#                 nport_compound = product of (1 + monthly total return) over the 12 N-PORT monthly returns
+#                                (Item B.5.a rtn1..rtn3; rtn1 = first month of the reporting quarter,
+#                                rtn3 = the period-end month; order verified on ERUS 2022-02: Feb = -80.43 %)
+#   partial_periods : stub periods (inception year, final year to liquidation) kept OUT of `years`; values
+#                 marked derived=true are arithmetic on two transcribed numbers, never a transcription.
+#   distributions   : liquidating distributions only (regular income dividends are inside tr_nav).
+#
+# IMPORTANT for the window arithmetic (E1): once a fund's holdings are marked at ~0 and it pays a series
+# of liquidating distributions on a residual NAV of a few cents (ERUS from 2022-08, RSX from 2023-01), the
+# issuer's "total return" figures assume each distribution is REINVESTED at the residual NAV — impossible
+# for a fund closed to purchases. For those years tr_nav is either null (ERUS) or transcribed but flagged
+# reinvestment_artifact=true (RSX). The economically meaningful path is the cash ladder given under
+# `cash_ladder`: value per original share = NAV at the last regular year-end x (1 + tr_nav to the halt
+# year) then + the distributions received, held at 0 % nominal, plus any residual NAV.
+#
+# Deviations from etf_universe.yaml found while transcribing (recorded here; the universe file is frozen,
+# RESULTS.md "Deviations from PREREG" must list them):
+#   NGE: last trading day was 2024-03-25, not 2023-07-28. The 2023-06-22 press release said 2023-07-28,
+#        but 497 supplements dated 2023-07-14 / 2023-08-07 / 2023-09-19 / 2024-03-01 moved the closing
+#        date to 2023-08-18, then 2023-09-28, then 2024-03-25; the fund was still in the 2024-02-28
+#        485BPOS with a 2023 calendar-year return. Yahoo's stale bar dated 2024-03-25 was therefore right.
+#        Consequence: NGE 2023 is a FULL year (-27.27 %), and liquidation fell on 2024-03-29.
+#   RSX: universe says distributions "2024-04-19, 2024-10-07, 2024-12-24" - confirmed, amounts added; an
+#        additional $0.0119 was declared 2025-12-22 (held by DTCC pending an OFAC licence).
+#   ERUS: universe knows only the 2022-08-17 distribution; four more were paid 2023-12-27 .. 2024-12-20
+#        totalling $4.066 per share (BlackRock product page), and NAV was $0.0352 on 2026-09-03.
+
+version: 1
+as_of: "2026-09-04"
+prereg: evals/econ/PREREG.md
+universe: evals/econ/etf_universe.yaml
+transcriber: E3 (manual NAV ladder subagent), 2026-09-04
+
+# Structured copy of the deviations above for decide_econ.py → RESULTS.md §10 (the universe file is frozen).
+prereg_deviations:
+  - "NGE delisting date: etf_universe.yaml (frozen) says 2023-07-28; 497 supplements dated 2023-07-14 / 2023-08-07 / 2023-09-19 / 2024-03-01 moved the closing date to 2024-03-25 (liquidation ~2024-03-29), so NGE 2023 is a full calendar year (-27.27 %) and the window arithmetic uses 2024-03-25. Yahoo's stale bar dated 2024-03-25 was the real last trade; the PREREG §6 remark about a bar 'eight months after the real last trade' was wrong about the date, not about the routing."
+  - "ERUS / RSX liquidating distributions: the universe knows only ERUS 2022-08-17 and the three RSX 2024 dates; four more ERUS distributions (2023-12-27, 2024-06-17, 2024-11-06, 2024-12-20; $4.098728/share in total incl. 2022) and RSX $0.0119 declared 2025-12-22 (held at DTCC pending an OFAC licence) were transcribed. Issuer 'total return' figures after the trading halts assume reinvestment at a residual NAV of cents (RSX 2023 +296.65 %, 2024 +421.94 %) and are flagged reinvestment_artifact — the window arithmetic uses the cash_ladder (NAV at the last regular year-end, then distributions as 0 % cash plus residual NAV) instead of compounding them."
+  - "Sources beyond N-CSR + liquidation notice (PREREG §6 names those two): PAK 2023 (+27.914 %) and ERUS 2022 (-99.844 %) and 2025 (+4.615 %) are twelve N-PORT Item B.5.a monthly returns compounded; NGE / PAK / FM / ERUS calendar years come from 485BPOS prospectus bar charts (iXBRL rr:AnnualReturnYYYY); EGPT and RSX from N-CSR financial highlights."
+  - "Not available from any issuer source: FM 2024 (December N-PORT never filed; 2024 null → the 2024-01-01..2025-01-09 span is a ladder gap), the NGE (2024-03-29) and PAK (2024-02-23) cash-out NAVs per share (final stubs after 2024-01-31 are ladder gaps), and an ERUS 2021-12-31 NAV (so the ERUS cash ladder cannot be expressed in return space after 2022; the 2022 -99.844 % mark is applied and the post-halt span is a ladder gap). Ladder gaps are held at 0 % and reported, never dropped."
+
+funds:
+
+  # ---------------------------------------------------------------------------------------------------
+  - ticker: EGPT
+    name: VanEck Egypt Index ETF (formerly Market Vectors Egypt Index ETF)
+    issuer: VanEck (VanEck ETF Trust, CIK 1137360; fiscal year = calendar year)
+    inception: "2010-02-16"
+    last_trading_day: "2024-03-21"
+    liquidation_date: "2024-03-28"
+    liquidation_nav: 21.38893
+    liquidation_nav_note: >-
+      Liquidating distribution per share, ex/record/payable 2024-03-28, read from the VanEck notice PDF
+      (text-extracted with pdftotext). Equals the per-share cash paid; no later distribution known.
+    liquidation_source_url: "https://www.vaneck.com/us/en/vaneck-egpt-liquidating-distribution.pdf"
+    distributions:
+      - date: "2024-03-28"
+        amount_per_share: 21.38893
+        type: final liquidating distribution
+        source_url: "https://www.vaneck.com/us/en/vaneck-egpt-liquidating-distribution.pdf"
+    years:
+      - {year: 2011, tr_nav: -0.4984, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041313001548/c72186_ncsr.htm", note: "FY2012 N-CSR, Egypt Index ETF financial highlights, column 2011"}
+      - {year: 2012, tr_nav: 0.4194, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041313001548/c72186_ncsr.htm", note: "FY2012 N-CSR; NAV 9.64 -> 12.75"}
+      - {year: 2013, tr_nav: 0.1090, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR, column 2013(#); NAV shown 51.00 -> 55.51 after a 2013 reverse share split (footnote #) - return unaffected"}
+      - {year: 2014, tr_nav: 0.1292, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR"}
+      - {year: 2015, tr_nav: -0.3389, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR"}
+      - {year: 2016, tr_nav: -0.3330, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR; 2016-11 EGP float"}
+      - {year: 2017, tr_nav: 0.2739, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR; NAV 26.02 -> 32.89"}
+      - {year: 2018, tr_nav: -0.1256, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR, column 2018"}
+      - {year: 2019, tr_nav: 0.0542, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR"}
+      - {year: 2020, tr_nav: -0.1009, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR"}
+      - {year: 2021, tr_nav: 0.0836, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR"}
+      - {year: 2022, tr_nav: -0.2367, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR; NAV 27.09 -> 20.41"}
+      - {year: 2023, tr_nav: 0.2478, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041324000899/c108367_ncsr.htm", note: "FY2023 N-CSR; NAV 20.41 -> 23.99; footnote (c): includes a $0.08/share payment from the Adviser"}
+    partial_periods:
+      - {period: "2010-02-16..2010-12-31", tr_nav: -0.0298, derived: false, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041313001548/c72186_ncsr.htm", note: "inception stub, FY2012 N-CSR column 'For the Period February 16, 2010 through December 31, 2010'; not annualised"}
+      - {period: "2024-01-01..2024-03-28", tr_nav: -0.1084, derived: true, method: derived, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041324000899/c108367_ncsr.htm", note: "21.38893 / 23.99 - 1 (liquidating distribution / NAV 2023-12-31 from the FY2023 N-CSR); assumes no other 2024 distribution (EGPT paid its income dividend each December). No N-PORT for Q1-2024 exists (fund terminated before the quarter end)."}
+    years_transcribed: 13
+    years_missing: 0
+    caveats:
+      - >-
+        Inception date 2010-02-16 confirmed by the FY2012 N-CSR stub-period column header (the universe had inception_verified: no).
+      - FY2023 footnote - the 24.78 % includes a one-off adviser payment of $0.08/share (~0.3 pp).
+
+  # ---------------------------------------------------------------------------------------------------
+  - ticker: NGE
+    name: Global X MSCI Nigeria ETF (formerly Global X Nigeria Index ETF)
+    issuer: Global X (Global X Funds, CIK 1432353; fiscal year ends Oct 31)
+    inception: "2013-04-02"
+    last_trading_day: "2024-03-25"
+    last_trading_day_note: >-
+      DEVIATION from etf_universe.yaml (2023-07-28). 497 supplement dated 2023-09-19: "As of the close of
+      regular trading on the NYSE Arca on March 25, 2024 (Closing Date), the shares of the Fund will cease
+      trading"; re-stated verbatim in the 2024-03-01 supplement. Earlier supplements (2023-07-14,
+      2023-08-07) had moved the date from 2023-07-28 to 2023-08-18 and 2023-09-28. The reason given: the
+      Fund's inability to convert naira into USD.
+    last_trading_day_source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000653/ck0001432353-20221031.htm"
+    liquidation_date: "2024-03-29"
+    liquidation_nav: null
+    liquidation_nav_note: >-
+      Not found in any issuer document. Secondary sources: investing.com profile shows a last close of
+      $3.73 on 2024-03-25 and "As of March 29, 2024 ... has gone out of business"; an unattributed search
+      snippet quoted NAV $3.7400 on 2024-03-29. Neither is an issuer figure -> null. The liquidation date
+      2024-03-29 rests on the same secondary sources; the issuer's 497 says only that liquidation
+      follows the 2024-03-25 closing date.
+    liquidation_source_url: "https://ng.investing.com/etfs/global-x-nigeria-index-profile"
+    distributions: []
+    distributions_note: single final distribution at NAV on or about 2024-03-29; amount not found (see liquidation_nav_note)
+    years:
+      - {year: 2014, tr_nav: -0.3191, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS filed 2023-02-27, rr:AnnualReturn2014; hybrid index (Solactive Nigeria to 2014-08-14, MSCI All Nigeria Select 25/50 after)"}
+      - {year: 2015, tr_nav: -0.2731, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2016, tr_nav: -0.4211, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27; 2016-06 naira float"}
+      - {year: 2017, tr_nav: 0.3413, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2018, tr_nav: -0.1655, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2019, tr_nav: -0.1639, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2020, tr_nav: 0.1608, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27; best quarter 2020-Q4 +29.17 %, worst 2020-Q1 -34.20 %"}
+      - {year: 2021, tr_nav: 0.0289, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2022, tr_nav: -0.0656, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27; also the 1-year figure in the average-annual table"}
+      - {year: 2023, tr_nav: -0.2727, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235324000059/ck0001432353-20231031.htm", note: "485BPOS filed 2024-02-28, rr:AnnualReturn2023 (fund still in the prospectus because trading ran to 2024-03-25); N-PORT monthly returns Aug..Dec 2023 = -10.74, -2.80, -4.17, -19.46, -11.51 % are consistent"}
+    partial_periods:
+      - {period: "2013-04-02..2013-12-31", tr_nav: null, derived: false, method: null, source_url: null, note: "inception stub not transcribed (Global X fiscal year ends Oct 31; no calendar stub published in the prospectus bar chart)"}
+      - {period: "2024-01-01..2024-01-31", tr_nav: 0.09131, derived: false, method: nport_month, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000175272424075288/primary_doc.xml", note: "N-PORT for period 2024-01-31, rtn3 (January 2024) = +9.131 %; Feb 1 .. Mar 29 2024 NOT available (no N-PORT for 2024-04-30 was filed) -> the final stub to liquidation is incomplete"}
+    years_transcribed: 10
+    years_missing: 0
+    caveats:
+      - The universe's delisted date 2023-07-28 is wrong by eight months; anything keyed to it (the 2023 selection-year stub, the Yahoo stale-bar assertion text) must be re-read against 2024-03-25.
+      - The final cash-out value per share (2024-03-29) is unknown from issuer sources; a window running past 2024-01-31 is 'manual_incomplete' for the last two months.
+
+  # ---------------------------------------------------------------------------------------------------
+  - ticker: PAK
+    name: Global X MSCI Pakistan ETF
+    issuer: Global X (Global X Funds, CIK 1432353; fiscal year ends Oct 31)
+    inception: "2015-04-22"
+    last_trading_day: "2024-02-16"
+    liquidation_date: "2024-02-23"
+    liquidation_nav: null
+    liquidation_nav_note: >-
+      The 2024-01-19 497 supplement (13 funds incl. PAK) states shares cease trading at the close on
+      2024-02-16 and the Funds liquidate on or about 2024-02-23 with a cash distribution equal to NAV;
+      no per-share amount was published in any filing read. No N-PORT covers February 2024.
+    liquidation_source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235324000014/a497-internationalfundsrel.htm"
+    distributions: []
+    distributions_note: single final distribution at NAV on or about 2024-02-23; amount not found
+    years:
+      - {year: 2016, tr_nav: 0.3608, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS filed 2023-02-27, rr:AnnualReturn2016"}
+      - {year: 2017, tr_nav: -0.2366, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27; MSCI FM -> EM reclassification 2017-05"}
+      - {year: 2018, tr_nav: -0.3035, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2019, tr_nav: 0.0024, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2020, tr_nav: -0.0265, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27"}
+      - {year: 2021, tr_nav: -0.1423, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27; MSCI EM -> FM 2021-11"}
+      - {year: 2022, tr_nav: -0.2982, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000143235323000113/ck0001432353-20221031.htm", note: "485BPOS 2023-02-27; also the 1-year figure in the average-annual table"}
+      - year: 2023
+        tr_nav: 0.27914
+        method: nport_compound
+        source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000175272424075264/primary_doc.xml"
+        note: >-
+          Not in any prospectus (PAK was dropped from the 2024-02-28 485BPOS). Compounded from the twelve
+          N-PORT monthly total returns (Item B.5.a, class C000081216): Jan +2.249 (period 2023-01-31,
+          .../000175272423075208/primary_doc.xml), Feb +3.662 / Mar -7.940 / Apr +3.328 (2023-04-30, amended
+          filing .../000175272423150977/primary_doc.xml, identical to the original), May +15.544 / Jun -0.821 /
+          Jul -2.119 (2023-07-31, .../000175272423223298/primary_doc.xml), Aug +14.122 / Sep +7.730 /
+          Oct -12.518 (2023-10-31, .../000175272423297182/primary_doc.xml), Nov +2.098 / Dec +3.001
+          (2024-01-31, source_url). Product = 1.27914. A web snippet's "18.49 %" for 2023 is a price-based
+          figure from an unidentified aggregator and was NOT used.
+    partial_periods:
+      - {period: "2015-04-22..2015-12-31", tr_nav: null, derived: false, method: null, source_url: null, note: "inception stub not transcribed (no calendar stub in the prospectus bar chart)"}
+      - {period: "2024-01-01..2024-01-31", tr_nav: 0.13445, derived: false, method: nport_month, source_url: "https://www.sec.gov/Archives/edgar/data/1432353/000175272424075264/primary_doc.xml", note: "N-PORT 2024-01-31 rtn3 = +13.445 %; Feb 1 .. Feb 23 2024 NOT available -> the final stub to liquidation is incomplete"}
+    years_transcribed: 8
+    years_missing: 0
+    caveats:
+      - 2023 rests on N-PORT monthly returns (issuer-reported class total returns) rather than a prospectus bar chart; the twelve months are all present and the amended April filing agrees with the original.
+      - The final three weeks (2024-02-01 .. 2024-02-23) and the cash-out NAV are unknown from issuer sources.
+
+  # ---------------------------------------------------------------------------------------------------
+  - ticker: FM
+    name: iShares Frontier and Select EM ETF (formerly iShares MSCI Frontier 100 ETF)
+    issuer: iShares / BlackRock (iShares, Inc., CIK 930667; fiscal year ends Aug 31)
+    inception: "2012-09-12"
+    last_trading_day: "2025-01-06"
+    liquidation_date: "2025-01-09"
+    liquidation_nav: 27.234261
+    liquidation_nav_note: >-
+      "Final distribution rate $27.234261 as of 01/09/2025"; "Closing price on final trading day of fund
+      $27.19 as of 01/06/2025" - iShares closed-funds page, read 2026-09-04. The 497 of 2024-12-30 cited in
+      the universe carries the same dates.
+    liquidation_source_url: "https://www.ishares.com/us/products/closed-funds/updates"
+    distributions:
+      - date: "2025-01-09"
+        amount_per_share: 27.234261
+        type: final liquidating distribution
+        source_url: "https://www.ishares.com/us/products/closed-funds/updates"
+    years:
+      - {year: 2013, tr_nav: 0.2560, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312521361414/d195032d485bpos.htm", note: "485BPOS filed 2021-12-20, series S000036005, rr:AnnualReturn2013 (first full year; index then MSCI Frontier Markets 100)"}
+      - {year: 2014, tr_nav: 0.0404, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS filed 2024-12-20, series S000036005 (same value in the 2021 filing)"}
+      - {year: 2015, tr_nav: -0.1532, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20"}
+      - {year: 2016, tr_nav: 0.0346, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20"}
+      - {year: 2017, tr_nav: 0.3366, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20"}
+      - {year: 2018, tr_nav: -0.1746, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20"}
+      - {year: 2019, tr_nav: 0.1747, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20"}
+      - {year: 2020, tr_nav: -0.0131, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20"}
+      - {year: 2021, tr_nav: 0.2261, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20; index changed to MSCI Frontier and Emerging Markets Select in 2021"}
+      - {year: 2022, tr_nav: -0.2593, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20"}
+      - {year: 2023, tr_nav: 0.0978, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312524283227/d857903d485bpos.htm", note: "485BPOS 2024-12-20; also the 1-year figure in the average-annual table"}
+      - year: 2024
+        tr_nav: null
+        method: null
+        source_url: "https://www.sec.gov/Archives/edgar/data/930667/000175272425012568/primary_doc.xml"
+        note: >-
+          December 2024 is missing: the last N-PORT covers 2024-11-30 (Sep +0.08 / Oct +0.29 / Nov -0.12 %)
+          and the fund terminated before the 2025-02-28 N-PORT; no prospectus was filed after 2024-12-20 and
+          the FY2025 N-CSR (filed 2025-11-05) carries no FM financial highlights. Jan..Nov 2024 compounded =
+          +6.751 % (Jan -1.83 / Feb +4.73 from .../000175272424088880/, Mar +6.00 / Apr -3.97 / May +3.72
+          from .../000175272424165627/, Jun -0.96 / Jul +0.07 / Aug -1.02 from .../000175272424239389/,
+          Sep..Nov from source_url). Price-based December figures exist on aggregators but are not NAV and
+          were not used. -> 'manual_incomplete' for 2024.
+    partial_periods:
+      - {period: "2012-09-12..2012-12-31", tr_nav: null, derived: false, method: null, source_url: null, note: "inception stub not transcribed"}
+      - {period: "2024-01-01..2024-11-30", tr_nav: 0.06751, derived: true, method: nport_compound, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000175272425012568/primary_doc.xml", note: "eleven N-PORT months, see the 2024 note; Dec 2024 and Jan 1..9 2025 missing"}
+      - {period: "2025-01-01..2025-01-09", tr_nav: null, derived: false, method: null, source_url: "https://www.ishares.com/us/products/closed-funds/updates", note: "final stub; the cash paid was $27.234261/share on 2025-01-09 (last close $27.19 on 2025-01-06) - usable as an absolute endpoint if a 2024-12-31 NAV is ever found"}
+    years_transcribed: 11
+    years_missing: 1
+    caveats:
+      - >-
+        FM is a basket fixture, never a selected fund (universe role: basket); 2013-2023 complete, 2024 incomplete by one month.
+      - Fiscal-year (Aug 31) NAV returns from the FY2024 N-CSR for cross-reference only, NOT calendar years - FY2024 +5.60 %, FY2023 +1.59 %, FY2022 -17.26 %, FY2021 +34.77 %, FY2020 -8.44 % (https://www.sec.gov/Archives/edgar/data/930667/000119312524251846/d891142dncsr.htm).
+
+  # ---------------------------------------------------------------------------------------------------
+  - ticker: ERUS
+    name: iShares MSCI Russia ETF
+    issuer: iShares / BlackRock (iShares, Inc., CIK 930667; fiscal year ends Aug 31)
+    inception: "2010-11-09"
+    last_trading_day: "2022-03-03"
+    last_trading_day_note: "NYSE Arca halted trading before the open on 2022-03-04 (FY2022 N-CSR: 'the NYSE Arca, Inc. halted trading on the Fund on March 4, 2022'); creations suspended 2022-03-01; plan of liquidation adopted 2022-08-03 (Form 8937)."
+    liquidation_date: null
+    liquidation_date_note: >-
+      Still in liquidation: "The Board of Directors of iShares, Inc. unanimously voted to continue to have
+      ERUS managed pursuant to the plan of liquidation through December 31, 2026" (BlackRock product page,
+      read 2026-09-04). NAV $0.0352 per share as of 2026-09-03 (same page). First liquidating
+      distribution 2022-08-17.
+    liquidation_nav: null
+    liquidation_nav_note: "no final NAV yet; residual NAV $0.0352 on 2026-09-03 (BlackRock product page). Cash paid so far: $4.098728 per share (sum of the five liquidating distributions below)."
+    liquidation_source_url: "https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf"
+    distributions:
+      - {date: "2022-08-17", amount_per_share: 0.032727, type: "liquidating distribution (return of capital, IRC 331)", source_url: "https://www.ishares.com/us/literature/tax-information/form-8937-erus-08-17-2022.pdf"}
+      - {date: "2023-12-27", amount_per_share: 0.354546, type: "liquidating distribution (return of capital); ex-date 2023-12-20", source_url: "https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf"}
+      - {date: "2024-06-17", amount_per_share: 0.230000, type: "liquidating distribution (return of capital); ex-date 2024-06-11", source_url: "https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf"}
+      - {date: "2024-11-06", amount_per_share: 2.796364, type: "liquidating distribution (return of capital); ex-date 2024-11-01", source_url: "https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf"}
+      - {date: "2024-12-20", amount_per_share: 0.685091, type: "liquidating distribution (return of capital); ex-date 2024-12-17", source_url: "https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf"}
+    distributions_note: >-
+      2023-2024 amounts are as listed in the distributions table of the BlackRock product page on
+      2026-09-04 (page text rendered by WebFetch); only the 2022-08-17 amount was cross-checked against a
+      Form 8937. The N-PORT monthly returns corroborate the timing (Nov 2023 +977 %, Mar 2024 +691 %,
+      Oct 2024 +7232 %, Nov 2024 +1557 %, Dec 2024 +17 % on a residual NAV of a few cents; the Mar-2024 and
+      Oct-2024 spikes are one month ahead of the payable dates because N-PORT books the ex-date).
+    years:
+      - {year: 2011, tr_nav: -0.2081, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312521361414/d195032d485bpos.htm", note: "485BPOS filed 2021-12-20, series S000047227, rr:AnnualReturn2011 (first full year)"}
+      - {year: 2012, tr_nav: 0.1368, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS filed 2022-12-27 (ERUS-only filing), same value in the 2021 filing"}
+      - {year: 2013, tr_nav: -0.0322, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2014, tr_nav: -0.4495, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2015, tr_nav: 0.0337, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2016, tr_nav: 0.5395, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2017, tr_nav: 0.0451, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2018, tr_nav: -0.0367, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2019, tr_nav: 0.4835, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2020, tr_nav: -0.0730, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27"}
+      - {year: 2021, tr_nav: 0.1798, method: 485bpos_bar, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000119312522312036/d439360d485bpos.htm", note: "485BPOS 2022-12-27, rr:AnnualReturn2021 (last year in any prospectus)"}
+      - year: 2022
+        tr_nav: -0.99844
+        method: nport_compound
+        source_url: "https://www.sec.gov/Archives/edgar/data/930667/000175272422092735/primary_doc.xml"
+        note: >-
+          Halt year. Twelve N-PORT monthly total returns: Jan -7.83 / Feb -80.43 (period 2022-02-28,
+          source_url), Mar -99.04 / Apr +0.47 / May -0.37 (.../000175272422167584/), Jun +9.42 / Jul -7.91 /
+          Aug -9.96 (.../000175272422234907/; August includes the $0.032727 distribution reinvested at the
+          residual NAV), Sep +0.31 / Oct -0.06 / Nov +0.43 (.../000175272423012230/), Dec -1.28
+          (.../000175272423086734/). Product = 0.00156 -> -99.844 %. Consistent with the FY2022 N-CSR
+          (NAV 45.29 on 2021-08-31 -> 0.04 on 2022-08-31, FY total return -99.85 %,
+          https://www.sec.gov/Archives/edgar/data/930667/000119312522276509/d390101dncsr.htm). The
+          reinvestment artifact is immaterial in 2022 (the distribution was 0.07 % of the start NAV).
+      - {year: 2023, tr_nav: null, method: null, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000175272424088809/primary_doc.xml", note: "N-PORT months compound to +1018 % only because the $0.354546 distribution is treated as reinvested at a ~$0.04 NAV; not a usable total return -> null. Use cash_ladder."}
+      - {year: 2024, tr_nav: null, method: null, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000175272425090497/primary_doc.xml", note: "N-PORT months compound to +1,163,088 % (same artifact, three distributions totalling $3.711455) -> null. Use cash_ladder."}
+      - {year: 2025, tr_nav: 0.04615, method: nport_compound, reinvestment_artifact: false, source_url: "https://www.sec.gov/Archives/edgar/data/930667/000141036826039498/primary_doc.xml", note: "no distribution in 2025; twelve N-PORT months (Jan +0.48 .. Dec +0.31 %, filings .../000175272425090497/, .../000175272425177802/, .../000141036825017821/, .../000141036826006908/, source_url) compound to +4.615 % on a residual NAV of ~$0.03 - economically nil per original share."}
+    partial_periods:
+      - {period: "2010-11-09..2010-12-31", tr_nav: null, derived: false, method: null, source_url: null, note: "inception stub not transcribed"}
+    cash_ladder:
+      note: >-
+        Per share held from 2021-12-31: apply 2011..2021 tr_nav, then 2022 = -99.844 % to a residual NAV
+        (~$0.04 after the $0.032727 paid 2022-08-17), then ADD the distributions as cash on their payable
+        dates (0.354546 in 2023; 0.230000 + 2.796364 + 0.685091 = 3.711455 in 2024; none in 2025) plus the
+        residual NAV ($0.0352 on 2026-09-03). Total cash paid to date $4.098728 per share; against an
+        implied 2021-12-31 NAV of about $46 (45.29 at 2021-08-31 x Sep-Dec 2021) that is roughly -91 %,
+        not -99.8 %. The implied start NAV is NOT transcribed - E1 should carry the ladder in return space
+        (value fraction of the 2021-12-31 NAV: 0.00156 after 2022; + 0.354546/NAV_2021 in 2023; etc.) only
+        if a 2021-12-31 NAV is sourced; otherwise report the window as 'manual_incomplete' past 2022.
+      distributions_total_to_date: 4.098728
+      residual_nav_2026_09_03: 0.0352
+      # NOT a nav_ reference key (the ladder code only reads nav_YYYY_MM_DD, and this figure has no source URL):
+      # the implied 2021-12-31 NAV named in the note above, kept machine-readable so decide_econ.py can quantify
+      # how far the -99.844 % mark understates the cash actually recovered (RESULTS.md §10). Replace with a sourced
+      # `nav_2021_12_31` (iShares daily NAV history or the 2021-12 N-PORT) to put ERUS on the same cash-ladder
+      # arithmetic as RSX.
+      implied_nav_2021_12_31_unsourced: 46.0
+    years_transcribed: 13
+    years_missing: 2
+    caveats:
+      - ERUS duplicates RSX for RUS (RSX has the earlier inception) and is never the RUS fund in the backtest; transcribed for completeness and as the second liquidating fixture.
+      - Post-halt 'total returns' (issuer and N-PORT alike) embed reinvestment at a residual NAV of cents and must not be compounded; the cash_ladder block is the meaningful path.
+      - 2023-2024 distribution amounts rest on one page read (BlackRock product page); Form 8937 notices for those dates were not fetched.
+
+  # ---------------------------------------------------------------------------------------------------
+  - ticker: RSX
+    name: VanEck Russia ETF (formerly Market Vectors Russia ETF)
+    issuer: VanEck (VanEck ETF Trust, CIK 1137360; fiscal year = calendar year)
+    inception: "2007-04-24"
+    inception_note: "FY2008 N-CSR stub column 'For the Period April 24, 2007 (commencement of operations) through December 31, 2007' - confirms the universe's secondary-source date (inception_verified was 'no')."
+    last_trading_day: "2022-03-03"
+    last_trading_day_note: "Cboe BZX halted trading 2022-03-04; plan of liquidation approved 2022-09-29; SEC exemptive relief to suspend redemptions 2022-12-28; Cboe BZX suspended trading and began delisting 2023-01-12 (FY2024 N-CSR Note 2 and universe status_url)."
+    liquidation_date: null
+    liquidation_date_note: >-
+      Still in liquidation as of the FY2025 N-CSR (filed 2026-03-10): "Upon payment of the final liquidating
+      distribution, the Funds will be terminated ... It is expected that the liquidation of the Funds will
+      take an extended period of time". MVIS Russia Index decommissioned 2023-07-31.
+    liquidation_nav: null
+    liquidation_nav_note: "no final NAV yet; NAV per share 0.37 (2022-12-31), 0.34 (2023-12-31), 0.34 (2024-12-31), 0.34 (2025-12-31) from the financial highlights. Cash paid so far: $1.6051 per share incl. the $0.0119 declared 2025-12-22 that DTCC is holding pending an OFAC licence (1.5932 actually released)."
+    liquidation_source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041326000713/c115545_ncsr-ixbrl.htm"
+    distributions:
+      - {date: "2023-01-12", amount_per_share: 0.0313, type: "liquidating distribution (return of capital); ex/record/pay 2023-01-12", source_url: "https://www.vaneck.com/us/en/vaneck-rsx-and-rsxj-liquidating-distributions-2023.pdf"}
+      - {date: "2023-07-27", amount_per_share: 0.3403, type: "liquidating distribution; ex/record/pay 2023-07-27", source_url: "https://www.vaneck.com/us/en/vaneck-rsx-and-rsxj-liquidating-distributions-2023.pdf"}
+      - {date: "2023-09-29", amount_per_share: 0.3144, type: "liquidating distribution; ex/record/pay 2023-09-29", source_url: "https://www.vaneck.com/us/en/vaneck-rsx-and-rsxj-liquidating-distributions-2023.pdf"}
+      - {date: "2024-04-19", amount_per_share: 0.6798, type: "liquidating distribution; ex 2024-04-15, record 2024-04-16 (proceeds of X5 Retail Group and TCS Group sales per FY2024 N-CSR Note 2)", source_url: "https://www.vaneck.com/us/en/vaneck-rsx-and-rsxj-liquidating-distributions.pdf"}
+      - {date: "2024-10-07", amount_per_share: 0.2202, type: "liquidating distribution; ex/record 2024-10-02 (Mobile Telesystems sale, Ozon loan close-outs)", source_url: "https://www.vaneck.com/us/en/vaneck-rsx-and-rsxj-liquidating-distributions.pdf"}
+      - {date: "2024-12-24", amount_per_share: 0.0072, type: "liquidating distribution; ex/record 2024-12-23", source_url: "https://www.vaneck.com/us/en/vaneck-rsx-and-rsxj-liquidating-distributions.pdf"}
+      - {date: "2025-12-26", amount_per_share: 0.0119, type: "distribution declared 2025-12-22 to holders of record 2025-12-22, paid to DTCC 2025-12-26 and HELD by DTCC pending an OFAC licence (not yet received by shareholders)", source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041326000713/c115545_ncsr-ixbrl.htm"}
+    years:
+      - {year: 2008, tr_nav: -0.7431, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041309001356/c56571_n-csr.htm", note: "FY2008 N-CSR; NAV 52.29 -> 13.06; same figure in the FY2012 N-CSR"}
+      - {year: 2009, tr_nav: 1.3836, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041313001548/c72186_ncsr.htm", note: "FY2012 N-CSR, column 2009; NAV 13.06 -> 31.05"}
+      - {year: 2010, tr_nav: 0.2127, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041313001548/c72186_ncsr.htm", note: "FY2012 N-CSR"}
+      - {year: 2011, tr_nav: -0.2820, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041313001548/c72186_ncsr.htm", note: "FY2012 N-CSR"}
+      - {year: 2012, tr_nav: 0.1535, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041313001548/c72186_ncsr.htm", note: "FY2012 N-CSR; NAV 26.32 -> 29.63"}
+      - {year: 2013, tr_nav: -0.0065, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR, column 2013; NAV 29.63 -> 28.69"}
+      - {year: 2014, tr_nav: -0.4495, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR; NAV 28.69 -> 15.17 (coincidentally identical to ERUS 2014)"}
+      - {year: 2015, tr_nav: 0.0039, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR"}
+      - {year: 2016, tr_nav: 0.4591, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR"}
+      - {year: 2017, tr_nav: 0.0462, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041318000885/c90572_ncsr.htm", note: "FY2017 N-CSR; footnote (b): 0.52 pp of it is a one-time foreign withholding-tax reclaim"}
+      - {year: 2018, tr_nav: -0.0647, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR, column 2018; NAV 21.14 -> 18.79"}
+      - {year: 2019, tr_nav: 0.4040, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR"}
+      - {year: 2020, tr_nav: -0.0138, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR"}
+      - {year: 2021, tr_nav: 0.1874, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "FY2022 N-CSR; NAV 23.82 -> 26.75 (last regular year-end)"}
+      - {year: 2022, tr_nav: -0.9862, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041323001009/c105809_ncsr.htm", note: "halt year; FY2022 N-CSR; NAV 26.75 -> 0.37; Russian holdings fair-valued at or near zero from March 2022; no distribution paid in 2022"}
+      - {year: 2023, tr_nav: 2.9665, method: ncsr_fh, reinvestment_artifact: true, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041324000899/c108367_ncsr.htm", note: "FY2023 N-CSR; NAV 0.37 -> 0.34 with $0.686 of liquidating distributions treated as reinvested at the residual NAV; footnote: 'includes the impact of proceeds from the sale of certain investments, which were previously being fair valued at zero'. Cash ladder instead: 0.34 + 0.6860 = 1.026 per share vs 0.37 (+177 %)."}
+      - {year: 2024, tr_nav: 4.2194, method: ncsr_fh, reinvestment_artifact: true, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041325000893/c111949_ncsr-ixbrl.htm", note: "FY2024 N-CSR; NAV 0.34 -> 0.34 with $0.9072 of liquidating distributions; same footnote. Cash ladder: 0.34 + 0.9072 received in 2024."}
+      - {year: 2025, tr_nav: 0.0364, method: ncsr_fh, reinvestment_artifact: false, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041326000713/c115545_ncsr-ixbrl.htm", note: "FY2025 N-CSR; NAV 0.34 -> 0.34; the $0.0119 declared 2025-12-22 is held at DTCC"}
+    partial_periods:
+      - {period: "2007-04-24..2007-12-31", tr_nav: 0.3361, derived: false, method: ncsr_fh, source_url: "https://www.sec.gov/Archives/edgar/data/1137360/000093041309001356/c56571_n-csr.htm", note: "inception stub, FY2008 N-CSR column 'April 24, 2007 (commencement of operations) through December 31, 2007'; NAV 39.22 -> 52.29; not annualised"}
+    cash_ladder:
+      note: >-
+        Per share held from 2021-12-31 (NAV 26.75): 2022 -98.62 % -> 0.37 at 2022-12-31; then cash
+        distributions 0.6860 (2023), 0.9072 (2024), 0.0119 declared 2025 (held at DTCC) and residual NAV
+        0.34 at 2025-12-31 -> about 1.94 per share released + 0.34 residual = 2.28 vs 26.75, i.e. roughly
+        -91.5 %. Compounding the transcribed 2023-2025 tr_nav instead would give 0.37 x 3.9665 x 5.2194 x
+        1.0364 = 7.94 per share - the reinvestment artifact; do not do that.
+      nav_2021_12_31: 26.75
+      nav_2022_12_31: 0.37
+      distributions_total_to_date: 1.6051
+      distributions_released_to_date: 1.5932
+      residual_nav_2025_12_31: 0.34
+    years_transcribed: 18
+    years_missing: 0
+    caveats:
+      - RSX is the RUS fund of the backtest (earliest inception); every window through T <= 2021 that ends after 2022-03-03 is liquidated_in_window.
+      - Years 2023-2025 carry the issuer's figures verbatim but are flagged reinvestment_artifact; use the cash_ladder block for value-at-liquidation arithmetic.
+      - >-
+        N-CSR NAV figures are per share after any accounting adjustments (footnote: "may differ from net asset values and performance reported elsewhere by the Fund").
+
+summary:
+  years_transcribed: {EGPT: 13, NGE: 10, PAK: 8, FM: 11, ERUS: 13, RSX: 18}
+  years_missing: {EGPT: 0, NGE: 0, PAK: 0, FM: 1, ERUS: 2, RSX: 0}
+  missing_detail:
+    FM: ["2024 (December N-PORT never filed; Jan..Nov = +6.751 %)"]
+    ERUS: ["2023 and 2024 (post-halt total returns meaningless; see cash_ladder)"]
+  liquidation_values:
+    EGPT: "$21.38893 per share paid 2024-03-28"
+    NGE: "unknown from issuer sources (secondary: ~$3.73-3.74, 2024-03-25/29)"
+    PAK: "unknown (NAV on or about 2024-02-23; no filing states it)"
+    FM: "$27.234261 per share paid 2025-01-09 (last close $27.19 on 2025-01-06)"
+    ERUS: "in liquidation; $4.098728 per share paid in five distributions 2022-08-17 .. 2024-12-20; residual NAV $0.0352 (2026-09-03)"
+    RSX: "in liquidation; $1.5932 per share released in six distributions 2023-01-12 .. 2024-12-24 (+$0.0119 held at DTCC since 2025-12-26); residual NAV $0.34 (2025-12-31)"

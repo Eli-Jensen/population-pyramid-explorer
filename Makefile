@@ -5,6 +5,11 @@ UV    := uv run
 NPM   := npm --prefix web
 WPP_FROM  ?= $(HOME)/Projects/pyramid-econ/data/raw/wpp2024
 ECON_FROM ?= $(HOME)/Projects/pyramid-econ
+# Survivorship guard assertion 4 (PREREG §6): `fail` = the pre-registered stop (default — `make backtest` IS the strict run).
+# Yahoo served full dead histories for EGPT/NGE/PAK/FM on 2026-09-04, so the recorded run was `make backtest DEAD_SERIES=ok`,
+# which records the A4 failure per ticker, DISCARDS those series and takes the funds from etf_manual.yaml; RESULTS.md §10 lists
+# the deviation and the exact command. The deviation is therefore an explicit choice on every run, never inherited.
+DEAD_SERIES ?= fail
 Q ?=
 
 .DEFAULT_GOAL := help
@@ -62,8 +67,8 @@ m0: data build test render embed eval build-emb ## the whole M0 chain, in order 
 labels: ## retrieve/transcribe external label sets → evals/labels/
 	$(UV) scripts/fetch_labels.py
 
-backtest: ## economic-lens backtest suite → evals/econ/RESULTS.md (refuses without a committed PREREG.md)
-	$(UV) --group econ scripts/fetch_etf.py
+backtest: ## economic-lens backtest → evals/econ/RESULTS.md (strict PREREG guard; the recorded run was `make backtest DEAD_SERIES=ok`, see RESULTS §10)
+	$(UV) --group econ scripts/fetch_etf.py --dead-series $(DEAD_SERIES)
 	$(UV) --group econ scripts/backtest_lookalikes.py
 	$(UV) --group econ scripts/panel_shape_growth.py
 	$(UV) --group econ scripts/disconnect_table.py
