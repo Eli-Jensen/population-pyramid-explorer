@@ -19,6 +19,8 @@
 import metaJson from '../data/meta.json';
 import entitiesJson from '../data/entities.json';
 import { decodeBlob } from './math/delta.ts';
+import { gunzip, isGzip } from './math/gz.ts';
+import { decodeEcon, type EconData } from './econ.ts';
 import { decodeF16 } from './math/f16.ts';
 import {
   N_DIMS,
@@ -252,15 +254,7 @@ export function bandTable(bands: Bands, name: string): Float32Array | undefined 
   return e ? bands.values.subarray(e[0], e[0] + e[1]) : undefined;
 }
 
-export function isGzip(bytes: Uint8Array): boolean {
-  return bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
-}
-
-/** Inflate a gzip buffer through `DecompressionStream('gzip')`. */
-export async function gunzip(buf: ArrayBuffer): Promise<Uint8Array> {
-  const stream = new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'));
-  return new Uint8Array(await new Response(stream).arrayBuffer());
-}
+export { gunzip, isGzip };
 
 // --------------------------------------------------------------------------------- tier 1
 
@@ -356,6 +350,22 @@ export function loadCorpus(): Promise<Corpus> {
       totals,
       source: { path: shares.path, decodeMs: shares.decodeMs, fetchMs: shares.fetchMs },
     };
+  });
+}
+
+// --------------------------------------------------------------------------------- tier 2b (econ)
+
+/**
+ * `econ.{sha8}.ecz` — the economic-lens file (PLAN §7), fetched AFTER the first paint and never in the first-paint
+ * set (the decoder itself is ~4 KB gz and rides in the entry; the econ COMPONENTS are the lazy chunk).
+ * Resolves to null when the build shipped no econ file (`meta.files.econ` absent) — the UI shows its "no econ data"
+ * state instead of failing.
+ */
+export function loadEcon(): Promise<EconData | null> {
+  return memo('econ', async () => {
+    const rel = cfg.meta.files.econ;
+    if (!rel) return null;
+    return decodeEcon(await fetchBytes(rel));
   });
 }
 

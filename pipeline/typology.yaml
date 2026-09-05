@@ -1,0 +1,192 @@
+# Demographic-dividend stage per (country, year) — thresholds for pyramid_explorer.econ.typology.
+#
+# Source of the rule (VERIFIED 2026-09-04 from the PDF text, Table 1 "Criteria for Typology", p. 11):
+#   Ahmed, S. A., M. Cruz, B. Quillin and P. Schellekens (2016). "Demographic Change and Development: A Global
+#   Typology". World Bank Policy Research Working Paper 7893 (the typology of the Global Monitoring Report
+#   2015/2016 "Development Goals in an Era of Demographic Change").
+#   https://documents1.worldbank.org/curated/en/867951479745020851/pdf/WPS7893.pdf
+#   Table 1 (verbatim structure): rows = growth of the working-age (15–64) population SHARE 2015–30 (<= 0 / > 0);
+#   columns = total fertility rate 1985 (< 2.1 / >= 2.1) for the non-growing row, total fertility rate 2015
+#   (< 4 / >= 4) for the growing row →
+#     share change <= 0 and TFR(1985) <  2.1  → post-dividend
+#     share change <= 0 and TFR(1985) >= 2.1  → late-dividend
+#     share change >  0 and TFR(2015) <  4    → early-dividend
+#     share change >  0 and TFR(2015) >= 4    → pre-dividend
+#   The paper motivates 30 years as "the approximate length of time that defines a generation" and the 15-year
+#   projection window as the 2030 Agenda horizon (footnote 9). Population data: UN WPP 2015 Revision, medium variant.
+#
+# ADAPTED here to every year y (the report classifies 2015 only):
+#   * the 15-year look-ahead is y → y + 15 from the WPP 2024 medium variant (estimates through 2023);
+#   * the "generation ago" fertility is TFR(y − 30) from WPP 2024 (the report used the 1985 value for 2015);
+#   * for y < 1980 the generation-ago TFR (year < 1950) is not observed, so a country whose working-age share is
+#     NOT growing over the next 15 years gets stage 0 = n/a rather than a guessed late/post split (the growing
+#     branch needs only TFR(y) and is assigned normally);
+#   * the WPP vintage differs (2024 vs 2015), so borderline 2015 cases may move — see `reproduction_2015`.
+# Nothing here says what a stage implies for growth or markets; it is a demographic descriptor.
+
+version: 1
+source:
+  citation: "Ahmed, Cruz, Quillin & Schellekens (2016), World Bank PRWP 7893, Table 1; GMR 2015/2016 typology"
+  url: https://documents1.worldbank.org/curated/en/867951479745020851/pdf/WPS7893.pdf
+  verified: true
+  verified_on: "2026-09-04"
+  adapted: true
+
+thresholds:
+  working_age_lo: 15            # inclusive, years
+  working_age_hi: 64            # inclusive, years (5-year bins: 15–19 … 60–64)
+  horizon_years: 15             # working-age share change y → y + horizon (report: 2015 → 2030)
+  share_change_growing: "> 0"   # percent change of the share; "<= 0" = not growing
+  generation_years: 30          # TFR looked up at y − 30 (report: 1985 for 2015)
+  tfr_replacement: 2.1          # post (< 2.1) vs late (>= 2.1) on TFR(y − 30)
+  tfr_high: 4.0                 # early (< 4) vs pre (>= 4) on TFR(y)
+  missing_generation_tfr: "n/a" # stage 0 when TFR(y − 30) is unobserved and the share is not growing
+
+codes: {0: n/a, 1: pre, 2: early, 3: late, 4: post}
+
+# Reproduction target: WPS7893 Table A1 (annex, pp. 39–44), hand-transcribed from the PDF text on 2026-09-04
+# (columns: type, % change in working-age share 2015–30, TFR 1985, TFR 2015; WPP 2015 Revision numbers).
+# `test_econ_export.py::test_typology_reproduces_2015_assignments` asserts the 20 `named` countries and reports
+# the agreement rate over the whole table; differences trace to the WPP 2015 → 2024 revision, not to the rule.
+reproduction_2015:
+  named: [CHN, IND, BRA, COD, DEU, JPN, NGA, BGD, VNM, THA, KOR, MEX, IDN, EGY, PAK, ZAF, USA, PHL, ITA, NPL]
+  # Observed on 2026-09-04 with WPP 2024: 112 of the 132 transcribed rows reproduce (85 %). The 20 that do not are
+  # all within a hair of a threshold in the report's own numbers or moved by the WPP 2015 → 2024 revision, e.g.
+  # RUS (TFR 1985 2.12 in WPP 2015 vs < 2.1 in WPP 2024 → post, not late), UZB (working-age share now projected to
+  # fall 2015–30 after the fertility rebound → late, not early), KEN / ETH / RWA / YEM (TFR 2015 revised across 4.0),
+  # COL / IRL / MYS / MAR / URY / ARE / KWT / JAM / FJI (share change within ±5 pp of zero, sign flipped by the
+  # revision), LVA / SRB (TFR 1985 across 2.1), DZA / IRN (share change sign), TLS (TFR 2015 5.33 → 3.78).
+  min_agreement_rate: 0.8
+  table_a1:
+    AFG: {stage: pre,   wa_change: 17.53, tfr_1985: 7.47, tfr_2015: 4.25}
+    ALB: {stage: late,  wa_change: -10.69, tfr_1985: 3.15, tfr_2015: 1.78}
+    DZA: {stage: early, wa_change: 0.99, tfr_1985: 5.30, tfr_2015: 2.62}
+    AGO: {stage: pre,   wa_change: 6.56, tfr_1985: 7.25, tfr_2015: 5.79}
+    ARG: {stage: early, wa_change: 1.13, tfr_1985: 3.05, tfr_2015: 2.27}
+    ARM: {stage: late,  wa_change: -8.09, tfr_1985: 2.58, tfr_2015: 1.51}
+    AUS: {stage: post,  wa_change: -6.42, tfr_1985: 1.86, tfr_2015: 1.86}
+    AUT: {stage: post,  wa_change: -9.17, tfr_1985: 1.45, tfr_2015: 1.53}
+    AZE: {stage: late,  wa_change: -7.88, tfr_1985: 2.95, tfr_2015: 2.22}
+    BHR: {stage: early, wa_change: 1.45, tfr_1985: 4.08, tfr_2015: 1.98}
+    BGD: {stage: early, wa_change: 6.15, tfr_1985: 4.98, tfr_2015: 2.08}
+    BLR: {stage: post,  wa_change: -8.41, tfr_1985: 2.00, tfr_2015: 1.64}
+    BEL: {stage: post,  wa_change: -6.77, tfr_1985: 1.56, tfr_2015: 1.83}
+    BEN: {stage: pre,   wa_change: 7.60, tfr_1985: 6.88, tfr_2015: 4.50}
+    BOL: {stage: early, wa_change: 4.99, tfr_1985: 5.09, tfr_2015: 2.83}
+    BRA: {stage: late,  wa_change: -1.41, tfr_1985: 3.10, tfr_2015: 1.74}
+    BGR: {stage: post,  wa_change: -4.91, tfr_1985: 1.95, tfr_2015: 1.60}
+    BFA: {stage: pre,   wa_change: 8.18, tfr_1985: 7.07, tfr_2015: 5.23}
+    KHM: {stage: early, wa_change: 2.39, tfr_1985: 5.99, tfr_2015: 2.53}
+    CMR: {stage: pre,   wa_change: 8.25, tfr_1985: 6.60, tfr_2015: 4.46}
+    CAN: {stage: post,  wa_change: -10.27, tfr_1985: 1.62, tfr_2015: 1.56}
+    TCD: {stage: pre,   wa_change: 7.99, tfr_1985: 7.21, tfr_2015: 5.79}
+    CHL: {stage: late,  wa_change: -4.98, tfr_1985: 2.60, tfr_2015: 1.73}
+    CHN: {stage: late,  wa_change: -7.12, tfr_1985: 2.75, tfr_2015: 1.59}
+    COL: {stage: late,  wa_change: -0.93, tfr_1985: 3.18, tfr_2015: 1.83}
+    COD: {stage: pre,   wa_change: 7.15, tfr_1985: 6.98, tfr_2015: 5.66}
+    CRI: {stage: late,  wa_change: -2.89, tfr_1985: 3.31, tfr_2015: 1.76}
+    HRV: {stage: post,  wa_change: -6.58, tfr_1985: 1.72, tfr_2015: 1.48}
+    CUB: {stage: post,  wa_change: -9.04, tfr_1985: 1.85, tfr_2015: 1.58}
+    CZE: {stage: post,  wa_change: -5.85, tfr_1985: 1.90, tfr_2015: 1.54}
+    DNK: {stage: post,  wa_change: -5.12, tfr_1985: 1.54, tfr_2015: 1.76}
+    DOM: {stage: early, wa_change: 2.71, tfr_1985: 3.65, tfr_2015: 2.38}
+    ECU: {stage: early, wa_change: 1.28, tfr_1985: 4.00, tfr_2015: 2.44}
+    EGY: {stage: early, wa_change: 3.29, tfr_1985: 5.15, tfr_2015: 3.16}
+    SLV: {stage: early, wa_change: 2.51, tfr_1985: 4.17, tfr_2015: 1.87}
+    EST: {stage: late,  wa_change: -5.97, tfr_1985: 2.20, tfr_2015: 1.66}
+    ETH: {stage: early, wa_change: 12.05, tfr_1985: 7.37, tfr_2015: 3.99}
+    FJI: {stage: late,  wa_change: -0.28, tfr_1985: 3.47, tfr_2015: 2.48}
+    FIN: {stage: post,  wa_change: -7.05, tfr_1985: 1.66, tfr_2015: 1.77}
+    FRA: {stage: post,  wa_change: -5.44, tfr_1985: 1.81, tfr_2015: 1.99}
+    GEO: {stage: late,  wa_change: -7.19, tfr_1985: 2.26, tfr_2015: 1.82}
+    DEU: {stage: post,  wa_change: -10.74, tfr_1985: 1.43, tfr_2015: 1.44}
+    GHA: {stage: early, wa_change: 6.42, tfr_1985: 5.88, tfr_2015: 3.95}
+    GRC: {stage: post,  wa_change: -2.46, tfr_1985: 1.53, tfr_2015: 1.30}
+    GTM: {stage: early, wa_change: 8.10, tfr_1985: 5.50, tfr_2015: 3.03}
+    GIN: {stage: pre,   wa_change: 6.57, tfr_1985: 6.63, tfr_2015: 4.73}
+    GNB: {stage: pre,   wa_change: 6.01, tfr_1985: 6.68, tfr_2015: 4.56}
+    HTI: {stage: early, wa_change: 6.11, tfr_1985: 5.70, tfr_2015: 2.85}
+    HND: {stage: early, wa_change: 7.02, tfr_1985: 5.37, tfr_2015: 2.25}
+    HKG: {stage: post,  wa_change: -17.53, tfr_1985: 1.36, tfr_2015: 1.30}
+    HUN: {stage: post,  wa_change: -4.48, tfr_1985: 1.86, tfr_2015: 1.40}
+    IND: {stage: early, wa_change: 3.11, tfr_1985: 4.27, tfr_2015: 2.34}
+    IDN: {stage: early, wa_change: 1.40, tfr_1985: 3.40, tfr_2015: 2.36}
+    IRN: {stage: early, wa_change: 1.48, tfr_1985: 5.62, tfr_2015: 1.62}
+    IRQ: {stage: pre,   wa_change: 5.10, tfr_1985: 6.09, tfr_2015: 4.35}
+    IRL: {stage: late,  wa_change: -1.78, tfr_1985: 2.18, tfr_2015: 2.00}
+    ISR: {stage: early, wa_change: 0.27, tfr_1985: 3.07, tfr_2015: 2.93}
+    ITA: {stage: post,  wa_change: -7.83, tfr_1985: 1.35, tfr_2015: 1.49}
+    JAM: {stage: late,  wa_change: -3.36, tfr_1985: 3.10, tfr_2015: 1.99}
+    JPN: {stage: post,  wa_change: -5.68, tfr_1985: 1.66, tfr_2015: 1.46}
+    JOR: {stage: early, wa_change: 7.74, tfr_1985: 6.02, tfr_2015: 3.20}
+    KAZ: {stage: late,  wa_change: -2.03, tfr_1985: 3.03, tfr_2015: 2.53}
+    KEN: {stage: pre,   wa_change: 8.34, tfr_1985: 6.54, tfr_2015: 4.10}
+    PRK: {stage: late,  wa_change: -1.47, tfr_1985: 2.36, tfr_2015: 1.94}
+    KOR: {stage: post,  wa_change: -13.45, tfr_1985: 1.60, tfr_2015: 1.33}   # printed "Korea, People's Rep." with HIC — the Republic of Korea row
+    KWT: {stage: late,  wa_change: -2.00, tfr_1985: 3.15, tfr_2015: 2.04}
+    LAO: {stage: early, wa_change: 6.81, tfr_1985: 6.27, tfr_2015: 2.77}
+    LVA: {stage: late,  wa_change: -5.61, tfr_1985: 2.13, tfr_2015: 1.55}
+    LBN: {stage: late,  wa_change: -1.84, tfr_1985: 3.23, tfr_2015: 1.71}
+    LTU: {stage: post,  wa_change: -7.62, tfr_1985: 2.06, tfr_2015: 1.63}
+    MDG: {stage: pre,   wa_change: 4.74, tfr_1985: 6.30, tfr_2015: 4.21}
+    MWI: {stage: pre,   wa_change: 9.24, tfr_1985: 7.30, tfr_2015: 4.88}
+    MYS: {stage: late,  wa_change: -1.75, tfr_1985: 3.59, tfr_2015: 1.90}
+    MLI: {stage: pre,   wa_change: 8.38, tfr_1985: 7.15, tfr_2015: 5.92}
+    MEX: {stage: early, wa_change: 2.42, tfr_1985: 3.75, tfr_2015: 2.14}
+    MNG: {stage: late,  wa_change: -1.48, tfr_1985: 4.84, tfr_2015: 2.54}
+    MAR: {stage: late,  wa_change: -0.95, tfr_1985: 4.45, tfr_2015: 2.38}
+    MOZ: {stage: pre,   wa_change: 7.28, tfr_1985: 6.33, tfr_2015: 5.12}
+    MMR: {stage: early, wa_change: 3.22, tfr_1985: 3.80, tfr_2015: 2.13}
+    NPL: {stage: early, wa_change: 10.01, tfr_1985: 5.33, tfr_2015: 2.09}
+    NLD: {stage: post,  wa_change: -8.89, tfr_1985: 1.55, tfr_2015: 1.77}
+    NZL: {stage: post,  wa_change: -6.56, tfr_1985: 2.03, tfr_2015: 1.99}
+    NIC: {stage: early, wa_change: 4.70, tfr_1985: 5.00, tfr_2015: 2.16}
+    NER: {stage: pre,   wa_change: 1.75, tfr_1985: 7.69, tfr_2015: 7.46}
+    NGA: {stage: pre,   wa_change: 6.15, tfr_1985: 6.60, tfr_2015: 5.41}
+    NOR: {stage: post,  wa_change: -5.43, tfr_1985: 1.80, tfr_2015: 1.81}
+    OMN: {stage: late,  wa_change: -4.18, tfr_1985: 7.85, tfr_2015: 2.51}
+    PAK: {stage: early, wa_change: 5.51, tfr_1985: 6.30, tfr_2015: 3.38}
+    PAN: {stage: early, wa_change: 0.27, tfr_1985: 3.24, tfr_2015: 2.36}
+    PNG: {stage: early, wa_change: 6.18, tfr_1985: 4.97, tfr_2015: 3.58}
+    PRY: {stage: early, wa_change: 2.65, tfr_1985: 4.77, tfr_2015: 2.45}
+    PER: {stage: early, wa_change: 1.69, tfr_1985: 4.10, tfr_2015: 2.35}
+    PHL: {stage: early, wa_change: 2.40, tfr_1985: 4.53, tfr_2015: 2.87}
+    POL: {stage: late,  wa_change: -8.38, tfr_1985: 2.16, tfr_2015: 1.33}
+    PRT: {stage: post,  wa_change: -5.92, tfr_1985: 1.62, tfr_2015: 1.24}
+    PRI: {stage: late,  wa_change: -3.09, tfr_1985: 2.26, tfr_2015: 1.59}
+    QAT: {stage: late,  wa_change: -2.27, tfr_1985: 4.41, tfr_2015: 1.95}
+    ROU: {stage: late,  wa_change: -3.79, tfr_1985: 2.22, tfr_2015: 1.53}
+    RUS: {stage: late,  wa_change: -8.60, tfr_1985: 2.12, tfr_2015: 1.72}
+    RWA: {stage: early, wa_change: 11.47, tfr_1985: 7.99, tfr_2015: 3.62}
+    SAU: {stage: early, wa_change: 3.09, tfr_1985: 6.22, tfr_2015: 2.59}
+    SEN: {stage: pre,   wa_change: 7.23, tfr_1985: 6.88, tfr_2015: 4.83}
+    SRB: {stage: late,  wa_change: -4.38, tfr_1985: 2.23, tfr_2015: 1.59}
+    SGP: {stage: post,  wa_change: -12.12, tfr_1985: 1.70, tfr_2015: 1.26}
+    SVK: {stage: late,  wa_change: -8.71, tfr_1985: 2.15, tfr_2015: 1.44}
+    SVN: {stage: post,  wa_change: -10.57, tfr_1985: 1.65, tfr_2015: 1.65}
+    SOM: {stage: pre,   wa_change: 4.81, tfr_1985: 7.26, tfr_2015: 6.12}
+    ZAF: {stage: early, wa_change: 2.73, tfr_1985: 4.00, tfr_2015: 2.28}
+    ESP: {stage: post,  wa_change: -6.41, tfr_1985: 1.46, tfr_2015: 1.38}
+    LKA: {stage: late,  wa_change: -1.84, tfr_1985: 2.64, tfr_2015: 2.03}
+    SDN: {stage: pre,   wa_change: 7.27, tfr_1985: 6.30, tfr_2015: 4.13}
+    SWE: {stage: post,  wa_change: -4.42, tfr_1985: 1.91, tfr_2015: 1.93}
+    CHE: {stage: post,  wa_change: -8.81, tfr_1985: 1.55, tfr_2015: 1.57}
+    SYR: {stage: early, wa_change: 11.32, tfr_1985: 5.87, tfr_2015: 2.77}
+    TZA: {stage: pre,   wa_change: 6.70, tfr_1985: 6.36, tfr_2015: 4.92}
+    THA: {stage: late,  wa_change: -7.29, tfr_1985: 2.30, tfr_2015: 1.46}
+    TLS: {stage: pre,   wa_change: 7.27, tfr_1985: 5.21, tfr_2015: 5.33}
+    TTO: {stage: late,  wa_change: -2.76, tfr_1985: 2.75, tfr_2015: 1.73}
+    TUN: {stage: late,  wa_change: -3.50, tfr_1985: 4.00, tfr_2015: 2.07}
+    TUR: {stage: early, wa_change: 0.90, tfr_1985: 3.35, tfr_2015: 2.01}
+    UGA: {stage: pre,   wa_change: 10.18, tfr_1985: 7.10, tfr_2015: 5.46}
+    UKR: {stage: post,  wa_change: -7.37, tfr_1985: 1.90, tfr_2015: 1.56}
+    ARE: {stage: late,  wa_change: -4.19, tfr_1985: 4.83, tfr_2015: 1.73}
+    GBR: {stage: post,  wa_change: -5.18, tfr_1985: 1.84, tfr_2015: 1.91}
+    USA: {stage: post,  wa_change: -7.77, tfr_1985: 1.91, tfr_2015: 1.90}
+    URY: {stage: late,  wa_change: -0.61, tfr_1985: 2.53, tfr_2015: 1.98}
+    UZB: {stage: early, wa_change: 1.46, tfr_1985: 4.40, tfr_2015: 2.33}
+    VEN: {stage: early, wa_change: 0.78, tfr_1985: 3.65, tfr_2015: 2.28}
+    VNM: {stage: late,  wa_change: -3.84, tfr_1985: 3.85, tfr_2015: 1.95}
+    YEM: {stage: early, wa_change: 10.13, tfr_1985: 8.80, tfr_2015: 3.79}
+    ZMB: {stage: pre,   wa_change: 7.43, tfr_1985: 6.68, tfr_2015: 5.14}
+    ZWE: {stage: early, wa_change: 10.51, tfr_1985: 5.66, tfr_2015: 3.65}

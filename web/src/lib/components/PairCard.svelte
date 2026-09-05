@@ -4,8 +4,14 @@
   // W1-years sentence, the IDENTICAL "similar because / differs in" sentences the country-page card shows
   // (lib/explain.ts via the engine), a feature table with both members z-scored against A's year country set,
   // swap, "B → best year" (lit while the URL says from=best) and links back to both country pages. `tools` is the
-  // slot where the export menu mounts.
+  // slot where the export menu mounts. M5 (lens on): an economic-context table — log GDP/cap, 10-y growth, income group,
+  // stage, TFR — both members z-scored against the A-year country cross-section (n printed), raw values labelled with
+  // their own years; computed through `econLib` (the dynamically loaded lib/econ.ts), never a static import here.
   import type { Snippet } from 'svelte';
+  import type { EconData, EconField } from '../econ.ts';
+  import type { EconLib, EconStatus } from '../state.svelte.ts';
+  import { fmtPctYr } from '../econ/fmt.ts';
+  import { evidenceHref } from '../econ/ui.ts';
   import type { Entity } from '../types.ts';
   import type { PairData } from '../compare.ts';
   import { bandChip, formatTableFeature, formatZ, pairHeadline } from '../compare.ts';
@@ -33,8 +39,61 @@
     onswap: () => void;
     onbest: () => void;
     tools?: Snippet;
+    econ?: EconData | null;
+    econLib?: EconLib | null;
+    econStatus?: EconStatus;
+    lens?: boolean;
   }
-  let { pair, a, b, metric, bestLit, canBest, bestNote = null, loadingText, error, onswap, onbest, tools }: Props = $props();
+  let { pair, a, b, metric, bestLit, canBest, bestNote = null, loadingText, error, onswap, onbest, tools, econ = null, econLib = null, econStatus = 'idle', lens = false }: Props = $props();
+
+  const money = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+  interface EconRow {
+    field: EconField;
+    label: string;
+    rawA: string;
+    rawB: string;
+    zA: number | null;
+    zB: number | null;
+    n: number;
+  }
+  const ECON_FIELDS: Array<[EconField, string]> = [
+    ['log_gdppc', 'GDP per capita (log; shown in 2011$)'],
+    ['growth10', '10-y real GDP growth'],
+    ['income', 'income group then'],
+    ['stage', 'dividend stage'],
+    ['tfr', 'total fertility rate'],
+  ];
+  const econRows = $derived.by<EconRow[] | null>(() => {
+    if (!lens || !econ || !econLib || b.year === null) return null;
+    const e = econ;
+    const L = econLib;
+    if (!L.hasEcon(e, a.entity.id) && !L.hasEcon(e, b.entity.id)) return [];
+    const ya = Math.min(a.year, e.yearMax);
+    const yb = Math.min(b.year, e.yearMax);
+    const raw = (id: string, y: number, f: EconField): string => {
+      switch (f) {
+        case 'log_gdppc': {
+          const v = L.gdppc(e, id, y);
+          return v === null ? 'n/a' : `$${money.format(v)}`;
+        }
+        case 'growth10':
+          return fmtPctYr(L.growth10(e, id, y));
+        case 'income':
+          return L.income(e, id, y)?.label ?? L.incomeNote(y);
+        case 'stage':
+          return L.stage(e, id, y)?.label ?? 'n/a';
+        case 'tfr': {
+          const v = L.tfr(e, id, y);
+          return v === null ? 'n/a' : v.toFixed(2);
+        }
+      }
+    };
+    return ECON_FIELDS.map(([f, label]) => {
+      const cs = L.crossSection(e, ya, f);
+      return { field: f, label, rawA: raw(a.entity.id, ya, f), rawB: raw(b.entity.id, yb, f), zA: L.zScore(L.econFieldValue(e, a.entity.id, ya, f), cs), zB: L.zScore(L.econFieldValue(e, b.entity.id, yb, f), cs), n: cs.n };
+    });
+  });
+  const econYearNote = $derived(econ && (a.year > econ.yearMax || (b.year ?? 0) > econ.yearMax) ? `economic series end in ${econ.yearMax}; later years read the ${econ.yearMax} values` : null);
 
   const headline = $derived(pair && b.year !== null ? pairHeadline({ name: a.entity.short_name, year: a.year }, { name: b.entity.short_name, year: b.year }, pair.band, pair.bandKind) : null);
   const chip = $derived(pair ? bandChip(pair.band, pair.bandKind) : null);
@@ -152,6 +211,53 @@
         </table>
         <p class="mt-1 text-[11px] text-muted">z-scores for both against the {pair.referenceYear} country set ({pair.nReference} countries ≥ 100k), whatever B's year — so “alike” means alike by {pair.referenceYear} standards.</p>
       </div>
+    </div>
+  {/if}
+
+  {#if lens}
+    <div class="mt-4 border-t border-border pt-3">
+      <h3 class="text-xs font-medium uppercase tracking-wide text-muted">
+        Economic context
+        <a class="ml-1 text-[10px] font-normal normal-case text-muted underline decoration-dotted underline-offset-2 hover:text-fg" href={evidenceHref('sources')} title="Sources, splicing and licences; what the literature found">evidence</a>
+      </h3>
+      {#if econStatus === 'idle' || econStatus === 'loading'}
+        <p class="mt-1 text-xs text-muted" aria-busy="true">loading the economic series…</p>
+      {:else if econStatus === 'absent'}
+        <p class="mt-1 text-xs text-fg-2">This build shipped no economic series.</p>
+      {:else if econStatus === 'error'}
+        <p class="mt-1 text-xs text-fg-2" role="alert">Could not load the economic series.</p>
+      {:else if econRows && econRows.length === 0}
+        <p class="mt-1 text-xs text-fg-2">no GDP series for either member (countries only)</p>
+      {:else if econRows}
+        <div class="overflow-x-auto">
+          <table class="mt-2 w-full text-xs">
+            <caption class="sr-only">Economic context of both members; z-scores are against the {a.year} country cross-section</caption>
+            <thead class="text-left text-muted">
+              <tr>
+                <th scope="col" class="py-1 pr-2 font-medium">series</th>
+                <th scope="col" class="py-1 pr-2 font-medium tabular-nums">A · {Math.min(a.year, econ?.yearMax ?? a.year)}</th>
+                <th scope="col" class="py-1 pr-2 font-medium tabular-nums">B · {Math.min(b.year ?? 0, econ?.yearMax ?? 0)}</th>
+                <th scope="col" class="py-1 pr-2 font-medium" title="standard deviations from the {a.year} country mean">z A</th>
+                <th scope="col" class="py-1 pr-2 font-medium">z B</th>
+                <th scope="col" class="py-1 font-medium" title="countries with a value in {a.year}">n</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each econRows as r (r.field)}
+                <tr class="border-t border-border">
+                  <th scope="row" class="py-1 pr-2 text-left font-normal text-fg-2">{r.label}</th>
+                  <td class="py-1 pr-2 tabular-nums">{r.rawA}</td>
+                  <td class="py-1 pr-2 tabular-nums">{r.rawB}</td>
+                  <td class="py-1 pr-2 tabular-nums text-fg-2">{formatZ(r.zA ?? NaN)}</td>
+                  <td class="py-1 pr-2 tabular-nums text-fg-2">{formatZ(r.zB ?? NaN)}</td>
+                  <td class="py-1 tabular-nums text-muted">{r.n}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-1 text-[11px] text-muted">Maddison 2023 (2011 international $, spliced past 2022 with WDI / PWT growth), PWT 11.0, WB OGHIST, WPP 2024; both members z-scored against the {a.year} country cross-section, whatever B's year.{econYearNote ? ` ${econYearNote}.` : ''}</p>
+      {/if}
     </div>
   {/if}
 

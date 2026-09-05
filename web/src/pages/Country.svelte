@@ -28,6 +28,7 @@
   import ExportMenu, { type CsvItem } from '../lib/components/ExportMenu.svelte';
   import ShareButton from '../lib/components/ShareButton.svelte';
   import { footerText, pyramidToCsv, resultsToCsv, type ResultsCsvRow } from '../lib/export.ts';
+  import { loadEconUi } from '../lib/econ/ui.ts';
 
   const entity = $derived(app.entity);
   const year = $derived(app.year);
@@ -77,6 +78,13 @@
       : [],
   );
   const eraLabel = $derived(app.era === 'observed' ? 'observed' : app.era === 'nowcast' ? 'nowcast' : 'projected');
+  // M5: the econ chunk is fetched only once tier 2b has started (after the first paint) — never in the first-paint set
+  const econUiReady = $derived(app.econStatus !== 'idle');
+  const cohortMatches = $derived(
+    app.results && app.singleYear === null ? app.results.twins.filter((c) => c.entity.type === 'country').map((c) => ({ iso3: c.result.id, year: c.result.year })) : [],
+  );
+  const showCohort = $derived(app.lensOn && !!app.econ && !!entity && !isAggregate(entity) && !!app.results && app.singleYear === null);
+  const nameOf = (id: string) => byId(id)?.short_name ?? id;
   const memberNames = $derived(entity?.members?.map((id) => byId(id)?.short_name ?? id).sort() ?? []);
 
   // ---- M2: search ----
@@ -226,6 +234,15 @@
     <aside class="min-w-0 space-y-4" aria-label="Review">
       {#if pyramid && features}
         <Callouts total={pyramid.total} {features} {change} {year} />
+        {#if econUiReady}
+          {#await loadEconUi()}
+            <div class="card h-24 animate-pulse p-3" aria-busy="true" aria-label="loading the economic context"></div>
+          {:then m}
+            <m.EconStrip econ={app.econ} status={app.econStatus} error={app.econError} iso3={entity.id} {year} lens={app.lensOn} isAggregate={isAggregate(entity)} />
+          {/await}
+        {:else}
+          <div class="card h-24 animate-pulse p-3" aria-busy="true" aria-label="loading the economic context"></div>
+        {/if}
         <Narrative {paragraphs} />
       {/if}
       {#if series}
@@ -258,6 +275,11 @@
     {/if}
     {#if focal}
       <Twins {results} k={query.k} {focal} {loadingText} lastObserved={app.lastObservedYear} currentYear={app.currentYear} />
+      {#if showCohort && app.econ && results}
+        {#await loadEconUi() then m}
+          <m.CohortOutcomes econ={app.econ} matches={cohortMatches} focal={{ iso3: entity.id, year: results.q.year }} focalName={entity.short_name} {nameOf} />
+        {/await}
+      {/if}
       <Opposites {results} k={query.k} div={query.div} {focal} {loadingText} lastObserved={app.lastObservedYear} currentYear={app.currentYear} />
       {#if results && results.ms > 0}
         <p class="mt-2 text-right text-[11px] text-muted" title="scan + dedupe + MMR + explanations, main thread">
@@ -277,6 +299,9 @@
         eraEdge={eraEdge(app.searchEra, app.currentYear, app.lastObservedYear)}
         corpusBytes={meta.sizes.shares_d16z}
         currentYear={app.currentYear}
+        econ={app.econ}
+        econLib={app.econLib}
+        lens={app.lensOn}
       />
     {/if}
   </section>

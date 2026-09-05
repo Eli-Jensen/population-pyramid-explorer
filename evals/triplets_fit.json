@@ -1,0 +1,856 @@
+{
+ "version": 1,
+ "rater": "synthetic-oracle",
+ "started": null,
+ "finished": null,
+ "synthetic": true,
+ "oracle": {
+  "metric": "blend",
+  "w_l2": null,
+  "sigma_bins": null,
+  "lambda": null,
+  "noise": 0.1,
+  "tie_rate": 0.05,
+  "dup_noise": 0.1,
+  "seed": 0
+ },
+ "n_items": 88,
+ "n_answered": 88,
+ "n_missing": 0,
+ "n_tie": 6,
+ "median_rt_ms": 6047.0,
+ "selection_data_hash": "e2bf14d57600d364dbdbbcacf9b70c0fc3cf3c5dcb7e4b9d22eeb03c79e266d5",
+ "self_agreement": {
+  "n_pairs": 8,
+  "n_judged": 8,
+  "n_agree": 8,
+  "gate": 6,
+  "passes": true,
+  "pairs": [
+   {
+    "dup": 51,
+    "orig": 18,
+    "stratum": "numeric",
+    "choice_orig": "A",
+    "choice_dup": "A",
+    "agree": true
+   },
+   {
+    "dup": 52,
+    "orig": 11,
+    "stratum": "numeric",
+    "choice_orig": "A",
+    "choice_dup": "A",
+    "agree": true
+   },
+   {
+    "dup": 54,
+    "orig": 17,
+    "stratum": "visual",
+    "choice_orig": "B",
+    "choice_dup": "B",
+    "agree": true
+   },
+   {
+    "dup": 58,
+    "orig": 23,
+    "stratum": "visual",
+    "choice_orig": "B",
+    "choice_dup": "B",
+    "agree": true
+   },
+   {
+    "dup": 60,
+    "orig": 24,
+    "stratum": "visual",
+    "choice_orig": "B",
+    "choice_dup": "B",
+    "agree": true
+   },
+   {
+    "dup": 61,
+    "orig": 25,
+    "stratum": "visual",
+    "choice_orig": "A",
+    "choice_dup": "A",
+    "agree": true
+   },
+   {
+    "dup": 80,
+    "orig": 44,
+    "stratum": "opposite",
+    "choice_orig": "tie",
+    "choice_dup": "tie",
+    "agree": true
+   },
+   {
+    "dup": 84,
+    "orig": 4,
+    "stratum": "numeric",
+    "choice_orig": "A",
+    "choice_dup": "A",
+    "agree": true
+   }
+  ]
+ },
+ "status": "informational (self-agreement gate met)",
+ "promotion_allowed": true,
+ "agreement": {
+  "blend": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 67,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 26,
+     "agreement": 0.8387096774193549
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 33,
+     "agreement": 0.9428571428571428
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 8,
+     "agreement": 0.8888888888888888
+    }
+   },
+   "agreement": 0.8933333333333333
+  },
+  "l2": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 53,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 23,
+     "agreement": 0.7419354838709677
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 23,
+     "agreement": 0.6571428571428571
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 7,
+     "agreement": 0.7777777777777778
+    }
+   },
+   "agreement": 0.7066666666666667
+  },
+  "w1": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 50,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 23,
+     "agreement": 0.7419354838709677
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 26,
+     "agreement": 0.7428571428571429
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 1,
+     "agreement": 0.1111111111111111
+    }
+   },
+   "agreement": 0.6666666666666666
+  },
+  "l2s": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 55,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 24,
+     "agreement": 0.7741935483870968
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 24,
+     "agreement": 0.6857142857142857
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 7,
+     "agreement": 0.7777777777777778
+    }
+   },
+   "agreement": 0.7333333333333333
+  },
+  "hel": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 49,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 22,
+     "agreement": 0.7096774193548387
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 23,
+     "agreement": 0.6571428571428571
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 4,
+     "agreement": 0.4444444444444444
+    }
+   },
+   "agreement": 0.6533333333333333
+  },
+  "feat": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 57,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 24,
+     "agreement": 0.7741935483870968
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 25,
+     "agreement": 0.7142857142857143
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 8,
+     "agreement": 0.8888888888888888
+    }
+   },
+   "agreement": 0.76
+  },
+  "w1sex": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 61,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 25,
+     "agreement": 0.8064516129032258
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 28,
+     "agreement": 0.8
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 8,
+     "agreement": 0.8888888888888888
+    }
+   },
+   "agreement": 0.8133333333333334
+  },
+  "w1bal": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 49,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 22,
+     "agreement": 0.7096774193548387
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 25,
+     "agreement": 0.7142857142857143
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 2,
+     "agreement": 0.2222222222222222
+    }
+   },
+   "agreement": 0.6533333333333333
+  },
+  "clr": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 36,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 14,
+     "agreement": 0.45161290322580644
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 20,
+     "agreement": 0.5714285714285714
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 2,
+     "agreement": 0.2222222222222222
+    }
+   },
+   "agreement": 0.48
+  },
+  "trend@10": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 39,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 19,
+     "agreement": 0.6129032258064516
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 13,
+     "agreement": 0.37142857142857144
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 7,
+     "agreement": 0.7777777777777778
+    }
+   },
+   "agreement": 0.52
+  },
+  "visual:dinov2-base": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 43,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 16,
+     "agreement": 0.5161290322580645
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 25,
+     "agreement": 0.7142857142857143
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 2,
+     "agreement": 0.2222222222222222
+    }
+   },
+   "agreement": 0.5733333333333334
+  },
+  "visual:siglip2-base-naflex": {
+   "n_items": 80,
+   "n_tie": 5,
+   "n_undefined": 0,
+   "n_judged": 75,
+   "n_agree": 30,
+   "by_stratum": {
+    "visual": {
+     "n_judged": 31,
+     "n_agree": 5,
+     "agreement": 0.16129032258064516
+    },
+    "numeric": {
+     "n_judged": 35,
+     "n_agree": 22,
+     "agreement": 0.6285714285714286
+    },
+    "opposite": {
+     "n_judged": 9,
+     "n_agree": 3,
+     "agreement": 0.3333333333333333
+    }
+   },
+   "agreement": 0.4
+  }
+ },
+ "tests": {
+  "blend_vs_visual": {
+   "a": "blend",
+   "b": "visual:siglip2-base-naflex",
+   "n_items": 32,
+   "n_tie": 1,
+   "n_discordant": 31,
+   "wins_a": 26,
+   "wins_b": 5,
+   "p": 0.00019219517707824707,
+   "winner": "blend"
+  },
+  "visual_pair:visual:siglip2-base-naflex_vs_visual:dinov2-base": {
+   "a": "visual:siglip2-base-naflex",
+   "b": "visual:dinov2-base",
+   "n_items": 32,
+   "n_tie": 1,
+   "n_discordant": 17,
+   "wins_a": 3,
+   "wins_b": 14,
+   "p": 0.012725830078125,
+   "winner": "visual:dinov2-base"
+  }
+ },
+ "numeric_pair_tests": {
+  "blend vs l2": {
+   "a": "blend",
+   "b": "l2",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 13,
+   "wins_a": 12,
+   "wins_b": 1,
+   "p": 0.00341796875,
+   "winner": "blend"
+  },
+  "blend vs l2s": {
+   "a": "blend",
+   "b": "l2s",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 12,
+   "wins_a": 11,
+   "wins_b": 1,
+   "p": 0.00634765625,
+   "winner": "blend"
+  },
+  "blend vs hel": {
+   "a": "blend",
+   "b": "hel",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 16,
+   "wins_a": 15,
+   "wins_b": 1,
+   "p": 0.000518798828125,
+   "winner": "blend"
+  },
+  "blend vs w1sex": {
+   "a": "blend",
+   "b": "w1sex",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 7,
+   "wins_a": 6,
+   "wins_b": 1,
+   "p": 0.125,
+   "winner": null
+  },
+  "blend vs w1bal": {
+   "a": "blend",
+   "b": "w1bal",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 16,
+   "wins_a": 15,
+   "wins_b": 1,
+   "p": 0.000518798828125,
+   "winner": "blend"
+  },
+  "blend vs trend@10": {
+   "a": "blend",
+   "b": "trend@10",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 23,
+   "wins_a": 22,
+   "wins_b": 1,
+   "p": 5.7220458984375e-06,
+   "winner": "blend"
+  },
+  "l2 vs l2s": {
+   "a": "l2",
+   "b": "l2s",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 3,
+   "wins_a": 1,
+   "wins_b": 2,
+   "p": 1.0,
+   "winner": null
+  },
+  "l2 vs hel": {
+   "a": "l2",
+   "b": "hel",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 11,
+   "wins_a": 7,
+   "wins_b": 4,
+   "p": 0.548828125,
+   "winner": null
+  },
+  "l2 vs w1sex": {
+   "a": "l2",
+   "b": "w1sex",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 20,
+   "wins_a": 7,
+   "wins_b": 13,
+   "p": 0.26317596435546875,
+   "winner": null
+  },
+  "l2 vs w1bal": {
+   "a": "l2",
+   "b": "w1bal",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 19,
+   "wins_a": 11,
+   "wins_b": 8,
+   "p": 0.6476058959960938,
+   "winner": null
+  },
+  "l2 vs trend@10": {
+   "a": "l2",
+   "b": "trend@10",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 22,
+   "wins_a": 16,
+   "wins_b": 6,
+   "p": 0.052478790283203125,
+   "winner": null
+  },
+  "l2s vs hel": {
+   "a": "l2s",
+   "b": "hel",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 12,
+   "wins_a": 8,
+   "wins_b": 4,
+   "p": 0.3876953125,
+   "winner": null
+  },
+  "l2s vs w1sex": {
+   "a": "l2s",
+   "b": "w1sex",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 19,
+   "wins_a": 7,
+   "wins_b": 12,
+   "p": 0.359283447265625,
+   "winner": null
+  },
+  "l2s vs w1bal": {
+   "a": "l2s",
+   "b": "w1bal",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 16,
+   "wins_a": 10,
+   "wins_b": 6,
+   "p": 0.454498291015625,
+   "winner": null
+  },
+  "l2s vs trend@10": {
+   "a": "l2s",
+   "b": "trend@10",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 25,
+   "wins_a": 18,
+   "wins_b": 7,
+   "p": 0.043285250663757324,
+   "winner": "l2s"
+  },
+  "hel vs w1sex": {
+   "a": "hel",
+   "b": "w1sex",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 23,
+   "wins_a": 7,
+   "wins_b": 16,
+   "p": 0.0931396484375,
+   "winner": null
+  },
+  "hel vs w1bal": {
+   "a": "hel",
+   "b": "w1bal",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 14,
+   "wins_a": 7,
+   "wins_b": 7,
+   "p": 1.0,
+   "winner": null
+  },
+  "hel vs trend@10": {
+   "a": "hel",
+   "b": "trend@10",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 25,
+   "wins_a": 16,
+   "wins_b": 9,
+   "p": 0.2295229434967041,
+   "winner": null
+  },
+  "w1sex vs w1bal": {
+   "a": "w1sex",
+   "b": "w1bal",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 19,
+   "wins_a": 14,
+   "wins_b": 5,
+   "p": 0.063568115234375,
+   "winner": null
+  },
+  "w1sex vs trend@10": {
+   "a": "w1sex",
+   "b": "trend@10",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 30,
+   "wins_a": 23,
+   "wins_b": 7,
+   "p": 0.005222879350185395,
+   "winner": "w1sex"
+  },
+  "w1bal vs trend@10": {
+   "a": "w1bal",
+   "b": "trend@10",
+   "n_items": 48,
+   "n_tie": 4,
+   "n_discordant": 33,
+   "wins_a": 20,
+   "wins_b": 13,
+   "p": 0.296206368599087,
+   "winner": null
+  }
+ },
+ "grid": {
+  "n_items": 44,
+  "grid": {
+   "w_l2": [
+    0.5,
+    0.3,
+    0.4,
+    0.6,
+    0.7
+   ],
+   "sigma_bins": [
+    0,
+    1
+   ],
+   "lambda": [
+    50.0,
+    0.0,
+    10.0,
+    25.0,
+    100.0
+   ]
+  },
+  "blend": {
+   "default": {
+    "w_l2": 0.5,
+    "sigma_bins": 0
+   },
+   "n_items": 44,
+   "loo_agreement": 0.9318181818181818,
+   "loo_selected": [
+    {
+     "cell": {
+      "w_l2": 0.5,
+      "sigma_bins": 0
+     },
+     "n": 44
+    }
+   ],
+   "in_sample_best": {
+    "w_l2": 0.5,
+    "sigma_bins": 0
+   },
+   "table": [
+    {
+     "w_l2": 0.5,
+     "sigma_bins": 0,
+     "n_judged": 44,
+     "n_agree": 41,
+     "agreement": 0.9318181818181818
+    },
+    {
+     "w_l2": 0.3,
+     "sigma_bins": 0,
+     "n_judged": 44,
+     "n_agree": 41,
+     "agreement": 0.9318181818181818
+    },
+    {
+     "w_l2": 0.4,
+     "sigma_bins": 0,
+     "n_judged": 44,
+     "n_agree": 41,
+     "agreement": 0.9318181818181818
+    },
+    {
+     "w_l2": 0.6,
+     "sigma_bins": 0,
+     "n_judged": 44,
+     "n_agree": 37,
+     "agreement": 0.8409090909090909
+    },
+    {
+     "w_l2": 0.7,
+     "sigma_bins": 0,
+     "n_judged": 44,
+     "n_agree": 35,
+     "agreement": 0.7954545454545454
+    },
+    {
+     "w_l2": 0.5,
+     "sigma_bins": 1,
+     "n_judged": 44,
+     "n_agree": 38,
+     "agreement": 0.8636363636363636
+    },
+    {
+     "w_l2": 0.3,
+     "sigma_bins": 1,
+     "n_judged": 44,
+     "n_agree": 41,
+     "agreement": 0.9318181818181818
+    },
+    {
+     "w_l2": 0.4,
+     "sigma_bins": 1,
+     "n_judged": 44,
+     "n_agree": 40,
+     "agreement": 0.9090909090909091
+    },
+    {
+     "w_l2": 0.6,
+     "sigma_bins": 1,
+     "n_judged": 44,
+     "n_agree": 35,
+     "agreement": 0.7954545454545454
+    },
+    {
+     "w_l2": 0.7,
+     "sigma_bins": 1,
+     "n_judged": 44,
+     "n_agree": 34,
+     "agreement": 0.7727272727272727
+    }
+   ],
+   "best_vs_default": {
+    "n_discordant": 0,
+    "wins_a": 0,
+    "wins_b": 0,
+    "p": null,
+    "winner": null
+   }
+  },
+  "w1bal": {
+   "default": {
+    "lambda": 50.0
+   },
+   "n_items": 44,
+   "loo_agreement": 0.75,
+   "loo_selected": [
+    {
+     "cell": {
+      "lambda": 100.0
+     },
+     "n": 44
+    }
+   ],
+   "in_sample_best": {
+    "lambda": 100.0
+   },
+   "table": [
+    {
+     "lambda": 50.0,
+     "n_judged": 44,
+     "n_agree": 27,
+     "agreement": 0.6136363636363636
+    },
+    {
+     "lambda": 0.0,
+     "n_judged": 44,
+     "n_agree": 27,
+     "agreement": 0.6136363636363636
+    },
+    {
+     "lambda": 10.0,
+     "n_judged": 44,
+     "n_agree": 27,
+     "agreement": 0.6136363636363636
+    },
+    {
+     "lambda": 25.0,
+     "n_judged": 44,
+     "n_agree": 26,
+     "agreement": 0.5909090909090909
+    },
+    {
+     "lambda": 100.0,
+     "n_judged": 44,
+     "n_agree": 33,
+     "agreement": 0.75
+    }
+   ],
+   "best_vs_default": {
+    "n_discordant": 8,
+    "wins_a": 7,
+    "wins_b": 1,
+    "p": 0.0703125,
+    "winner": null
+   }
+  }
+ },
+ "mde": {
+  "blend_vs_visual": "pre-registered: with 32 items one side must win ≥ 22 of the non-tie discordant items (≈ 69 %); the exact two-sided binomial gives p = 0.050 at 22/32 (one-sided 0.025), so 23/32 is the first count called here",
+  "numeric": "with 48 numeric/opposite items the pairwise comparisons resolve gaps ≥ ~20 points"
+ },
+ "recommendations": {
+  "default_metric": "blend",
+  "exposed_visual": {
+   "current": "visual:siglip2-base-naflex",
+   "recommended": "visual:dinov2-base",
+   "reason": "visual:dinov2-base won the paired test on the 32 visual items (14–3, p = 0.013); G1 still decides in verdicts.json"
+  },
+  "blend_params": {
+   "w_l2": 0.5,
+   "sigma_bins": 0,
+   "lambda": 50.0,
+   "changed": false
+  },
+  "verdicts_json": "not modified by fit_params.py — apply by hand after review"
+ }
+}

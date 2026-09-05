@@ -1,0 +1,152 @@
+{
+ "version": 1,
+ "deny_list": [
+  "\\b(buy|sell|short|overweight|underweight|allocate|position|picks?)\\b",
+  "outsized",
+  "expect(ed)?\\s+(to\\s+)?(return|outperform)",
+  "should\\s+invest",
+  "(will|would)\\s+(rise|outperform|boom)",
+  "top\\s+\\d+",
+  "opportunit",
+  "alpha",
+  "undervalued"
+ ],
+ "levels": {
+  "L0": {
+   "name": "what happened next",
+   "requires": []
+  },
+  "L1": {
+   "name": "growth association",
+   "requires": [
+    "mu_eg_gt_0",
+    "ci_headline_excludes_0",
+    "p_n1_lt_05",
+    "p_n2_lt_05",
+    "n_eff_ge_20",
+    "panel_s3_d_lt_0_dk_p_lt_05",
+    "oos_r2_s3_gt_s0"
+   ]
+  },
+  "L2": {
+   "name": "returns signal",
+   "requires": [
+    "mu_er_vs_vt_gt_0",
+    "ci_er_headline_excludes_0",
+    "hh_p_lt_05",
+    "nw_p_lt_05",
+    "mu_er_vs_ew_gt_0",
+    "beats_n1_investable_p_lt_05",
+    "beats_n4_p_lt_05",
+    "n_eff_returns_ge_20",
+    "oos_block_same_sign"
+   ]
+  }
+ },
+ "sentences": {
+  "L0.what_happened": {
+   "level": "L0",
+   "placeholders": [
+    "k",
+    "T",
+    "h",
+    "mu_g",
+    "median_g",
+    "n_candidates",
+    "n_eff",
+    "hit_rate"
+   ],
+   "template": "Among the {k} countries whose pyramid in {T} most resembled the pre-boom prototypes, GDP per capita grew {mu_g:+.1f} %/yr over the following {h} years, against {median_g:+.1f} %/yr for the median of all {n_candidates} candidates (N_eff = {n_eff}; {hit_rate:.0%} of them beat the median)."
+  },
+  "L0.disconnect": {
+   "level": "L0",
+   "placeholders": [
+    "country",
+    "year",
+    "multiple",
+    "n_years",
+    "index_name",
+    "r_msci",
+    "msci_since",
+    "max_dd",
+    "access_date"
+   ],
+   "template": "{country} {year}: GDP per capita {multiple:.1f}× in {n_years} years; the {index_name} index returned {r_msci:+.1f} %/yr (USD) since {msci_since}, with a maximum drawdown of {max_dd:.0f} % (MSCI factsheet, accessed {access_date}).",
+   "fallback_no_msci": "{country} {year}: GDP per capita {multiple:.1f}× in {n_years} years; no MSCI figure transcribed."
+  },
+  "L0.investability": {
+   "level": "L0",
+   "placeholders": [
+    "ticker",
+    "issuer",
+    "inception",
+    "delisted",
+    "T"
+   ],
+   "variants": {
+    "live": "{ticker} ({issuer}) has existed since {inception}.",
+    "liquidated": "{ticker} was liquidated on {delisted} (issuer notice).",
+    "none_at_T": "No US-listed single-country fund existed in {T}.",
+    "none_ever": "No US-listed single-country fund exists for this country."
+   }
+  },
+  "L0.null": {
+   "level": "L0",
+   "placeholders": [
+    "k",
+    "B",
+    "share_n1",
+    "p_n1",
+    "share_n2",
+    "p_n2"
+   ],
+   "template": "Random sets of {k} countries did at least as well in {share_n1:.0%} of {B} draws (p = {p_n1:.2f}); sets of equally poor countries did at least as well in {share_n2:.0%} of draws (p = {p_n2:.2f})."
+  },
+  "L0.vs_vt": {
+   "level": "L0",
+   "placeholders": [
+    "ticker",
+    "y1",
+    "y2",
+    "r",
+    "r_vt",
+    "benchmark_note"
+   ],
+   "template": "{ticker} total return {y1}–{y2}: {r:+.1f} %/yr · VT over the same window: {r_vt:+.1f} %/yr{benchmark_note}.",
+   "benchmark_note_values": {
+    "vt": "",
+    "vt_proxy": " (VT proxy before 2008-06-24: SPY/EFA/EEM at the weights in PREREG.md §3.5)",
+    "none": " (VT did not exist for this window)"
+   }
+  },
+  "L1.growth_association": {
+   "level": "L1",
+   "placeholders": [
+    "mu",
+    "ci_lo",
+    "ci_hi",
+    "h",
+    "n_eff",
+    "p_n1",
+    "p_n2",
+    "wa_addendum"
+   ],
+   "template": "In this site's backtest, countries whose pyramid resembled the pre-boom prototypes went on to grow {mu:+.1f} pp/yr faster than the median candidate over the following {h} years (95 % CI {ci_lo:+.1f} to {ci_hi:+.1f}; N_eff = {n_eff}; p vs random countries {p_n1:.3f}, vs income-matched countries {p_n2:.3f}).{wa_addendum}",
+   "wa_addendum_if_p2_met": " The working-age share alone accounts for this.",
+   "wa_addendum_otherwise": ""
+  },
+  "L2.returns_signal": {
+   "level": "L2",
+   "placeholders": [
+    "mu_er",
+    "ci_lo",
+    "ci_hi",
+    "h",
+    "n_eff",
+    "n_investable",
+    "n_lookalikes"
+   ],
+   "template": "In this site's backtest, US-listed funds for those countries returned {mu_er:+.1f} pp/yr more than VT over the same {h}-year windows (95 % CI {ci_lo:+.1f} to {ci_hi:+.1f}; N_eff = {n_eff}; {n_investable} of {n_lookalikes} lookalikes had a fund at entry). Past returns; no forecast."
+  }
+ }
+}

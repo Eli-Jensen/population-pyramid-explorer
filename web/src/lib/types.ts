@@ -96,6 +96,8 @@ export interface MetaFiles {
   bands_default: string;
   emb: Record<string, string>; // model → `emb/{model}.{sha8}.f16`
   notice: string;
+  /** `econ.{sha8}.ecz` — the economic-lens file (tier 2b, PLAN §7); absent until the econ export runs. */
+  econ?: string;
 }
 
 export interface MetaSizes {

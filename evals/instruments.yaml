@@ -1,0 +1,3237 @@
+# Per-country investability for the economic lens — GENERATED BODY below the `generated:` line, hand-editable header.
+# Regenerate with `uv run --group econ scripts/build_econ.py` (pyramid_explorer.econ.instruments.write_instruments);
+# the generator re-reads this header verbatim and replaces everything after `generated:`.
+#
+# What the fields mean
+#   status       live | liquidating | liquidated | none  — the best-standing fund of the country (frozen universe +
+#                etf_manual.yaml corrections; a Yahoo quote is never evidence of life)
+#   msci_class   DM | EM | FM | standalone | none | null  — as recorded in etf_universe.yaml (funds) or
+#                evals/markets.yaml (snapshot for fund-less countries); null = not looked up
+#   mobility     open | restricted | closed | not_assessed — derived: standalone or an index_deletion event → closed;
+#                FM with a repatriation event → restricted; EM / DM → open; otherwise not_assessed
+#   tickers[]    every single-country fund of the universe for that country, with DERIVED statistics only:
+#                since_inception_cagr_pct (+ vt_same_window_pct, benchmark vt|vt_proxy, window) from cached daily adjusted
+#                closes for live funds, or from the issuer's full calendar-year NAV returns for delisted funds
+#                (window = those calendar years, flagged full_calendar_years_only); cagr_10y_pct = the backtest's
+#                2015-12-31 → 2025-12-31 window (etf_returns.csv, status as recorded) with VT over the same window;
+#                max_dd_pct = maximum drawdown over the since-inception window (live) or the backtest window (manual)
+#   events[]     dated country events from evals/markets.yaml (verified flag per event)
+# Past figures only; nothing here is a forecast or a recommendation. Fund names are examples of what exists or existed.
+generated:
+  as_of: '2026-09-04'
+  universe_as_of: '2026-09-04'
+  counts:
+    countries: 237
+    status:
+      none: 192
+      live: 41
+      liquidated: 3
+      liquidating: 1
+    mobility:
+      not_assessed: 194
+      open: 40
+      closed: 3
+    tickers: 48
+    cached_series:
+    - EEM
+    - EFA
+    - SPY
+    - VT
+  countries:
+    ABW:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    AFG:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    AGO:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    AIA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ALB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    AND:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ARE:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: UAE
+        name: iShares MSCI UAE ETF
+        issuer: iShares (BlackRock)
+        inception: '2014-04-29'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/264275/ishares-msci-uae-capped-etf
+        since_inception_cagr_pct: 1.92
+        max_dd_pct: -60.49
+        as_of: '2026-09-04'
+        window:
+        - '2014-05-01'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.68
+        benchmark: vt
+        cagr_10y_pct: 6.19
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -49.71
+        cagr_10y_incomplete: null
+      events: []
+    ARG:
+      status: live
+      msci_class: standalone
+      msci_class_source: etf_universe.yaml
+      mobility: closed
+      tickers:
+      - ticker: ARGT
+        name: Global X MSCI Argentina ETF (formerly Global X FTSE Argentina 20 ETF)
+        issuer: Global X (Mirae Asset)
+        inception: '2011-03-02'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: standalone
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.globalxetfs.com/funds/argt/
+        since_inception_cagr_pct: 8.95
+        max_dd_pct: -61.68
+        as_of: '2026-09-04'
+        window:
+        - '2011-03-03'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.22
+        benchmark: vt
+        cagr_10y_pct: 18.93
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -61.68
+        cagr_10y_incomplete: null
+      events:
+      - iso3: ARG
+        date: '2021-11-01'
+        note: Argentina was reclassified from emerging to standalone status (capital controls since 2019).
+        kind: reclassification
+        detail: MSCI reclassified Argentina from Emerging Markets to Standalone status (capital controls since 2019).
+        url: https://www.msci.com/market-classification
+        verified: false
+        source: memory of the MSCI 2021 Annual Market Classification Review (June 2021, effective November 2021)
+    ARM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ASM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ATG:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    AUS:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWA
+        name: iShares MSCI Australia ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239607/ishares-msci-australia-etf
+        since_inception_cagr_pct: 7.92
+        max_dd_pct: -66.98
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 7.63
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -45.54
+        cagr_10y_incomplete: null
+      events: []
+    AUT:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWO
+        name: iShares MSCI Austria ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239609/ishares-msci-austria-capped-etf
+        since_inception_cagr_pct: 7.72
+        max_dd_pct: -75.69
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 12.37
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -58.1
+        cagr_10y_incomplete: null
+      events: []
+    AZE:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BDI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BEL:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWK
+        name: iShares MSCI Belgium ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239610/ishares-msci-belgium-capped-etf
+        since_inception_cagr_pct: 6.34
+        max_dd_pct: -74.1
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 5.63
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -42.8
+        cagr_10y_incomplete: null
+      events: []
+    BEN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BES:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BFA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BGD:
+      status: none
+      msci_class: FM
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BGR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BHR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BHS:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BIH:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BLM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BLR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BLZ:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BMU:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BOL:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BRA:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWZ
+        name: iShares MSCI Brazil ETF
+        issuer: iShares (BlackRock)
+        inception: '2000-07-10'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239612/ishares-msci-brazil-capped-etf
+        since_inception_cagr_pct: 6.61
+        max_dd_pct: -77.25
+        as_of: '2026-09-04'
+        window:
+        - '2000-07-14'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 6.69
+        benchmark: vt_proxy
+        cagr_10y_pct: 9.88
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -56.99
+        cagr_10y_incomplete: null
+      events: []
+    BRB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BRN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BTN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    BWA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CAF:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CAN:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWC
+        name: iShares MSCI Canada ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239615/ishares-msci-canada-etf
+        since_inception_cagr_pct: 9.12
+        max_dd_pct: -60.75
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 11.96
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -42.66
+        cagr_10y_incomplete: null
+      events: []
+    CHE:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWL
+        name: iShares MSCI Switzerland ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239685/ishares-msci-switzerland-capped-etf
+        since_inception_cagr_pct: 7.7
+        max_dd_pct: -51.62
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 9.06
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -28.99
+        cagr_10y_incomplete: null
+      events: []
+    CHL:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: ECH
+        name: iShares MSCI Chile ETF
+        issuer: iShares (BlackRock)
+        inception: '2007-11-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239618/ishares-msci-chile-capped-etf
+        since_inception_cagr_pct: 1.58
+        max_dd_pct: -74.08
+        as_of: '2026-09-04'
+        window:
+        - '2007-11-20'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.02
+        benchmark: vt_proxy
+        cagr_10y_pct: 5.64
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -66.89
+        cagr_10y_incomplete: null
+      events: []
+    CHN:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: FXI
+        name: iShares China Large-Cap ETF
+        issuer: iShares (BlackRock)
+        inception: '2004-10-05'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239536/ishares-china-largecap-etf
+        since_inception_cagr_pct: 5.48
+        max_dd_pct: -72.68
+        as_of: '2026-09-04'
+        window:
+        - '2004-10-08'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.89
+        benchmark: vt_proxy
+        cagr_10y_pct: 3.28
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -60.81
+        cagr_10y_incomplete: null
+      - ticker: MCHI
+        name: iShares MSCI China ETF
+        issuer: iShares (BlackRock)
+        inception: '2011-03-29'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239619/ishares-msci-china-etf
+        since_inception_cagr_pct: 2.41
+        max_dd_pct: -62.84
+        as_of: '2026-09-04'
+        window:
+        - '2011-03-31'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.33
+        benchmark: vt
+        cagr_10y_pct: 4.92
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -62.84
+        cagr_10y_incomplete: null
+      events: []
+    CIV:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CMR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    COD:
+      status: none
+      msci_class: none
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    COG:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    COK:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    COL:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: GXG
+        name: Global X MSCI Colombia ETF (formerly Global X FTSE Colombia 20 ETF)
+        issuer: Global X (Mirae Asset)
+        inception: '2009-02-05'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.globalxetfs.com/funds/colo/
+        since_inception_cagr_pct: 6.58
+        max_dd_pct: -78.91
+        as_of: '2026-09-04'
+        window:
+        - '2009-02-09'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 12.21
+        benchmark: vt
+        cagr_10y_pct: 6.66
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -62.75
+        cagr_10y_incomplete: null
+      events: []
+    COM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CPV:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CRI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CUB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CUW:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CYM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CYP:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    CZE:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    DEU:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWG
+        name: iShares MSCI Germany ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239650/ishares-msci-germany-etf
+        since_inception_cagr_pct: 6.43
+        max_dd_pct: -67.57
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 7.54
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -46.8
+        cagr_10y_incomplete: null
+      events: []
+    DJI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    DMA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    DNK:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    DOM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    DZA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ECU:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    EGY:
+      status: liquidated
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EGPT
+        name: VanEck Egypt Index ETF (formerly Market Vectors Egypt Index ETF)
+        issuer: VanEck
+        inception: '2010-02-16'
+        status: liquidated
+        delisted: '2024-03-21'
+        delisted_universe: null
+        liquidation_date: '2024-03-28'
+        msci_class: EM
+        status_url: https://www.vaneck.com/us/en/press-releases/vaneck-announces-changes-to-etf-product-line-egypt-index-etf.pdf/
+        liquidation_source_url: https://www.vaneck.com/us/en/vaneck-egpt-liquidating-distribution.pdf
+        source_url: null
+        since_inception_cagr_pct: -6.31
+        as_of: '2023-12-31'
+        window:
+        - '2010-12-31'
+        - '2023-12-29'
+        n_full_years: 13
+        contiguous: true
+        basis: issuer calendar-year NAV total returns compounded (full_calendar_years_only; inception and final stubs excluded)
+        vt_same_window_pct: 8.51
+        benchmark: vt
+        cagr_10y_pct: -4.25
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: liquidated_in_window
+        cagr_10y_max_dd_pct: -41.75
+        cagr_10y_incomplete: null
+        max_dd_pct: -41.75
+        max_dd_basis: backtest 2015–2025 ladder path (annual marks)
+      events: []
+    ERI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ESH:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ESP:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWP
+        name: iShares MSCI Spain ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239683/ishares-msci-spain-capped-etf
+        since_inception_cagr_pct: 9.08
+        max_dd_pct: -61.19
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 10.21
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -46.36
+        cagr_10y_incomplete: null
+      events: []
+    EST:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ETH:
+      status: none
+      msci_class: none
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    FIN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    FJI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    FLK:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    FRA:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWQ
+        name: iShares MSCI France ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239648/ishares-msci-france-etf
+        since_inception_cagr_pct: 7.35
+        max_dd_pct: -61.41
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 9.29
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -39.23
+        cagr_10y_incomplete: null
+      events: []
+    FRO:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    FSM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GAB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GBR:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWU
+        name: iShares MSCI United Kingdom ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239690/ishares-msci-united-kingdom-etf
+        since_inception_cagr_pct: 6.14
+        max_dd_pct: -63.99
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 7.25
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -43.33
+        cagr_10y_incomplete: null
+      events: []
+    GEO:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GGY:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GHA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GIB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GIN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GLP:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GMB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GNB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GNQ:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GRC:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: GREK
+        name: Global X MSCI Greece ETF (formerly Global X FTSE Greece 20 ETF)
+        issuer: Global X (Mirae Asset)
+        inception: '2011-12-07'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.globalxetfs.com/funds/grek/
+        since_inception_cagr_pct: 6.9
+        max_dd_pct: -79.5
+        as_of: '2026-09-04'
+        window:
+        - '2011-12-08'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 11.82
+        benchmark: vt
+        cagr_10y_pct: 13.73
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -57.04
+        cagr_10y_incomplete: null
+      events: []
+    GRD:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GRL:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GTM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GUF:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GUM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    GUY:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    HKG:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWH
+        name: iShares MSCI Hong Kong ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239657/ishares-msci-hong-kong-etf
+        since_inception_cagr_pct: 5.11
+        max_dd_pct: -66.43
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 4.25
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -42.71
+        cagr_10y_incomplete: null
+      events: []
+    HND:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    HRV:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    HTI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    HUN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    IDN:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EIDO
+        name: iShares MSCI Indonesia ETF
+        issuer: iShares (BlackRock)
+        inception: '2010-05-05'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239661/ishares-msci-indonesia-etf
+        since_inception_cagr_pct: -1.14
+        max_dd_pct: -63.21
+        as_of: '2026-09-04'
+        window:
+        - '2010-05-07'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 11.23
+        benchmark: vt
+        cagr_10y_pct: 1.24
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -59.41
+        cagr_10y_incomplete: null
+      events: []
+    IMN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    IND:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EPI
+        name: WisdomTree India Earnings Fund
+        issuer: WisdomTree
+        inception: '2008-02-22'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.sec.gov/Archives/edgar/data/1350487/000119312520277104/d91756d497k.htm
+        since_inception_cagr_pct: 3.87
+        max_dd_pct: -66.21
+        as_of: '2026-09-04'
+        window:
+        - '2008-02-26'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.42
+        benchmark: vt_proxy
+        cagr_10y_pct: 10.3
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -50.29
+        cagr_10y_incomplete: null
+      - ticker: INDA
+        name: iShares MSCI India ETF
+        issuer: iShares (BlackRock)
+        inception: '2012-02-02'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239659/ishares-msci-india-etf
+        since_inception_cagr_pct: 5.39
+        max_dd_pct: -45.07
+        as_of: '2026-09-04'
+        window:
+        - '2012-02-03'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 11.23
+        benchmark: vt
+        cagr_10y_pct: 8.23
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -45.07
+        cagr_10y_incomplete: null
+      events: []
+    IRL:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EIRL
+        name: iShares MSCI Ireland ETF
+        issuer: iShares (BlackRock)
+        inception: '2010-05-05'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239662/ishares-msci-ireland-capped-etf
+        since_inception_cagr_pct: 10.21
+        max_dd_pct: -46.48
+        as_of: '2026-09-04'
+        window:
+        - '2010-05-11'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.95
+        benchmark: vt
+        cagr_10y_pct: 7.49
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -46.48
+        cagr_10y_incomplete: null
+      events: []
+    IRN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    IRQ:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ISL:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ISR:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EIS
+        name: iShares MSCI Israel ETF
+        issuer: iShares (BlackRock)
+        inception: '2008-03-26'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239663/ishares-msci-israel-capped-etf
+        since_inception_cagr_pct: 7.16
+        max_dd_pct: -51.94
+        as_of: '2026-09-04'
+        window:
+        - '2008-03-28'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.72
+        benchmark: vt_proxy
+        cagr_10y_pct: 9.92
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -41.88
+        cagr_10y_incomplete: null
+      events: []
+    ITA:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWI
+        name: iShares MSCI Italy ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239664/ishares-msci-italy-capped-etf
+        since_inception_cagr_pct: 7.04
+        max_dd_pct: -70.38
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 10.73
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -43.0
+        cagr_10y_incomplete: null
+      events: []
+    JAM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    JEY:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    JOR:
+      status: none
+      msci_class: FM
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    JPN:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWJ
+        name: iShares MSCI Japan ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239665/ishares-msci-japan-etf
+        since_inception_cagr_pct: 3.13
+        max_dd_pct: -58.89
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 7.37
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -33.14
+        cagr_10y_incomplete: null
+      events: []
+    KAZ:
+      status: none
+      msci_class: FM
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    KEN:
+      status: none
+      msci_class: FM
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    KGZ:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    KHM:
+      status: none
+      msci_class: none
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    KIR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    KNA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    KOR:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWY
+        name: iShares MSCI South Korea ETF
+        issuer: iShares (BlackRock)
+        inception: '2000-05-09'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239681/ishares-msci-south-korea-capped-etf
+        since_inception_cagr_pct: 10.36
+        max_dd_pct: -74.14
+        as_of: '2026-09-04'
+        window:
+        - '2000-05-12'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 6.89
+        benchmark: vt_proxy
+        cagr_10y_pct: 8.98
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -49.73
+        cagr_10y_incomplete: null
+      events: []
+    KWT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LAO:
+      status: none
+      msci_class: none
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LBN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LBR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LBY:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LCA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LIE:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LKA:
+      status: none
+      msci_class: FM
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LSO:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LTU:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LUX:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    LVA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MAC:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MAF:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MAR:
+      status: none
+      msci_class: FM
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MCO:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MDA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MDG:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MDV:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MEX:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWW
+        name: iShares MSCI Mexico ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239670/ishares-msci-mexico-capped-etf
+        since_inception_cagr_pct: 9.15
+        max_dd_pct: -64.94
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 6.08
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -53.62
+        cagr_10y_incomplete: null
+      events: []
+    MHL:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MKD:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MLI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MLT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MMR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MNE:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MNG:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MNP:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MOZ:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MRT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MSR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MTQ:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MUS:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MWI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    MYS:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWM
+        name: iShares MSCI Malaysia ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239669/ishares-msci-malaysia-etf
+        since_inception_cagr_pct: 2.05
+        max_dd_pct: -89.19
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 2.8
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -43.81
+        cagr_10y_incomplete: null
+      events: []
+    MYT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NAM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NCL:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NER:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NGA:
+      status: liquidated
+      msci_class: standalone
+      msci_class_source: etf_universe.yaml
+      mobility: closed
+      tickers:
+      - ticker: NGE
+        name: Global X MSCI Nigeria ETF (formerly Global X Nigeria Index ETF)
+        issuer: Global X (Mirae Asset)
+        inception: '2013-04-02'
+        status: liquidated
+        delisted: '2024-03-25'
+        delisted_universe: '2023-07-28'
+        liquidation_date: '2024-03-29'
+        msci_class: standalone
+        status_url: https://www.prnewswire.com/news-releases/global-x-etfs-to-liquidate-msci-nigeria-etf-nge-301858690.html
+        liquidation_source_url: https://ng.investing.com/etfs/global-x-nigeria-index-profile
+        source_url: https://www.sec.gov/Archives/edgar/data/1432353/000113542822000013/globalxintl103121.htm
+        since_inception_cagr_pct: -14.14
+        as_of: '2023-12-31'
+        window:
+        - '2013-12-31'
+        - '2023-12-29'
+        n_full_years: 10
+        contiguous: true
+        basis: issuer calendar-year NAV total returns compounded (full_calendar_years_only; inception and final stubs excluded)
+        vt_same_window_pct: 8.06
+        benchmark: vt
+        cagr_10y_pct: -7.08
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: manual_incomplete
+        cagr_10y_max_dd_pct: -56.03
+        cagr_10y_incomplete: 2024-01-31..2024-03-29 (final stub not transcribed)
+        max_dd_pct: -56.03
+        max_dd_basis: backtest 2015–2025 ladder path (annual marks)
+      events:
+      - iso3: NGA
+        date: '2020-03-01'
+        note: Foreign-exchange repatriation failures from 2020 (the ground given for the 2024 index deletion); the onset month
+          is approximate.
+        kind: repatriation
+        detail: Foreign-exchange repatriation failures since 2020 (the ground MSCI gave for the 2024 deletion); month is approximate.
+        url: https://www.msci.com/documents/10199/09a7d0cc-1500-711d-c437-4df67fb05609
+        verified: false
+        source: same MSCI announcement; the onset date is paraphrased from it, not a dated event
+      - iso3: NGA
+        date: '2024-02-29'
+        note: Every Nigerian security was deleted from the frontier-markets index at a price that is effectively zero as of
+          the close of 29 February 2024, after foreign-exchange repatriation failures since 2020; the market was reclassified
+          from frontier to standalone.
+        kind: index_deletion
+        detail: MSCI deleted every Nigerian security from the MSCI Frontier Markets Indexes at a price that is effectively zero
+          as of the close of 29 February 2024, after foreign-exchange repatriation failures since 2020; Nigeria was reclassified
+          Frontier → Standalone.
+        url: https://www.msci.com/documents/10199/09a7d0cc-1500-711d-c437-4df67fb05609
+        verified: true
+        source: docs/research/econ_evidence.md Link 4 (MSCI announcement, February 2024)
+    NIC:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NIU:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NLD:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWN
+        name: iShares MSCI Netherlands ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239671/ishares-msci-netherlands-etf
+        since_inception_cagr_pct: 7.75
+        max_dd_pct: -65.22
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 11.56
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -43.56
+        cagr_10y_incomplete: null
+      events: []
+    NOR:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: NORW
+        name: Global X MSCI Norway ETF (formerly Global X FTSE Norway 30 ETF)
+        issuer: Global X (Mirae Asset)
+        inception: '2010-11-09'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.globalxetfs.com/funds/norw/
+        since_inception_cagr_pct: 8.11
+        max_dd_pct: -35.62
+        as_of: '2026-09-04'
+        window:
+        - '2010-11-09'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.51
+        benchmark: vt
+        cagr_10y_pct: 7.1
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -33.86
+        cagr_10y_incomplete: null
+      events: []
+    NPL:
+      status: none
+      msci_class: none
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NRU:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    NZL:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: ENZL
+        name: iShares MSCI New Zealand ETF
+        issuer: iShares (BlackRock)
+        inception: '2010-09-01'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239672/ishares-msci-new-zealand-capped-etf
+        since_inception_cagr_pct: 7.64
+        max_dd_pct: -42.44
+        as_of: '2026-09-04'
+        window:
+        - '2010-09-02'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 11.21
+        benchmark: vt
+        cagr_10y_pct: 4.87
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -42.44
+        cagr_10y_incomplete: null
+      events: []
+    OMN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PAK:
+      status: liquidated
+      msci_class: FM
+      msci_class_source: etf_universe.yaml
+      mobility: not_assessed
+      tickers:
+      - ticker: PAK
+        name: Global X MSCI Pakistan ETF
+        issuer: Global X (Mirae Asset)
+        inception: '2015-04-22'
+        status: liquidated
+        delisted: '2024-02-16'
+        delisted_universe: null
+        liquidation_date: '2024-02-23'
+        msci_class: FM
+        status_url: https://www.prnewswire.com/news-releases/global-x-etfs-to-liquidate-19-etfs-302039841.html
+        liquidation_source_url: https://www.sec.gov/Archives/edgar/data/1432353/000143235324000014/a497-internationalfundsrel.htm
+        source_url: https://www.sec.gov/Archives/edgar/data/1432353/000113542822000013/globalxintl103121.htm
+        since_inception_cagr_pct: -7.34
+        as_of: '2023-12-31'
+        window:
+        - '2015-12-31'
+        - '2023-12-29'
+        n_full_years: 8
+        contiguous: true
+        basis: issuer calendar-year NAV total returns compounded (full_calendar_years_only; inception and final stubs excluded)
+        vt_same_window_pct: 9.94
+        benchmark: vt
+        cagr_10y_pct: -4.72
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: manual_incomplete
+        cagr_10y_max_dd_pct: -68.77
+        cagr_10y_incomplete: 2024-01-31..2024-02-23 (final stub not transcribed)
+        max_dd_pct: -68.77
+        max_dd_basis: backtest 2015–2025 ladder path (annual marks)
+      events: []
+    PAN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PER:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EPU
+        name: iShares MSCI Peru and Global Exposure ETF (formerly iShares MSCI All Peru Capped ETF)
+        issuer: iShares (BlackRock)
+        inception: '2009-06-19'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239606/ishares-msci-all-peru-capped-etf
+        since_inception_cagr_pct: 11.02
+        max_dd_pct: -60.62
+        as_of: '2026-09-04'
+        window:
+        - '2009-06-22'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 11.88
+        benchmark: vt
+        cagr_10y_pct: 17.28
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -50.97
+        cagr_10y_incomplete: null
+      events: []
+    PHL:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EPHE
+        name: iShares MSCI Philippines ETF
+        issuer: iShares (BlackRock)
+        inception: '2010-09-28'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239675/ishares-msci-philippines-etf
+        since_inception_cagr_pct: 1.02
+        max_dd_pct: -53.82
+        as_of: '2026-09-04'
+        window:
+        - '2010-09-29'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.85
+        benchmark: vt
+        cagr_10y_pct: -1.8
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -51.62
+        cagr_10y_incomplete: null
+      events: []
+    PLW:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PNG:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    POL:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EPOL
+        name: iShares MSCI Poland ETF
+        issuer: iShares (BlackRock)
+        inception: '2010-05-25'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239676/ishares-msci-poland-capped-etf
+        since_inception_cagr_pct: 6.77
+        max_dd_pct: -63.71
+        as_of: '2026-09-04'
+        window:
+        - '2010-05-26'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 11.59
+        benchmark: vt
+        cagr_10y_pct: 9.81
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -61.4
+        cagr_10y_incomplete: null
+      events: []
+    PRI:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PRK:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PRT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PRY:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PSE:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    PYF:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    QAT:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: QAT
+        name: iShares MSCI Qatar ETF
+        issuer: iShares (BlackRock)
+        inception: '2014-04-29'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/264273/ishares-msci-qatar-capped-etf
+        since_inception_cagr_pct: 0.84
+        max_dd_pct: -45.22
+        as_of: '2026-09-04'
+        window:
+        - '2014-05-01'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.68
+        benchmark: vt
+        cagr_10y_pct: 3.75
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -34.04
+        cagr_10y_incomplete: null
+      events: []
+    REU:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ROU:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    RUS:
+      status: liquidating
+      msci_class: standalone
+      msci_class_source: etf_universe.yaml
+      mobility: closed
+      tickers:
+      - ticker: RSX
+        name: VanEck Russia ETF (formerly Market Vectors Russia ETF)
+        issuer: VanEck
+        inception: '2007-04-24'
+        status: liquidating
+        delisted: '2022-03-03'
+        delisted_universe: '2023-01-12'
+        liquidation_date: null
+        msci_class: standalone
+        status_url: https://www.prnewswire.com/news-releases/cboe-bzx-exchange-to-suspend-trading-in-vaneck-russia-etf-rsx-and-vaneck-russia-small-cap-etf-rsxj-and-commence-delisting-proceedings-301720181.html
+        liquidation_source_url: https://www.sec.gov/Archives/edgar/data/1137360/000093041326000713/c115545_ncsr-ixbrl.htm
+        source_url: https://www.sec.gov/Archives/edgar/data/1137360/000113736024000317/vaneckrussiaetfrsxsumpro05.htm
+        since_inception_cagr_pct: -24.42
+        as_of: '2025-12-31'
+        window:
+        - '2007-12-31'
+        - '2025-12-31'
+        n_full_years: 16
+        contiguous: false
+        basis: issuer calendar-year NAV total returns compounded (full_calendar_years_only; inception and final stubs excluded)
+        vt_same_window_pct: 7.49
+        benchmark: vt_proxy
+        cagr_10y_pct: -16.2
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: liquidated_in_window
+        cagr_10y_max_dd_pct: -92.73
+        cagr_10y_incomplete: null
+        max_dd_pct: -92.73
+        max_dd_basis: backtest 2015–2025 ladder path (annual marks)
+      - ticker: ERUS
+        name: iShares MSCI Russia ETF
+        issuer: iShares (BlackRock)
+        inception: '2010-11-09'
+        status: liquidating
+        delisted: '2022-03-03'
+        delisted_universe: '2022-08-17'
+        liquidation_date: null
+        msci_class: standalone
+        status_url: https://www.ishares.com/us/literature/tax-information/form-8937-erus-08-17-2022.pdf
+        liquidation_source_url: https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf
+        source_url: https://www.ishares.com/us/products/239677/ishares-msci-russia-etf
+        since_inception_cagr_pct: -37.92
+        as_of: '2025-12-31'
+        window:
+        - '2010-12-31'
+        - '2025-12-31'
+        n_full_years: 13
+        contiguous: false
+        basis: issuer calendar-year NAV total returns compounded (full_calendar_years_only; inception and final stubs excluded)
+        vt_same_window_pct: 9.9
+        benchmark: vt
+        cagr_10y_pct: -42.54
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: manual_incomplete
+        cagr_10y_max_dd_pct: -99.84
+        cagr_10y_incomplete: '2022-12-31..2025-12-31 (post-halt cash distributions: reference NAV not transcribed)'
+        max_dd_pct: -99.84
+        max_dd_basis: backtest 2015–2025 ladder path (annual marks)
+      events:
+      - iso3: RUS
+        date: '2022-03-03'
+        note: US-listed Russia funds (ERUS, RSX) stopped trading on 3 March 2022 after the Moscow Exchange closure and sanctions;
+          both went into liquidation with holdings marked near zero.
+        kind: trading_halt
+        detail: US-listed Russia funds (ERUS, RSX) stopped trading on 3 March 2022 after the Moscow Exchange closure and sanctions;
+          both went into liquidation with holdings marked near zero.
+        url: https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf
+        verified: true
+        source: evals/econ/etf_manual.yaml (ERUS / RSX last_trading_day, transcribed from issuer filings)
+      - iso3: RUS
+        date: '2022-03-09'
+        note: Russia was reclassified from emerging to standalone status and its securities removed from the emerging-markets
+          indexes at a price that is effectively zero.
+        kind: index_deletion
+        detail: MSCI reclassified Russia from Emerging Markets to Standalone status and removed Russian securities from the
+          MSCI EM Indexes at a price that is effectively zero.
+        url: https://www.msci.com/index-review-russia
+        verified: false
+        source: memory of the MSCI announcement of 2 March 2022 (effective 9 March 2022); not re-read on 2026-09-04
+    RWA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SAU:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: KSA
+        name: iShares MSCI Saudi Arabia ETF
+        issuer: iShares (BlackRock)
+        inception: '2015-09-16'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/271542/ishares-msci-saudi-arabia-capped-etf
+        since_inception_cagr_pct: 6.23
+        max_dd_pct: -40.56
+        as_of: '2026-09-04'
+        window:
+        - '2015-09-17'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 12.12
+        benchmark: vt
+        cagr_10y_pct: 6.73
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -40.56
+        cagr_10y_incomplete: null
+      events: []
+    SDN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SEN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SGP:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWS
+        name: iShares MSCI Singapore ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239678/ishares-msci-singapore-capped-etf
+        since_inception_cagr_pct: 4.6
+        max_dd_pct: -75.21
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 7.4
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -40.84
+        cagr_10y_incomplete: null
+      events: []
+    SHN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SLB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SLE:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SLV:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SMR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SOM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SPM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SRB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SSD:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    STP:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SUR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SVK:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SVN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SWE:
+      status: live
+      msci_class: DM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWD
+        name: iShares MSCI Sweden ETF
+        issuer: iShares (BlackRock)
+        inception: '1996-03-12'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: DM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239684/ishares-msci-sweden-etf
+        since_inception_cagr_pct: 8.62
+        max_dd_pct: -74.27
+        as_of: '2026-09-04'
+        window:
+        - '1996-03-18'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.88
+        benchmark: vt_proxy
+        cagr_10y_pct: 8.94
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -42.33
+        cagr_10y_incomplete: null
+      events: []
+    SWZ:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SXM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SYC:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    SYR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TCA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TCD:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TGO:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    THA:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: THD
+        name: iShares MSCI Thailand ETF
+        issuer: iShares (BlackRock)
+        inception: '2008-03-26'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239688/ishares-msci-thailand-capped-etf
+        since_inception_cagr_pct: 4.76
+        max_dd_pct: -64.22
+        as_of: '2026-09-04'
+        window:
+        - '2008-04-01'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.51
+        benchmark: vt_proxy
+        cagr_10y_pct: 2.98
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -49.32
+        cagr_10y_incomplete: null
+      events: []
+    TJK:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TKL:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TKM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TLS:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TON:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TTO:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TUN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TUR:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: TUR
+        name: iShares MSCI Turkey ETF
+        issuer: iShares (BlackRock)
+        inception: '2008-03-26'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239689/ishares-msci-turkey-etf
+        since_inception_cagr_pct: 1.45
+        max_dd_pct: -72.34
+        as_of: '2026-09-04'
+        window:
+        - '2008-03-28'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 8.72
+        benchmark: vt_proxy
+        cagr_10y_pct: 2.35
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -59.25
+        cagr_10y_incomplete: null
+      events: []
+    TUV:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    TWN:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EWT
+        name: iShares MSCI Taiwan ETF
+        issuer: iShares (BlackRock)
+        inception: '2000-06-20'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239686/ishares-msci-taiwan-etf
+        since_inception_cagr_pct: 7.68
+        max_dd_pct: -64.36
+        as_of: '2026-09-04'
+        window:
+        - '2000-06-23'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 6.87
+        benchmark: vt_proxy
+        cagr_10y_pct: 15.31
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -38.88
+        cagr_10y_incomplete: null
+      events: []
+    TZA:
+      status: none
+      msci_class: none
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    UGA:
+      status: none
+      msci_class: none
+      msci_class_source: markets.yaml snapshot
+      mobility: not_assessed
+      tickers: []
+      events: []
+    UKR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    URY:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    USA:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    UZB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    VAT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    VCT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    VEN:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    VGB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    VIR:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    VNM:
+      status: live
+      msci_class: FM
+      msci_class_source: etf_universe.yaml
+      mobility: not_assessed
+      tickers:
+      - ticker: VNM
+        name: VanEck Vietnam ETF (formerly Market Vectors Vietnam ETF)
+        issuer: VanEck
+        inception: '2009-08-11'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: FM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.vaneck.com/us/en/investments/vietnam-etf-vnm/
+        since_inception_cagr_pct: -0.54
+        max_dd_pct: -63.25
+        as_of: '2026-09-04'
+        window:
+        - '2009-08-14'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 11.05
+        benchmark: vt
+        cagr_10y_pct: 3.86
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -51.67
+        cagr_10y_incomplete: null
+      events: []
+    VUT:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    WLF:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    WSM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    XKX:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    YEM:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ZAF:
+      status: live
+      msci_class: EM
+      msci_class_source: etf_universe.yaml
+      mobility: open
+      tickers:
+      - ticker: EZA
+        name: iShares MSCI South Africa ETF
+        issuer: iShares (BlackRock)
+        inception: '2003-02-03'
+        status: live
+        delisted: null
+        delisted_universe: null
+        liquidation_date: null
+        msci_class: EM
+        status_url: null
+        liquidation_source_url: null
+        source_url: https://www.ishares.com/us/products/239680/ishares-msci-south-africa-etf
+        since_inception_cagr_pct: 9.62
+        max_dd_pct: -64.64
+        as_of: '2026-09-04'
+        window:
+        - '2003-02-07'
+        - '2026-09-04'
+        basis: daily adjusted closes, first bar after inception to the last cached bar
+        vt_same_window_pct: 10.0
+        benchmark: vt_proxy
+        cagr_10y_pct: 9.2
+        cagr_10y_vt_pct: 11.76
+        cagr_10y_window:
+        - '2015-12-31'
+        - '2025-12-31'
+        cagr_10y_benchmark: vt
+        cagr_10y_status: ok
+        cagr_10y_max_dd_pct: -62.25
+        cagr_10y_incomplete: null
+      events: []
+    ZMB:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+    ZWE:
+      status: none
+      msci_class: null
+      msci_class_source: null
+      mobility: not_assessed
+      tickers: []
+      events: []
+  baskets:
+  - ticker: FM
+    name: iShares Frontier and Select EM ETF (formerly iShares MSCI Frontier 100 ETF)
+    issuer: iShares (BlackRock)
+    inception: '2012-09-12'
+    status: liquidated
+    delisted: '2025-01-06'
+    delisted_universe: null
+    liquidation_date: '2025-01-09'
+    msci_class: n/a
+    status_url: https://www.sec.gov/Archives/edgar/data/930667/000119312524286769/d917051d497.htm
+    liquidation_source_url: https://www.ishares.com/us/products/closed-funds/updates
+    source_url: https://www.sec.gov/Archives/edgar/data/930667/000119312514220145/d735493d497.htm
+    since_inception_cagr_pct: 3.5
+    as_of: '2023-12-31'
+    window:
+    - '2012-12-31'
+    - '2023-12-29'
+    n_full_years: 11
+    contiguous: true
+    basis: issuer calendar-year NAV total returns compounded (full_calendar_years_only; inception and final stubs excluded)
+    vt_same_window_pct: 9.34
+    benchmark: vt
+    cagr_10y_pct: 3.48
+    cagr_10y_vt_pct: 11.76
+    cagr_10y_window:
+    - '2015-12-31'
+    - '2025-12-31'
+    cagr_10y_benchmark: vt
+    cagr_10y_status: manual_incomplete
+    cagr_10y_max_dd_pct: -25.93
+    cagr_10y_incomplete: 2024-11-30..2024-12-31 (calendar year not transcribed); 2025-01-01..2025-01-09 (final stub not transcribed)
+    max_dd_pct: -25.93
+    max_dd_basis: backtest 2015–2025 ladder path (annual marks)

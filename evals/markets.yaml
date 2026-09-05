@@ -1,0 +1,73 @@
+# Country market events and classification facts used by pyramid_explorer.econ.instruments (plan §7, M5.4).
+# Hand-curated; every entry names its source and whether it was read on the day ([V] verified: true) or comes from
+# memory / secondary reporting ([M] verified: false). Facts only — no series, no prices, no judgement about the future.
+# `note` = the wording shipped inside econ.*.ecz (no provider name — the shipped-data guard); `detail` = the full fact for
+# evidence.json. `mobility` is derived by instruments.py from the class + events (standalone or an index deletion → closed; FM with a
+# repatriation event → restricted; EM / DM → open; everything else → not_assessed) and is never hand-set here.
+
+version: 1
+as_of: "2026-09-04"
+
+# Index-provider market classification snapshot for countries WITHOUT a US-listed single-country fund in
+# evals/econ/etf_universe.yaml (funds carry their own msci_class there). Source: docs/research/econ_evidence.md
+# Link 4 (MSCI Market Classification, Aug 2023 snapshot, [V]) — https://www.msci.com/documents/1296102/1330218/MSCI-Country-Classification-Standard-cfs-en.pdf
+msci_class_snapshot:
+  source: "MSCI Market Classification standard, August 2023 snapshot, transcribed in docs/research/econ_evidence.md (Link 4)"
+  url: https://www.msci.com/documents/1296102/1330218/MSCI-Country-Classification-Standard-cfs-en.pdf
+  verified: true
+  classes:
+    BGD: FM
+    KEN: FM
+    LKA: FM
+    MAR: FM
+    JOR: FM
+    KAZ: FM
+    ETH: none
+    UGA: none
+    TZA: none
+    COD: none
+    NPL: none
+    LAO: none
+    KHM: none
+
+events:
+  - iso3: NGA
+    date: "2024-02-29"
+    note: "Every Nigerian security was deleted from the frontier-markets index at a price that is effectively zero as of the close of 29 February 2024, after foreign-exchange repatriation failures since 2020; the market was reclassified from frontier to standalone."
+    kind: index_deletion
+    detail: "MSCI deleted every Nigerian security from the MSCI Frontier Markets Indexes at a price that is effectively zero as of the close of 29 February 2024, after foreign-exchange repatriation failures since 2020; Nigeria was reclassified Frontier → Standalone."
+    url: https://www.msci.com/documents/10199/09a7d0cc-1500-711d-c437-4df67fb05609
+    verified: true
+    source: "docs/research/econ_evidence.md Link 4 (MSCI announcement, February 2024)"
+  - iso3: NGA
+    date: "2020-03-01"
+    note: "Foreign-exchange repatriation failures from 2020 (the ground given for the 2024 index deletion); the onset month is approximate."
+    kind: repatriation
+    detail: "Foreign-exchange repatriation failures since 2020 (the ground MSCI gave for the 2024 deletion); month is approximate."
+    url: https://www.msci.com/documents/10199/09a7d0cc-1500-711d-c437-4df67fb05609
+    verified: false
+    source: "same MSCI announcement; the onset date is paraphrased from it, not a dated event"
+  - iso3: RUS
+    date: "2022-03-03"
+    note: "US-listed Russia funds (ERUS, RSX) stopped trading on 3 March 2022 after the Moscow Exchange closure and sanctions; both went into liquidation with holdings marked near zero."
+    kind: trading_halt
+    detail: "US-listed Russia funds (ERUS, RSX) stopped trading on 3 March 2022 after the Moscow Exchange closure and sanctions; both went into liquidation with holdings marked near zero."
+    url: https://www.blackrock.com/us/individual/products/239677/ishares-msci-russia-capped-etf
+    verified: true
+    source: "evals/econ/etf_manual.yaml (ERUS / RSX last_trading_day, transcribed from issuer filings)"
+  - iso3: RUS
+    date: "2022-03-09"
+    note: "Russia was reclassified from emerging to standalone status and its securities removed from the emerging-markets indexes at a price that is effectively zero."
+    kind: index_deletion
+    detail: "MSCI reclassified Russia from Emerging Markets to Standalone status and removed Russian securities from the MSCI EM Indexes at a price that is effectively zero."
+    url: https://www.msci.com/index-review-russia
+    verified: false
+    source: "memory of the MSCI announcement of 2 March 2022 (effective 9 March 2022); not re-read on 2026-09-04"
+  - iso3: ARG
+    date: "2021-11-01"
+    note: "Argentina was reclassified from emerging to standalone status (capital controls since 2019)."
+    kind: reclassification
+    detail: "MSCI reclassified Argentina from Emerging Markets to Standalone status (capital controls since 2019)."
+    url: https://www.msci.com/market-classification
+    verified: false
+    source: "memory of the MSCI 2021 Annual Market Classification Review (June 2021, effective November 2021)"

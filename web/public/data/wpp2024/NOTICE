@@ -11,3 +11,5 @@ World Bank, World Development Indicators. CC BY 4.0.
 World Bank, historical classification by income (OGHIST). CC BY 4.0.
 
 Patch togo-2026-01-19: UN interim update applied to LocID(s) [768]; aggregates [900, 902, 903, 914, 941, 1500, 1834] recomputed from members by this site (the UN did not revise aggregates).
+
+Economic-context series (econ.*.ecz), derived by this site: GDP per capita is the Maddison Project Database 2023 level (2011 int. $) spliced past 2022 with World Bank World Development Indicators / Penn World Table 11.0 growth; 10-year real growth from Penn World Table 11.0 (World Development Indicators for 2024); income group from the World Bank historical classification (OGHIST) by fiscal year; fertility from WPP 2024; dividend stage adapted from the World Bank GMR 2015/16 typology (Ahmed, Cruz, Quillin & Schellekens 2016, PRWP 7893). Fund figures are derived statistics (year-end levels, growth rates, drawdowns), never price series; no non-redistributable source is included.

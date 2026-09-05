@@ -1,0 +1,249 @@
+{
+ "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618",
+ "primary": {
+  "growth_row": "B|10|10|growth",
+  "returns_row": "B|10|10|returns",
+  "n3_row": "10|10"
+ },
+ "levels_granted": [
+  "L0"
+ ],
+ "allowed_sentence_ids": [
+  "L0.disconnect",
+  "L0.investability",
+  "L0.null",
+  "L0.vs_vt",
+  "L0.what_happened"
+ ],
+ "levels": {
+  "L0": {
+   "name": "what happened next",
+   "granted": true,
+   "requires": [],
+   "failed": [],
+   "unavailable": [],
+   "note": null
+  },
+  "L1": {
+   "name": "growth association",
+   "granted": false,
+   "requires": [
+    "mu_eg_gt_0",
+    "ci_headline_excludes_0",
+    "p_n1_lt_05",
+    "p_n2_lt_05",
+    "n_eff_ge_20",
+    "panel_s3_d_lt_0_dk_p_lt_05",
+    "oos_r2_s3_gt_s0"
+   ],
+   "failed": [
+    "mu_eg_gt_0",
+    "ci_headline_excludes_0",
+    "p_n1_lt_05",
+    "p_n2_lt_05"
+   ],
+   "unavailable": [],
+   "note": null
+  },
+  "L2": {
+   "name": "returns signal",
+   "granted": false,
+   "requires": [
+    "mu_er_vs_vt_gt_0",
+    "ci_er_headline_excludes_0",
+    "hh_p_lt_05",
+    "nw_p_lt_05",
+    "mu_er_vs_ew_gt_0",
+    "beats_n1_investable_p_lt_05",
+    "beats_n4_p_lt_05",
+    "n_eff_returns_ge_20",
+    "oos_block_same_sign"
+   ],
+   "failed": [
+    "mu_er_vs_vt_gt_0",
+    "ci_er_headline_excludes_0",
+    "hh_p_lt_05",
+    "nw_p_lt_05",
+    "mu_er_vs_ew_gt_0",
+    "beats_n1_investable_p_lt_05",
+    "beats_n4_p_lt_05",
+    "n_eff_returns_ge_20"
+   ],
+   "unavailable": [
+    "hh_p_lt_05",
+    "nw_p_lt_05"
+   ],
+   "note": "pre-registered expectation NOT met; the UI may never predict returns. L2 requires beating VT."
+  }
+ },
+ "conditions": {
+  "mu_eg_gt_0": {
+   "value": -0.1899351477813351,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|growth.stats.mean_excess (pp/yr)"
+  },
+  "ci_headline_excludes_0": {
+   "value": [
+    -1.4684069209354271,
+    1.1995798967701474
+   ],
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|growth.stats.ci_headline"
+  },
+  "p_n1_lt_05": {
+   "value": 0.6500699860027994,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|growth.nulls.N1.p_mean_excess"
+  },
+  "p_n2_lt_05": {
+   "value": 0.9834033193361328,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|growth.nulls.N2.p_mean_excess"
+  },
+  "n_eff_ge_20": {
+   "value": 43.0,
+   "ok": true,
+   "available": true,
+   "detail": "B|10|10|growth.stats.n_eff"
+  },
+  "panel_s3_d_lt_0_dk_p_lt_05": {
+   "value": {
+    "beta": -0.0023872922485447,
+    "p_dk": 2.8723415895953192e-30
+   },
+   "ok": true,
+   "available": true,
+   "detail": "panel.specs.S3.coef.D (in-sample, full sample as pre-registered; contaminated by prototype self-matching — RESULTS §5 note)"
+  },
+  "oos_r2_s3_gt_s0": {
+   "value": {
+    "S3": 0.01649243936360023,
+    "S0": -0.03170833939137441
+   },
+   "ok": true,
+   "available": true,
+   "detail": "panel.holdout.oos_r2.{S3,S0}.vs_mean"
+  },
+  "p2_met": {
+   "value": 0.06837398411147741,
+   "ok": true,
+   "available": true,
+   "detail": "n3.10|10.delta (pp/yr)"
+  },
+  "mu_er_vs_vt_gt_0": {
+   "value": -18.462773724644965,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|returns.stats.mean_excess (vs VT, pp/yr)"
+  },
+  "ci_er_headline_excludes_0": {
+   "value": [
+    -18.462773724644965,
+    -18.462773724644965
+   ],
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|returns.stats.ci_headline"
+  },
+  "hh_p_lt_05": {
+   "value": null,
+   "ok": false,
+   "available": false,
+   "detail": "B|10|10|returns.stats.hh_p"
+  },
+  "nw_p_lt_05": {
+   "value": {
+    "L2": null,
+    "L4": null
+   },
+   "ok": false,
+   "available": false,
+   "detail": "B|10|10|returns.stats.nw2_p and nw4_p"
+  },
+  "mu_er_vs_ew_gt_0": {
+   "value": -14.640625276752816,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|returns.vs.ew.mean_excess"
+  },
+  "beats_n1_investable_p_lt_05": {
+   "value": 1.0,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|returns.nulls.N1_investable.p_mean_excess"
+  },
+  "beats_n4_p_lt_05": {
+   "value": 1.0,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|returns.nulls.N4_investable.p_one_sided (paired bootstrap)"
+  },
+  "n_eff_returns_ge_20": {
+   "value": 1.0,
+   "ok": false,
+   "available": true,
+   "detail": "B|10|10|returns.stats.n_eff"
+  },
+  "oos_block_same_sign": {
+   "value": -18.462773724644965,
+   "ok": true,
+   "available": true,
+   "detail": "B|10|10|returns.oos_block_T_ge_2010"
+  }
+ },
+ "rendered": {
+  "L0.what_happened": [
+   "Among the 10 countries whose pyramid in 1990 most resembled the pre-boom prototypes, GDP per capita grew -0.5 %/yr over the following 10 years, against +1.6 %/yr for the median of all 148 candidates (N_eff = 10; 40% of them beat the median).",
+   "Among the 10 countries whose pyramid in 1995 most resembled the pre-boom prototypes, GDP per capita grew +2.1 %/yr over the following 10 years, against +2.6 %/yr for the median of all 150 candidates (N_eff = 10; 40% of them beat the median).",
+   "Among the 10 countries whose pyramid in 2000 most resembled the pre-boom prototypes, GDP per capita grew +3.6 %/yr over the following 10 years, against +2.8 %/yr for the median of all 151 candidates (N_eff = 10; 40% of them beat the median).",
+   "Among the 10 countries whose pyramid in 2005 most resembled the pre-boom prototypes, GDP per capita grew +4.4 %/yr over the following 10 years, against +2.5 %/yr for the median of all 152 candidates (N_eff = 10; 90% of them beat the median).",
+   "Among the 10 countries whose pyramid in 2010 most resembled the pre-boom prototypes, GDP per capita grew +1.6 %/yr over the following 10 years, against +1.2 %/yr for the median of all 156 candidates (N_eff = 10; 50% of them beat the median).",
+   "Among the 10 countries whose pyramid in 2015 most resembled the pre-boom prototypes, GDP per capita grew -0.3 %/yr over the following 7–8 years, against +1.4 %/yr for the median of all 157 candidates (N_eff = 10; 30% of them beat the median)."
+  ],
+  "L0.null": [
+   "Random sets of 10 countries did at least as well in 65% of 5000 draws (p = 0.65); sets of equally poor countries did at least as well in 98% of draws (p = 0.98)."
+  ],
+  "L0.investability": [
+   "No US-listed single-country fund exists for this country.",
+   "No US-listed single-country fund existed in 2000.",
+   "No US-listed single-country fund existed in 2005.",
+   "No US-listed single-country fund existed in 2010.",
+   "NGE was liquidated on 2023-07-28 (issuer notice)."
+  ],
+  "L0.vs_vt": [
+   "NGE total return 2015–2025: -7.1 %/yr · VT over the same window: +11.8 %/yr."
+  ],
+  "L0.disconnect": [
+   "China 1990: GDP per capita 9.4× in 30 years; the MSCI China index returned +1.6 %/yr (USD) since 1992-12-31, with a maximum drawdown of 89 % (MSCI factsheet, accessed 2026-09-04).",
+   "South Korea 1975: GDP per capita 7.6× in 30 years; the MSCI Korea index returned +8.7 %/yr (USD) since 1994-05-31, with a maximum drawdown of 82 % (MSCI factsheet, accessed 2026-09-04).",
+   "South Korea 1990: GDP per capita 3.4× in 30 years; the MSCI Korea index returned +8.7 %/yr (USD) since 1994-05-31, with a maximum drawdown of 82 % (MSCI factsheet, accessed 2026-09-04).",
+   "Japan 1960: GDP per capita 5.1× in 30 years; the MSCI Japan index returned +3.3 %/yr (USD) since 1994-05-31, with a maximum drawdown of 63 % (MSCI factsheet, accessed 2026-09-04).",
+   "Taiwan 1970: GDP per capita 6.5× in 30 years; the MSCI Taiwan index returned +9.3 %/yr (USD) since 1994-05-31, with a maximum drawdown of 78 % (MSCI factsheet, accessed 2026-09-04).",
+   "Thailand 1985: GDP per capita 3.8× in 30 years; the MSCI Thailand index returned +2.3 %/yr (USD) since 1994-05-31, with a maximum drawdown of 92 % (MSCI factsheet, accessed 2026-09-04).",
+   "Vietnam 2000: GDP per capita 5.1× in 23 years; the MSCI Vietnam index returned +2.7 %/yr (USD) since 2006-11-30, with a maximum drawdown of 78 % (MSCI factsheet, accessed 2026-09-04).",
+   "India 2005: GDP per capita 2.8× in 18 years; the MSCI India index returned +7.6 %/yr (USD) since 1994-05-31, with a maximum drawdown of 73 % (MSCI factsheet, accessed 2026-09-04)."
+  ]
+ },
+ "deny_list": [
+  "\\b(buy|sell|short|overweight|underweight|allocate|position|picks?)\\b",
+  "outsized",
+  "expect(ed)?\\s+(to\\s+)?(return|outperform)",
+  "should\\s+invest",
+  "(will|would)\\s+(rise|outperform|boom)",
+  "top\\s+\\d+",
+  "opportunit",
+  "alpha",
+  "undervalued"
+ ],
+ "run": {
+  "generated_at": "2026-09-05T02:45:40+00:00",
+  "git_rev": "65bcfd2",
+  "seed": 20260904,
+  "B": 5000,
+  "prereg_commit": "14f8c3c6e86a0a4e4242996dd3a733a0f8426618"
+ }
+}

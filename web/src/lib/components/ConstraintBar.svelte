@@ -178,7 +178,7 @@
       </div>
 
       <div class="flex items-center justify-between gap-2">
-        <span class="text-fg-2" title="how far apart the 'most different' picks are pushed">Diversity</span>
+        <span class="text-fg-2" title="how far apart the 'most different' results are pushed">Diversity</span>
         <div class="seg" role="group" aria-label="Diversity of the opposites">
           {#each DIV_VALUES as d (d)}
             <button type="button" aria-pressed={q.div === d} onclick={() => onchange({ div: d as Div })} title={DIV_HINT[String(d)]}>{divLabel(d as Div)}</button>

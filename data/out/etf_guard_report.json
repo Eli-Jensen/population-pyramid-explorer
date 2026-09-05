@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-05T02:45:40+00:00",
+ "generated_at": "2026-09-05T04:52:15+00:00",
  "thresholds": {
   "min_bars": 250,
   "first_bar_slack_days": 45,
@@ -87,7 +87,7 @@
    "inception_yaml": "2003-04-07",
    "delisted_yaml": null,
    "fetched_at": "2026-09-04T23:24:59+00:00",
-   "today": "2026-09-04",
+   "today": "2026-09-05",
    "signature": "series",
    "n_raw_bars": 5887,
    "first_raw_bar": "2003-04-14",
@@ -111,7 +111,7 @@
    "inception_yaml": "2001-08-14",
    "delisted_yaml": null,
    "fetched_at": "2026-09-04T23:24:58+00:00",
-   "today": "2026-09-04",
+   "today": "2026-09-05",
    "signature": "series",
    "n_raw_bars": 6293,
    "first_raw_bar": "2001-08-27",

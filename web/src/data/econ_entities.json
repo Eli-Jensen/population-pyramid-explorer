@@ -1,0 +1,2135 @@
+{
+ "ABW": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "AFG": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "AGO": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "AIA": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "ALB": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "AND": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "ARE": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "ARG": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "standalone",
+  "mobility": "closed",
+  "stage_latest": "early"
+ },
+ "ARM": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "ASM": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "ATG": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "AUS": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "AUT": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "AZE": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "BDI": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "BEL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "BEN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "BES": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "BFA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "BGD": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "BGR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "BHR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "BHS": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "BIH": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "BLM": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "BLR": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "BLZ": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "BMU": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "BOL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "BRA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "BRB": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "BRN": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "BTN": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "BWA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "CAF": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "CAN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "CHE": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "CHL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "CHN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "CIV": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "CMR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "COD": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "none",
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "COG": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "COK": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "COL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "COM": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "CPV": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "CRI": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "CUB": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "CUW": {
+  "has_econ": true,
+  "gdppc_years": 25,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "CYM": {
+  "has_econ": true,
+  "gdppc_years": 19,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "CYP": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "CZE": {
+  "has_econ": true,
+  "gdppc_years": 55,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "DEU": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "DJI": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "DMA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "DNK": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "DOM": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "DZA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "ECU": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "EGY": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "liquidated",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "early"
+ },
+ "ERI": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "ESH": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "ESP": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "EST": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "ETH": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "none",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "FIN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "FJI": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "FLK": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "FRA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "FRO": {
+  "has_econ": true,
+  "gdppc_years": 17,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "FSM": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GAB": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GBR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "GEO": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GGY": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "GHA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GIB": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "GIN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "GLP": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "GMB": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GNB": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GNQ": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "GRC": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "GRD": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GRL": {
+  "has_econ": true,
+  "gdppc_years": 34,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "GTM": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "GUF": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "GUM": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "GUY": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "HKG": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "HND": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "HRV": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "HTI": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "HUN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "IDN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "IMN": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "IND": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "early"
+ },
+ "IRL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "IRN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "IRQ": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "ISL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "ISR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "early"
+ },
+ "ITA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "JAM": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "JEY": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "JOR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "JPN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "KAZ": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "KEN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "KGZ": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "KHM": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "none",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "KIR": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "KNA": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "KOR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "KWT": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "LAO": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "none",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "LBN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "LBR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "LBY": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "LCA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "LIE": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "LKA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "LSO": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "LTU": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "LUX": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "LVA": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "MAC": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "MAF": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "MAR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MCO": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MDA": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MDG": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MDV": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MEX": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "MHL": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MKD": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "MLI": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "MLT": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "MMR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MNE": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "MNG": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MNP": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "MOZ": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "MRT": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "MSR": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "MTQ": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "MUS": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "MWI": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "MYS": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "early"
+ },
+ "MYT": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "NAM": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "NCL": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "NER": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "NGA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "liquidated",
+  "msci_class": "standalone",
+  "mobility": "closed",
+  "stage_latest": "pre"
+ },
+ "NIC": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "NIU": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "NLD": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "NOR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "NPL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "none",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "NRU": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "NZL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "OMN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "PAK": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "liquidated",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "PAN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "PER": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "PHL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "early"
+ },
+ "PLW": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "PNG": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "POL": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "PRI": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "PRK": {
+  "has_econ": true,
+  "gdppc_years": 33,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "PRT": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "PRY": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "PSE": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "PYF": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "QAT": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "REU": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "ROU": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "RUS": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "liquidating",
+  "msci_class": "standalone",
+  "mobility": "closed",
+  "stage_latest": "post"
+ },
+ "RWA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "SAU": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "SDN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "SEN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "SGP": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "SHN": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "SLB": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "SLE": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "SLV": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "SMR": {
+  "has_econ": true,
+  "gdppc_years": 27,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "SOM": {
+  "has_econ": true,
+  "gdppc_years": 34,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "SPM": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "SRB": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "SSD": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "STP": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "SUR": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "SVK": {
+  "has_econ": true,
+  "gdppc_years": 40,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "SVN": {
+  "has_econ": true,
+  "gdppc_years": 73,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "SWE": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "DM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "SWZ": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "SXM": {
+  "has_econ": true,
+  "gdppc_years": 16,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "SYC": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "SYR": {
+  "has_econ": true,
+  "gdppc_years": 74,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "TCA": {
+  "has_econ": true,
+  "gdppc_years": 18,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "TCD": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "TGO": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "THA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "TJK": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "TKL": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "TKM": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "TLS": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "TON": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "TTO": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "TUN": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "TUR": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "late"
+ },
+ "TUV": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "TWN": {
+  "has_econ": true,
+  "gdppc_years": 74,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "post"
+ },
+ "TZA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "none",
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "UGA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": "none",
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "UKR": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "URY": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "USA": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "UZB": {
+  "has_econ": true,
+  "gdppc_years": 46,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "VAT": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "VCT": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "VEN": {
+  "has_econ": true,
+  "gdppc_years": 74,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "VGB": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "post"
+ },
+ "VIR": {
+  "has_econ": true,
+  "gdppc_years": 21,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "VNM": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "FM",
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "VUT": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "WLF": {
+  "has_econ": false,
+  "gdppc_years": 0,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "WSM": {
+  "has_econ": true,
+  "gdppc_years": 35,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ },
+ "XKX": {
+  "has_econ": true,
+  "gdppc_years": 17,
+  "gdppc_ge_30y": false,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "late"
+ },
+ "YEM": {
+  "has_econ": true,
+  "gdppc_years": 74,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "ZAF": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "live",
+  "msci_class": "EM",
+  "mobility": "open",
+  "stage_latest": "early"
+ },
+ "ZMB": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "pre"
+ },
+ "ZWE": {
+  "has_econ": true,
+  "gdppc_years": 75,
+  "gdppc_ge_30y": true,
+  "investability_status": "none",
+  "msci_class": null,
+  "mobility": "not_assessed",
+  "stage_latest": "early"
+ }
+}

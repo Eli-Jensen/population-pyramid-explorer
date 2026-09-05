@@ -6,8 +6,10 @@
 // Compare (M3):           '/compare/{a}/{ya}/{b}/{yb|best}' → CompareQuery (+ ?view=overlay|diff|side, ?from=best,
 //                         ?axis/?unit, ?era/?metric/?sex). `best` is INPUT sugar: the router keeps it (`yb: 'best'`);
 //                         the store resolves it against the corpus and replaceStates the concrete year + `?from=best`.
-// Static (M3):            '/about' → StaticQuery (pages/About.svelte)
-// Reserved:               '/evidence', '/eval/…' → Placeholder
+// Static (M3/M5):        '/about', '/evidence' → StaticQuery (pages/About.svelte, pages/Evidence.svelte — lazy chunks)
+// Dev tools (M4/M5):      '/eval/triplets' → EvalQuery (pages/Triplets.svelte, dev-only, never linked)
+// Reserved:               other '/eval/…' → Placeholder
+// Economic lens (M5):     `?lens=econ` on country and compare queries (elided when off; the store also remembers it)
 // Anything else           → NotFound.
 // Canonical form: no trailing slash, lowercase slug, canonical slug (aliases redirect), defaults elided,
 // query params in a fixed order. Non-canonical URLs return a Redirect (the app applies it with replaceState).
@@ -36,6 +38,14 @@ export interface DisplayOptions {
   unit: Unit; // pct = % of total · abs = thousands · pctsex = % of own sex
 }
 export const DEFAULT_OPTIONS: Readonly<DisplayOptions> = { axis: 'fit', unit: 'pct' };
+
+// ---- economic lens (M5, PLAN §7) ----------------------------------------------------------------------
+
+/** `?lens=econ` turns the market lens on; null = off (elided). Not a DisplayOption: it rides beside them on both queries. */
+export type Lens = 'econ' | null;
+export function parseLens(search: string): Lens {
+  return params(search).get('lens') === 'econ' ? 'econ' : null;
+}
 
 // ---- search constraints (M2, PLAN §6) ------------------------------------------------------------------
 
@@ -107,6 +117,7 @@ export interface CountryQuery extends DisplayOptions, SearchOptions {
   kind: 'country';
   id: string; // entity id (ISO3 / agg-*)
   year: number;
+  lens: Lens; // M5 market lens (`?lens=econ`), off by default
 }
 // ---- compare (M3, PLAN §7 J4/J5) ---------------------------------------------------------------------------
 
@@ -129,6 +140,7 @@ export interface CompareQuery extends DisplayOptions {
   era: EraMode | null; // null = J8 default from A's year (the era the best-year search may use)
   metric: Metric;
   sex: Sex;
+  lens: Lens;
 }
 export interface CompareInput {
   view?: CompareView;
@@ -136,16 +148,25 @@ export interface CompareInput {
   era?: EraMode | null;
   metric?: Metric;
   sex?: Sex;
+  lens?: Lens;
 }
 
-export const STATIC_PAGES = ['about'] as const;
+export const STATIC_PAGES = ['about', 'evidence'] as const;
 export type StaticPage = (typeof STATIC_PAGES)[number];
 export interface StaticQuery {
   kind: 'static';
   page: StaticPage;
 }
 
-export const PLACEHOLDER_ROUTES = ['evidence', 'eval'] as const;
+/** Dev-only tools under `/eval/…` (PLAN §4.6 item 8): reachable by URL, never linked. */
+export const EVAL_TOOLS = ['triplets'] as const;
+export type EvalTool = (typeof EVAL_TOOLS)[number];
+export interface EvalQuery {
+  kind: 'eval';
+  tool: EvalTool;
+}
+
+export const PLACEHOLDER_ROUTES = ['eval'] as const;
 export type PlaceholderRoute = (typeof PLACEHOLDER_ROUTES)[number];
 export interface PlaceholderQuery {
   kind: 'placeholder';
@@ -153,7 +174,7 @@ export interface PlaceholderQuery {
   segments: string[]; // path segments after the route name, lowercased
   search: string; // raw search string ('' or '?…'), untouched until the route is built
 }
-export type Query = HomeQuery | CountryQuery | CompareQuery | StaticQuery | PlaceholderQuery;
+export type Query = HomeQuery | CountryQuery | CompareQuery | StaticQuery | EvalQuery | PlaceholderQuery;
 
 export interface Redirect {
   kind: 'redirect';
@@ -366,13 +387,14 @@ export function searchParams(s: Partial<SearchOptions>): Array<[string, string]>
   return p;
 }
 
-/** '?axis=pin10&unit=abs&mode=any…' or '' — the canonical search string for a set of options. */
-export function optionsSearch(o: Partial<DisplayOptions & SearchOptions>): string {
+/** '?axis=pin10&unit=abs&mode=any…&lens=econ' or '' — the canonical search string for a set of options. */
+export function optionsSearch(o: Partial<DisplayOptions & SearchOptions & { lens: Lens }>): string {
   const e = elideDefaults(o);
   const parts: string[] = [];
   if (e.axis) parts.push(`axis=${e.axis}`);
   if (e.unit) parts.push(`unit=${e.unit}`);
   for (const [k, v] of searchParams(o)) parts.push(`${k}=${v}`);
+  if (o.lens === 'econ') parts.push('lens=econ');
   return parts.length ? '?' + parts.join('&') : '';
 }
 
@@ -410,6 +432,8 @@ export function canonical(query: Query, base: string): string {
     }
     case 'static':
       return `${b}${query.page}`;
+    case 'eval':
+      return `${b}eval/${query.tool}`;
     case 'placeholder': {
       const path = [query.route, ...query.segments].join('/');
       return `${b}${path}${query.search}`;
@@ -417,8 +441,8 @@ export function canonical(query: Query, base: string): string {
   }
 }
 
-/** '?axis=…&unit=…&view=diff&from=best&era=all&metric=l2&sex=1' or '' — fixed order, defaults elided. */
-export function compareSearch(q: Pick<CompareQuery, 'axis' | 'unit' | 'view' | 'from' | 'yb' | 'era' | 'metric' | 'sex'>): string {
+/** '?axis=…&unit=…&view=diff&from=best&era=all&metric=l2&sex=1&lens=econ' or '' — fixed order, defaults elided. */
+export function compareSearch(q: Pick<CompareQuery, 'axis' | 'unit' | 'view' | 'from' | 'yb' | 'era' | 'metric' | 'sex'> & { lens?: Lens }): string {
   const e = elideDefaults(q);
   const parts: string[] = [];
   if (e.axis) parts.push(`axis=${e.axis}`);
@@ -428,6 +452,7 @@ export function compareSearch(q: Pick<CompareQuery, 'axis' | 'unit' | 'view' | '
   if (q.era) parts.push(`era=${q.era}`);
   if (q.metric !== DEFAULT_SEARCH.metric) parts.push(`metric=${q.metric}`);
   if (q.sex !== DEFAULT_SEARCH.sex) parts.push(`sex=${q.sex}`);
+  if (q.lens === 'econ') parts.push('lens=econ');
   return parts.length ? '?' + parts.join('&') : '';
 }
 
@@ -475,6 +500,7 @@ export function compareQuery(
     era,
     metric,
     sex: opts.sex ?? DEFAULT_SEARCH.sex,
+    lens: opts.lens ?? null,
   };
 }
 
@@ -485,7 +511,7 @@ export function compareQuery(
 export function countryQuery(
   id: string,
   year: number,
-  opts: Partial<DisplayOptions> & SearchInput = {},
+  opts: Partial<DisplayOptions> & SearchInput & { lens?: Lens } = {},
   curYear: number = currentYear(),
 ): CountryQuery {
   return {
@@ -495,6 +521,7 @@ export function countryQuery(
     ...DEFAULT_OPTIONS,
     ...elideDefaults(opts),
     ...normaliseSearch(opts, year, curYear),
+    lens: opts.lens ?? null,
   };
 }
 
@@ -528,12 +555,16 @@ export function parse(pathname: string, search: string, base: string, opts: Pars
     const yb: YearOrBest | null = ybSeg === 'best' ? 'best' : yearOrNull(ybSeg);
     if (ya === null || yb === null) return { kind: 'notfound', path: '/' + segs.join('/') };
     const curYear = currentYear(opts.clock);
-    const q = compareQuery(ea.id, ya, eb.id, yb, { ...parseOptions(searchNorm), ...parseCompareInput(searchNorm) }, curYear);
+    const q = compareQuery(ea.id, ya, eb.id, yb, { ...parseOptions(searchNorm), ...parseCompareInput(searchNorm), lens: parseLens(searchNorm) }, curYear);
     return redirectIfNeeded(q, pathname + searchNorm, b);
   }
   if ((STATIC_PAGES as readonly string[]).includes(head)) {
     if (segs.length !== 1) return { kind: 'notfound', path: '/' + segs.join('/') };
     const q: StaticQuery = { kind: 'static', page: head as StaticPage };
+    return redirectIfNeeded(q, pathname + searchNorm, b);
+  }
+  if (head === 'eval' && segs.length === 2 && (EVAL_TOOLS as readonly string[]).includes(segs[1]!)) {
+    const q: EvalQuery = { kind: 'eval', tool: segs[1] as EvalTool };
     return redirectIfNeeded(q, pathname + searchNorm, b);
   }
   if ((PLACEHOLDER_ROUTES as readonly string[]).includes(head)) {
@@ -549,7 +580,7 @@ export function parse(pathname: string, search: string, base: string, opts: Pars
   const entity: Entity | undefined = resolve(head);
   if (!entity) return { kind: 'notfound', path: '/' + segs.join('/') };
   const curYear = currentYear(opts.clock);
-  const options = { ...parseOptions(searchNorm), ...parseSearchInput(searchNorm) };
+  const options = { ...parseOptions(searchNorm), ...parseSearchInput(searchNorm), lens: parseLens(searchNorm) };
 
   if (segs.length === 1) {
     // hub: '/{slug}' → '/{slug}/{currentYear}'
@@ -574,6 +605,6 @@ function redirectIfNeeded(q: Query, actual: string, base: string): Route {
 
 /** Type guards. */
 export const isQuery = (r: Route): r is Query =>
-  r.kind === 'home' || r.kind === 'country' || r.kind === 'compare' || r.kind === 'static' || r.kind === 'placeholder';
+  r.kind === 'home' || r.kind === 'country' || r.kind === 'compare' || r.kind === 'static' || r.kind === 'eval' || r.kind === 'placeholder';
 export const isCountry = (r: Route): r is CountryQuery => r.kind === 'country';
 export const isCompare = (r: Route): r is CompareQuery => r.kind === 'compare';

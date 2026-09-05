@@ -140,8 +140,8 @@ d    = ½ · l2 / σ_L2  +  ½ · w1s / σ_W1
     <h3 class="font-semibold">“Most different” and diversity</h3>
     <p>
       Opposites are the farthest pyramids under the active metric over the same candidate set as the twins,
-      <em>diversified</em> with a maximal-marginal-relevance step: the pool is the farthest quartile; the first pick is
-      the farthest; each next pick maximises <code>d(q, x) + β · min_s d(x, s)</code> against the picks so far. Three
+      <em>diversified</em> with a maximal-marginal-relevance step: the pool is the farthest quartile; the first choice is
+      the farthest; each next choice maximises <code>d(q, x) + β · min_s d(x, s)</code> against the choices so far. Three
       presets: strict (β = {presets.strict}) is plain farthest-k, balanced (β = {presets.balanced}, default) keeps about
       two thirds of the strict list, spread (β = {presets.spread}) about a third. <strong>The raw rank is never
       hidden</strong>: every opposite card says “#7 farthest”, and a strip under the cards lists the strictly farthest
@@ -305,7 +305,7 @@ d    = ½ · l2 / σ_L2  +  ½ · w1s / σ_W1
       {#each evals.notes as n, i (i)}<li>{n}</li>{/each}
     </ul>
     <p class="text-sm">
-      <span class="chip" aria-disabled="true" title="The economic-lens evidence page arrives in a later milestone (M5)">Evidence page — coming in a later milestone</span>
+      <a class="underline" href={href({ kind: 'static', page: 'evidence' })}>Evidence page — what the literature found, what happened after China 1990, and this site's own pre-registered backtest</a>
     </p>
   </section>
 
@@ -325,7 +325,7 @@ d    = ½ · l2 / σ_L2  +  ½ · w1s / σ_W1
         for the successor states of the USSR, Yugoslavia, Sudan/South Sudan and others.
       </li>
       <li>
-        <strong>Names.</strong> Short display names are used in the interface (Taiwan, Kosovo, South Korea, Türkiye…),
+        <strong>Names.</strong> Brief display names are used in the interface (Taiwan, Kosovo, South Korea, Türkiye…),
         with the UN name as the subtitle on each page (for example “China, Taiwan Province of China” and “Kosovo (under
         UNSC res. 1244)”). Any ISO code, UN name or common alias works in a URL.
       </li>

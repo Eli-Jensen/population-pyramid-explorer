@@ -1,0 +1,245 @@
+# Evidence links for the /evidence page — transcribed from docs/research/econ_evidence.md (research notes, 2026-09-04).
+# Every figure here appears in that file; `verified: true` = [V] (the research agent read the primary source that day),
+# `verified: false` = [M] (from memory / secondary reporting, not verified). pyramid_explorer.econ.evidence merges this
+# file with the site's own backtest outputs (evals/econ/*.json, decision.json) into web/src/data/evidence.json.
+# Language: past tense, effect sizes with their sample, a citation URL per line; no claim about what happens next.
+
+version: 1
+source_doc: docs/research/econ_evidence.md
+transcribed_on: "2026-09-04"
+transcribed: "2026-09-04"
+question: >-
+  Does a country's population pyramid say anything about its later economic growth, and did that growth reach an index
+  investor? This page lists what the published literature found, what happened after a well-known case (China 1990), and
+  what this site's own pre-registered backtest found on its own data. Nothing here is a forecast.
+
+# What the lens never does (rendered on /evidence; wording avoids the tokens the shipped-data licence guard scans for).
+never_does:
+  - "Never combines shape distance with any economic number into a score."
+  - "Never sorts or ranks result lists by return or by growth; the cohort strip reports where a country's own growth fell among its lookalikes (median, IQR, rank), in shape order."
+  - "Never shows a price, a valuation forecast or a World Economic Outlook projection."
+  - "Never links to a broker; instrument links go only to the issuer's own notice, filing or factsheet."
+  - "Never states a growth or market claim outside the pre-registered templates granted by evals/econ/decision.json (levels L1 and L2 were not granted); table cells and chips print numbers with their window, VT beside them, and every string passes the deny list."
+  - "Never shows a market number without VT (Vanguard Total World Stock ETF) over the identical window, flagged VT-proxy before 2008-06-24."
+  - "Never redistributes the International Monetary Fund's World Economic Outlook or any MSCI series; MSCI facts are hand-transcribed and cited with the access date."
+
+links:
+  - id: age_structure_to_growth
+    title: "Age structure → GDP growth"
+    direction: positive
+    strength: "real, conditional on policy"
+    summary: >-
+      Across studies, a rising working-age share went with faster GDP-per-capita growth, but only where policy let it —
+      the authors call the dividend "not inevitable", something that "has to be earned".
+    findings:
+      - claim: "The demographic dividend accounted for as much as one-third of East Asia's economic miracle (1965–90)."
+        effect: "≈ 1/3 of East Asia's per-capita growth (Bloom, Canning & Sevilla); Bloom, Canning & Malaney (1999) give a third to a half"
+        sample: "East Asia, 1965–1990"
+        citation: "Bloom, Canning & Sevilla (2001/2003), NBER WP 8685; RAND MR-1274"
+        url: https://www.nber.org/system/files/working_papers/w8685/w8685.pdf
+        verified: true
+      - claim: "The original one-third attribution."
+        effect: "≈ 1/3 of East Asian growth"
+        sample: "East Asia, 1965–1990"
+        citation: "Bloom & Williamson (1998), World Bank Economic Review 12(3):419–455"
+        url: https://academic.oup.com/wber/article-abstract/12/3/419/1632238
+        verified: false
+      - claim: "East Asia's working-age population grew about 2.4 %/yr, nearly four times the dependent population; the working-age share rose from about 57 % (1965) to about 68 % (2000); per-capita income grew more than 6 %/yr."
+        effect: "working-age share +11 pp over 35 years alongside > 6 %/yr per-capita income growth"
+        sample: "East Asia, 1965–2000"
+        citation: "Bloom, Canning & Sevilla (2001), NBER WP 8685"
+        url: https://www.nber.org/system/files/working_papers/w8685/w8685.pdf
+        verified: true
+      - claim: "A one-percentage-point rise in the working-age share went with about 1.5 pp faster GDP-per-capita growth."
+        effect: "+1 pp working-age share ≈ +1.5 pp GDP-per-capita growth"
+        sample: "cross-country panel (World Development 105:95–106)"
+        citation: "Cruz & Ahmed (2018), World Development 105:95–106; companion typology paper World Bank WPS7893"
+        url: https://www.sciencedirect.com/science/article/abs/pii/S0305750X17304114
+        verified: false
+        companion_url: https://documents1.worldbank.org/curated/en/867951479745020851/pdf/WPS7893.pdf
+        companion_verified: true
+      - claim: "Openness tripled the effect: a working-age population growing 1.5 % faster than the total added about 0.5 %/yr of growth in a closed economy but about 1.5 %/yr in an open one."
+        effect: "≈ 0.5 %/yr (closed) vs ≈ 1.5 %/yr (open)"
+        sample: "cross-country regressions in NBER WP 8685"
+        citation: "Bloom, Canning & Sevilla (2001), NBER WP 8685"
+        url: https://www.nber.org/system/files/working_papers/w8685/w8685.pdf
+        verified: true
+      - claim: "Latin America grew 0.7 %/yr per capita over 1975–95 against East Asia's 6.8 % with favourable demographics from 1970; direct age-structure effects explained about 11 % of the gap, about 50 % once the policy interaction is included; only 12 % of the region counted as open by 1980."
+        effect: "0.7 %/yr vs 6.8 %/yr; age structure alone ≈ 11 % of the gap"
+        sample: "Latin America vs East Asia, 1975–1995"
+        citation: "Bloom, Canning & Sevilla (2001), NBER WP 8685"
+        url: https://www.nber.org/system/files/working_papers/w8685/w8685.pdf
+        verified: true
+      - claim: "Sub-Saharan fertility fell slowly: DRC 6.1 (1960) → 6.0 (2024); Nigeria 6.4 → 4.4; Uganda 6.9 → 4.2; DRC's dependency ratio rose from 84.8 to 96.5."
+        effect: "TFR changes 1960 → 2024 as listed"
+        sample: "DRC, Nigeria, Uganda (WDI)"
+        citation: "World Bank WDI, read 2026-09-04"
+        url: https://databank.worldbank.org/source/world-development-indicators
+        verified: true
+      - claim: "This project's earlier backcast: effective-labour growth against realised 2000–2020 GDP growth over 69 countries — correlation 0.47, slope 0.76, MAE 1.5 pp; worst misses China, Vietnam, Ethiopia (catch-up growth dominated)."
+        effect: "corr 0.47, slope 0.76, MAE 1.5 pp"
+        sample: "69 countries, 2000–2020"
+        citation: "pyramid-econ, reports/backcast_2000_2020.csv (this author)"
+        url: null
+        verified: true
+
+  - id: growth_to_equity_returns
+    title: "GDP growth → equity returns"
+    direction: negative
+    strength: "negative across countries over a century"
+    summary: >-
+      Across countries, faster real GDP-per-capita growth went with LOWER real equity returns; growth financed by new
+      capital accrued to new shareholders and expected growth was already in prices.
+    findings:
+      - claim: "Cross-country correlation of real GDP-per-capita growth with real equity returns was negative."
+        effect: "negative (sign only)"
+        sample: "16 countries, 1900–2001"
+        citation: "Dimson, Marsh & Staunton (2002), Triumph of the Optimists"
+        url: null
+        verified: false
+      - claim: "Cross-country correlation of real GDP-per-capita growth with real equity returns: −0.37."
+        effect: "ρ = −0.37"
+        sample: "16 countries, 1900–2002"
+        citation: "Ritter (2005), Pacific-Basin Finance Journal 13:489–503"
+        url: https://site.warrington.ufl.edu/ritter/files/2015/04/Economic-growth-and-equity-returns-2005.pdf
+        verified: true
+      - claim: "Correlation −0.39 (p ≈ .10); −0.32 in USD terms."
+        effect: "ρ = −0.39 (p ≈ .10); USD-adjusted ρ = −0.32"
+        sample: "19 countries, 1900–2011"
+        citation: "Ritter (2012), Journal of Applied Corporate Finance"
+        url: https://static.twentyoverten.com/5980d16bbfb1c93238ad9c24/r1RMU0DFQ/Is-Economic-Growth-Good-for-Investors-Jay-Ritter.pdf
+        verified: true
+      - claim: "Correlation −0.41 in emerging markets."
+        effect: "ρ = −0.41"
+        sample: "15 emerging markets, 1988–2011"
+        citation: "Ritter (2012), Journal of Applied Corporate Finance"
+        url: https://static.twentyoverten.com/5980d16bbfb1c93238ad9c24/r1RMU0DFQ/Is-Economic-Growth-Good-for-Investors-Jay-Ritter.pdf
+        verified: true
+      - claim: "No significant relationship in a wider sample."
+        effect: "not significant"
+        sample: "44 countries"
+        citation: "Dimson, Marsh & Staunton, Credit Suisse Global Investment Returns Yearbook 2010"
+        url: null
+        verified: false
+      - claim: "Mechanism: growth from added capital and labour accrued to new shareholders (dilution); investors overpaid for expected growth, and that overpayment more than offset the benefit of unexpected growth."
+        effect: "qualitative"
+        sample: "Ritter's abstract and discussion"
+        citation: "Ritter (2005, 2012)"
+        url: https://site.warrington.ufl.edu/ritter/files/2015/04/Economic-growth-and-equity-returns-2005.pdf
+        verified: true
+      - claim: "MSCI Barra confirmed the negative cross-country correlation; over 1969–2009 the mean slippage from GDP growth to EPS growth was 2.3 pp, offset by 2.0 pp of P/E expansion; Sweden's index beat its GDP growth by 3.5 pp/yr while Spain's trailed by 4.5 pp/yr; results flipped with a one-year endpoint shift."
+        effect: "slippage 2.3 pp; P/E offset 2.0 pp; Sweden +3.5, Spain −4.5 pp/yr"
+        sample: "developed markets, 1969–2009"
+        citation: "MSCI Barra (May 2010), 'Is There a Link Between GDP Growth and Equity Returns?'"
+        url: https://www.msci.com/documents/10199/a134c5d5-dca0-420d-875d-06adb948f578
+        verified: true
+      - claim: "China GDP per capita (PPP, constant 2021 $, WDI) went from $1,667 (1990) to $23,841 (2024), 14.3×, while the MSCI China index returned +1.55 %/yr (USD, gross) since 1992-12-31 with a maximum drawdown of 88.63 % (1993-12-31 → 2001-09-12); MSCI EM +7.89 %/yr and MSCI ACWI +9.24 %/yr over their factsheet windows."
+        effect: "14.3× income vs +1.55 %/yr index"
+        sample: "China 1990–2024; MSCI China since 1992-12-31 (factsheet as of 2026-08-31)"
+        citation: "WDI; MSCI China Index factsheet (accessed 2026-09-04) — the transcribed values are in evals/econ/msci_citations.yaml"
+        url: https://www.msci.com/documents/10199/255599/msci-china-index.pdf
+        verified: true
+
+  - id: demographics_to_returns
+    title: "Demographics → equity returns directly"
+    direction: weak
+    strength: "weak; poor out-of-sample record"
+    summary: >-
+      Direct age-structure models of equity returns existed and mostly failed out of sample; the historical record has
+      too few effective degrees of freedom for sharp tests.
+    findings:
+      - claim: "Polynomial cohort-share model: +1 % in the 50–54 cohort went with about +1 pp of annual equity return, +1 % in the 70+ cohort with about −1.5 pp."
+        effect: "+1 pp / −1.5 pp per 1 % cohort share"
+        sample: "22 countries, pooled (FAJ 68(1):23–46)"
+        citation: "Arnott & Chaves (2012), Financial Analysts Journal 68(1):23–46"
+        url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1810985
+        verified: false
+      - claim: "'Statistical tests have limited power based on the few effective degrees of freedom in the historical record'; no sharp prospective decline implied."
+        effect: "qualitative"
+        sample: "US, 1926–1999 (REStat 83(4):565–584)"
+        citation: "Poterba (2001), Review of Economics and Statistics 83(4):565–584"
+        url: http://piketty.pse.ens.fr/files/PoterbaRESta2001.pdf
+        verified: false
+      - claim: "The MY ratio (ages 40–49 / 20–29) moved with stock prices in an overlapping-generations model."
+        effect: "qualitative"
+        sample: "US, 20th century"
+        citation: "Geanakoplos, Magill & Quinzii (2004), Brookings Papers on Economic Activity"
+        url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=329840
+        verified: false
+      - claim: "An M/O-ratio model forecast the US P/E falling to about 8.4 by 2025; it failed out of sample."
+        effect: "forecast P/E ≈ 8.4 by 2025 — did not happen"
+        sample: "US, 1954–2010 fit"
+        citation: "Liu & Spiegel (2011), FRBSF Economic Letter (follow-ups 2014 and later)"
+        url: https://www.frbsf.org/economic-research/publications/economic-letter/2011/august/boomer-retirement-us-equity-markets/
+        verified: false
+
+  - id: investability
+    title: "Investability"
+    direction: n/a
+    strength: "fails for the young countries"
+    summary: >-
+      The countries whose 2024 age structure is closest to China 1990 mostly had no US-listed single-country fund;
+      several funds that existed were liquidated, and one index deleted a whole market at an effectively zero price.
+    findings:
+      - claim: "The 2024 age split closest to China 1990 (0–14 28.8 % / 15–64 65.9 % / 65+ 5.3 %): Philippines, Bangladesh, Nepal, Laos, Cambodia, Jordan — not Nigeria, Ethiopia or DRC, which are younger than China ever was (DRC median age 15.9, Uganda 17.1 vs China's 1975 trough of 19.1)."
+        effect: "structural matches are 5–6× richer; income matches carry dependency ratios 73–97"
+        sample: "WDI 2024 cross-section"
+        citation: "computed from WDI (docs/research/econ_evidence.md)"
+        url: https://databank.worldbank.org/source/world-development-indicators
+        verified: true
+      - claim: "No US-listed single-country ETF existed (as of 2026-09-04) for Bangladesh, Pakistan (since 2024), Nigeria (since 2024), Ethiopia, Kenya, Egypt (since 2024), Tanzania, Uganda, DR Congo, Nepal, Laos or Cambodia; live examples: INDA, EPHE, EIDO, VNM, THD, EWY, MCHI, KSA, EPOL, AFK."
+        effect: "12 of the young lookalikes without a fund"
+        sample: "US-listed single-country ETFs, 2026-09-04"
+        citation: "evals/econ/etf_universe.yaml (issuer-verified dates); evals/instruments.yaml"
+        url: null
+        verified: true
+      - claim: "MSCI deleted every Nigerian security from the MSCI Frontier Markets Indexes at a price that is effectively zero as of the close of 29 February 2024 (foreign-exchange repatriation failures since 2020); Nigeria was reclassified Frontier → Standalone."
+        effect: "index deletion at effectively zero"
+        sample: "Nigeria, 2024-02-29"
+        citation: "MSCI announcement, February 2024"
+        url: https://www.msci.com/documents/10199/09a7d0cc-1500-711d-c437-4df67fb05609
+        verified: true
+      - claim: "MSCI classification snapshot (Aug 2023): EM = India, Indonesia, Philippines, Egypt, Turkey, Saudi Arabia, Korea, China, Thailand, Brazil, Mexico; Frontier/Standalone = Vietnam, Bangladesh, Kenya, Pakistan, Nigeria, Sri Lanka, Morocco, Jordan, Kazakhstan; not in the MSCI universe: Ethiopia, Uganda, Tanzania, DR Congo, Nepal, Laos, Cambodia."
+        effect: "classification facts"
+        sample: "MSCI Market Classification, August 2023"
+        citation: "MSCI Country Classification Standard"
+        url: https://www.msci.com/documents/1296102/1330218/MSCI-Country-Classification-Standard-cfs-en.pdf
+        verified: true
+      - claim: "Yahoo Finance served stale metadata — and, for some funds, full dead histories — for delisted tickers; liveness is therefore taken only from the issuer's own status and a fresh bar (PREREG §6)."
+        effect: "survivorship trap"
+        sample: "EGPT, NGE, PAK, FM, ERUS, RSX on 2026-09-04"
+        citation: "evals/econ/RESULTS.md §2 and §10"
+        url: null
+        verified: true
+
+china_1990_vs_today:
+  source: "docs/research/econ_evidence.md (WDI, OWID / UN WPP), [V]"
+  columns: [wa_pct, dependency, median_age, tfr, gdppc_ppp_2021usd]
+  rows:
+    - {label: "China 1990", wa_pct: 65.9, dependency: 51.8, median_age: 23.7, tfr: 2.5, gdppc_ppp_2021usd: 1667}
+    - {label: "China 2024", wa_pct: 69.3, dependency: 44.2, median_age: 40.6, tfr: 1.0, gdppc_ppp_2021usd: 23841, note: "median age is the 2026 value"}
+    - {label: "Korea 1990", wa_pct: 69.3, dependency: 44.3, median_age: 25.8, tfr: 1.6, gdppc_ppp_2021usd: 14378}
+    - {label: "Vietnam 2000", wa_pct: 62.5, dependency: 59.9, median_age: 22.7, tfr: 2.0, gdppc_ppp_2021usd: 4349}
+    - {label: "India 2024", wa_pct: 68.2, dependency: 46.6, median_age: 29.2, tfr: 2.0, gdppc_ppp_2021usd: 9416}
+    - {label: "Bangladesh 2024", wa_pct: 65.5, dependency: 52.6, median_age: 26.3, tfr: 2.1, gdppc_ppp_2021usd: 8487}
+    - {label: "Philippines 2024", wa_pct: 66.6, dependency: 50.1, median_age: 26.6, tfr: 1.9, gdppc_ppp_2021usd: 10378}
+    - {label: "Nigeria 2024", wa_pct: 55.9, dependency: 78.8, median_age: 18.3, tfr: 4.4, gdppc_ppp_2021usd: 7994, note: "flat since 2010"}
+    - {label: "Ethiopia 2024", wa_pct: 57.7, dependency: 73.3, median_age: 19.3, tfr: 3.9, gdppc_ppp_2021usd: 2892}
+    - {label: "DR Congo 2024", wa_pct: 50.9, dependency: 96.5, median_age: 15.9, tfr: 6.0, gdppc_ppp_2021usd: 1602}
+  reading: >-
+    Nobody today matched China 1990 on both age structure and income; today's structural matches were 5–6× richer,
+    today's income matches carried dependency ratios of 73–97. Egypt 1990 ($8,007) and Nigeria 1990 ($5,424) were 4.8× and
+    3.3× China's GDP per capita and were barely richer in 2024.
+
+licences:
+  shipped:
+    - {name: "Maddison Project Database 2023", licence: "CC BY 4.0", cite: "Bolt & van Zanden (2024)", url: "https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023"}
+    - {name: "Penn World Table 11.0", licence: "CC BY 4.0", cite: "Feenstra, Inklaar & Timmer (2015)", url: "https://www.rug.nl/ggdc/productivity/pwt/"}
+    - {name: "World Bank World Development Indicators", licence: "CC BY 4.0", cite: "World Bank", url: "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392"}
+    - {name: "World Bank historical income classification (OGHIST)", licence: "CC BY 4.0", cite: "World Bank", url: "https://datacatalogfiles.worldbank.org/ddh-published/0037712/DR0090754/OGHIST.xlsx"}
+    - {name: "UN World Population Prospects 2024", licence: "CC BY 3.0 IGO", cite: "United Nations, Population Division (2024)", url: "https://population.un.org/wpp/"}
+  cited_only:
+    - {name: "MSCI index factsheets", terms: "index data may not be redistributed; factsheet facts are cited with their access date, no series is shipped"}
+    - {name: "World Economic Outlook database (International Monetary Fund), April 2025", terms: "no systematic redistribution or derivative works; used at build time as a cross-check only and never exported"}
+    - {name: "Yahoo Finance / Stooq prices", terms: "personal use; only derived statistics (a CAGR, a drawdown, a date) are shipped"}
+    - {name: "Our World in Data", terms: "OWID's own content is CC BY; the underlying series keep their provider's licence"}

@@ -22,7 +22,16 @@
 // two years. `best` is resolved client-side: the corpus (tier 3) is fetched once, `y* = argmin_y d(A_ya, B_y)` over
 // the allowed era (the time-shift table's rule, lib/compare.ts), then the URL is replaceState'd to the concrete year
 // + `?from=best` so the button stays lit and Copy-link never emits `best` (J6).
+//
+// M5 (PLAN §7): the economic lens. Tier 2b `loadEcon()` runs AFTER the first paint lands (never in the first-paint set)
+// and feeds the always-on econ context (EconStrip, PairCard rows); `lens=econ` (`app.lens`) switches the market lens on.
+// The lens is sticky: it rides in the URL, is carried over to in-app navigations that lack it, and is remembered in
+// localStorage (`ppe:lens`) so the next visit starts where the reader left it; the first activation shows a dismissible
+// banner (`ppe:lens-banner`). Only the toggle writes the memory; a pasted URL never does.
 
+import * as econLibModule from './econ.ts';
+import type { EconData } from './econ.ts';
+export type EconLib = typeof econLibModule;
 import {
   byId,
   currentYear as clockYear,
@@ -43,6 +52,7 @@ import {
   loadBands,
   loadBandsDefault,
   loadCorpus,
+  loadEcon,
   loadEmbedding,
   loadEntityShard,
   loadYearShard,
@@ -65,6 +75,7 @@ import {
   type CountryQuery,
   type DisplayOptions,
   type EraMode,
+  type Lens,
   type Query,
   type Route,
   type SearchInput,
@@ -185,6 +196,8 @@ export interface DataSource {
   bands?(): Promise<Bands>;
   corpus?(): Promise<Corpus>;
   embedding?(model: string): Promise<Embedding>;
+  /** M5 tier 2b: the econ file, or null when the build shipped none. */
+  econ?(): Promise<EconData | null>;
 }
 /** Production source: lib/data.ts loaders (memoised, BASE_URL-aware). */
 export const dataSource: DataSource = {
@@ -194,7 +207,24 @@ export const dataSource: DataSource = {
   bands: loadBands,
   corpus: loadCorpus,
   embedding: (model) => loadEmbedding(model),
+  econ: loadEcon,
 };
+
+/** The slice of Web Storage the store uses (injectable; production wraps localStorage behind try/catch). */
+export interface StorageLike {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+export const LENS_KEY = 'ppe:lens';
+export const LENS_BANNER_KEY = 'ppe:lens-banner';
+function defaultStorage(): StorageLike | null {
+  try {
+    return typeof localStorage === 'undefined' ? null : localStorage;
+  } catch {
+    return null;
+  }
+}
+export type EconStatus = 'idle' | 'loading' | 'ready' | 'absent' | 'error';
 
 export type FeaturesFn = (shares: Float32Array) => Features;
 
@@ -205,6 +235,7 @@ export interface AppStateOptions {
   features?: FeaturesFn; // defaults to math/features.ts
   engine?: Engine | null; // null = no search (M1 behaviour); defaults to the production engine
   debounceMs?: number; // slider → search delay (30)
+  storage?: StorageLike | null; // lens memory (tests inject; null = no memory)
 }
 
 const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
@@ -240,6 +271,16 @@ export class AppState {
   /** Lock-offset toggle of the two scrubbers (UI state, not in the URL). */
   lockOffset = $state(false);
 
+  // M5 economic lens
+  econ = $state.raw<EconData | null>(null);
+  /** The econ module itself (lib/econ.ts), loaded with the data so first-paint components can compute econ cells
+   *  without a static import of the decoder. */
+  econLib = $state.raw<EconLib | null>(null);
+  econStatus = $state<EconStatus>('idle');
+  econError = $state<string | null>(null);
+  /** The first-activation banner (PLAN §7), until dismissed. */
+  lensBanner = $state(false);
+
   readonly lastObservedYear = meta.last_observed_year;
   readonly visualModel: string | null = meta.verdicts?.exposed_visual?.model ?? null;
 
@@ -250,6 +291,8 @@ export class AppState {
   private featuresFn: FeaturesFn = computeFeatures;
   private engine: Engine | null = productionEngine;
   private debounceMs = 30;
+  private storage: StorageLike | null = null;
+  private econStarted = false;
   private entityCache = new Map<string, EntityShard>();
   private yearCache = new Map<number, YearShard>();
   private pendingYears = new Map<number, Promise<YearShard>>(); // in-flight year-shard fetches (deduped across load paths)
@@ -265,6 +308,12 @@ export class AppState {
   options = $derived<DisplayOptions>({ axis: this.query?.axis ?? 'fit', unit: this.query?.unit ?? 'pct' });
   era = $derived<Era>(eraOf(this.year, this.currentYear, this.lastObservedYear));
   isProjected = $derived(this.year > this.currentYear);
+
+  /** The market lens of the current country / compare query (`?lens=econ`), null elsewhere. */
+  lens = $derived<Lens>(isCountry(this.route) ? this.route.lens : isCompare(this.route) ? this.route.lens : null);
+  lensOn = $derived(this.lens === 'econ');
+  /** Last year with any GDP/cap value in the econ file (null until it loads). */
+  lastEconYear = $derived<number | null>(this.econ ? (this.econ.header.last_econ_year ?? this.econ.yearMax) : null);
 
   /** The pyramid on screen: entity shard first (scrubbing needs no fetch), year shard as a fallback. */
   pyramid = $derived.by<PyramidView | null>(() => {
@@ -528,13 +577,14 @@ export class AppState {
     this.featuresFn = opts.features ?? computeFeatures;
     this.engine = opts.engine === undefined ? productionEngine : opts.engine;
     this.debounceMs = opts.debounceMs ?? 30;
+    this.storage = opts.storage === undefined ? defaultStorage() : opts.storage;
     this.currentYear = clockYear(this.clock);
     this.searchYear = this.currentYear;
   }
 
   /** Read the current location, canonicalise it, subscribe to Back/Forward and start loading. */
   init(): () => void {
-    this.applyRoute(currentRoute(this.env, { clock: this.clock }));
+    this.applyRoute(currentRoute(this.env, { clock: this.clock }), { initial: true });
     this.unsub?.();
     this.unsub = onPopState((r) => this.applyRoute(r, { fromHistory: true }), {
       ...this.env,
@@ -551,14 +601,29 @@ export class AppState {
     this.gen++;
   }
 
-  /** Adopt a parsed route. Redirects are applied with replaceState (aliases, case, hub year, defaults). */
-  applyRoute(r: Route, { fromHistory = false }: { fromHistory?: boolean } = {}) {
+  /**
+   * Adopt a parsed route. Redirects are applied with replaceState (aliases, case, hub year, defaults). The market lens
+   * is carried onto a country / compare route that lacks it when the previous route had it on (in-app links do not
+   * spell it) or, on the very first route, when localStorage remembers it — the URL is then replaceState'd so Copy
+   * link reproduces the view. A pasted URL with `lens=econ` turns the lens on without touching the memory.
+   */
+  applyRoute(r: Route, { fromHistory = false, initial = false }: { fromHistory?: boolean; initial?: boolean } = {}) {
     if (r.kind === 'redirect') {
       navigateTo(r.to, { replace: true, ...this.env });
       r = r.query;
     }
+    if ((r.kind === 'country' || r.kind === 'compare') && r.lens === null && !fromHistory) {
+      const carry = initial ? this.rememberedLens() === 'econ' : this.lens === 'econ';
+      if (carry) {
+        r = r.kind === 'country' ? countryQuery(r.id, r.year, { ...r, lens: 'econ' }, this.currentYear) : compareQuery(r.a, r.ya, r.b, r.yb, { ...r, lens: 'econ' }, this.currentYear);
+        navigate(r, { replace: true, ...this.env });
+      }
+    }
     this.route = r;
     this.dragFrom = null;
+    // A pasted / remembered `lens=econ` is the lens's first activation on this device as much as the toggle is: the
+    // banner shows until it is dismissed once (PLAN §7 "first activation shows a dismissible banner").
+    if ((r.kind === 'country' || r.kind === 'compare') && r.lens === 'econ' && !this.bannerDismissed()) this.lensBanner = true;
     if (!fromHistory) this.currentYear = clockYear(this.clock); // a long-lived tab crossing New Year
     this.syncSearchYear();
     void this.load();
@@ -700,6 +765,81 @@ export class AppState {
     this.lockOffset = on;
   }
 
+  // ---- M5 economic lens ------------------------------------------------------------------------------------------
+
+  /** Turn the market lens on / off (replaceState — a view tweak), remember it, show the first-activation banner. */
+  setLens(on: boolean) {
+    const lens: Lens = on ? 'econ' : null;
+    const c = this.compare;
+    const q = this.query;
+    if (q) {
+      const next = countryQuery(q.id, q.year, { ...q, lens }, this.currentYear);
+      this.route = next;
+      navigate(next, { replace: true, ...this.env });
+    } else if (c) {
+      const next = compareQuery(c.a, c.ya, c.b, c.yb, { ...c, lens }, this.currentYear);
+      this.route = next;
+      navigate(next, { replace: true, ...this.env });
+    }
+    this.remember(LENS_KEY, on ? 'econ' : 'off');
+    if (on) {
+      if (!this.bannerDismissed()) this.lensBanner = true;
+      void this.loadEconLater(true);
+    }
+  }
+
+  dismissLensBanner() {
+    this.lensBanner = false;
+    this.remember(LENS_BANNER_KEY, '1');
+  }
+
+  private bannerDismissed(): boolean {
+    try {
+      return this.storage?.getItem(LENS_BANNER_KEY) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  /** What localStorage remembers: 'econ' | 'off' | null (never asked). */
+  rememberedLens(): 'econ' | 'off' | null {
+    try {
+      const v = this.storage?.getItem(LENS_KEY);
+      return v === 'econ' || v === 'off' ? v : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private remember(key: string, value: string) {
+    try {
+      this.storage?.setItem(key, value);
+    } catch {
+      /* private mode / quota — the lens simply is not remembered */
+    }
+  }
+
+  /**
+   * Tier 2b: fetch the econ file once, AFTER the first paint (`load()` calls this when its shards have settled;
+   * `now` skips the yield for the toggle). A build without an econ file resolves to `absent`.
+   */
+  async loadEconLater(now = false): Promise<void> {
+    if (this.econStarted || !this.data.econ) return;
+    this.econStarted = true;
+    this.econStatus = 'loading';
+    if (!now) await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    try {
+      const e = await this.data.econ();
+      this.econLib = econLibModule;
+      this.econ = e;
+      this.econStatus = e ? 'ready' : 'absent';
+    } catch (err) {
+      this.econStatus = 'error';
+      this.econError = err instanceof Error ? err.message : String(err);
+      this.econStarted = false; // a retry may succeed (data.ts evicts the rejected promise)
+    }
+  }
+
   /** Replace one side of the pair (picker), keeping its year (pushState). */
   setCompareEntity(side: 'a' | 'b', id: string) {
     const c = this.compare;
@@ -784,6 +924,7 @@ export class AppState {
     if (cachedE && cachedY) {
       this.loading = false;
       this.error = null;
+      void this.loadEconLater();
       return;
     }
     this.loading = !cachedE; // the page can paint from either shard; report loading only until one lands
@@ -817,6 +958,7 @@ export class AppState {
       this.error = failed.reason instanceof Error ? failed.reason.message : String(failed.reason);
       this.loading = false;
     }
+    void this.loadEconLater(); // tier 2b, only once the first paint has settled
   }
 
   /** M2 tiers for the current constraints: extra year shards, bands, the corpus, the embedding. Idempotent. */
@@ -934,6 +1076,7 @@ export class AppState {
       this.loading = false;
     }
     this.resolveBest();
+    void this.loadEconLater();
   }
 
   /**

@@ -36,6 +36,7 @@ data: ## fetch/copy raw inputs (WPP 2024 + Togo update + LOCATIONS; Maddison, PW
 build: ## rebuild DuckDB + corpus + web shards + build report (+ web/src/data/evals.json for the About page)
 	$(UV) scripts/build_data.py
 	$(UV) scripts/export_evals.py
+	$(UV) --group econ scripts/build_econ.py
 
 build-nopatch: ## same, without the Togo interim update
 	$(UV) scripts/build_data.py --no-patches
@@ -110,3 +111,12 @@ clean: ## remove rebuildable outputs
 
 distclean: clean ## also raw data, venv, node_modules
 	rm -rf data/raw .venv web/node_modules
+
+# ---- M4 human triplets (PLAN §4.6 item 8; owner Z1) — appended targets, nothing above is touched
+.PHONY: triplets-select triplets-fit
+
+triplets-select: ## select the 88 triplet items (seed 0) → evals/triplets_selection.json + web/src/data copy
+	$(UV) scripts/select_triplets.py
+
+triplets-fit: ## fit the rater's answers (evals/triplets.json) → evals/TRIPLETS.md + triplets_fit.json; SYNTHETIC=1 for a noisy oracle
+	$(UV) scripts/fit_params.py $(if $(SYNTHETIC),--synthetic,)

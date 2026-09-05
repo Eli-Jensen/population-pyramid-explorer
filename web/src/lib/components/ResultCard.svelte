@@ -3,8 +3,11 @@
   // projected badge for cross-year hits), band chip with percentile, raw rank for opposites, decomposition
   // sparkline and the two explanation sentences. The mini pyramid and the title link to the compare page
   // /compare/{focal}/{year}/{cand}/{candYear} (M3, PLAN §7) under the metric/sex that ranked the card; a small
-  // secondary link opens the candidate's own page.
-  import type { CardData } from '../state.svelte.ts';
+  // secondary link opens the candidate's own page. M5: with the market lens on, a historical card (year ≤ last econ
+  // year − 5) gains a "then what happened ▸" disclosure (lazy econ chunk: GDP/cap → +10/+20/+30, dividend window, the
+  // market row beside VT); a current-era card (J9 lookalikes today) carries the investability badge instead.
+  import { app, type CardData } from '../state.svelte.ts';
+  import { loadEconUi } from '../econ/ui.ts';
   import { compareQuery, countryQuery, type Metric, type Sex } from '../router.ts';
   import { href } from '../url.ts';
   import { flagEmoji } from '../entities.ts';
@@ -35,6 +38,10 @@
   const link = $derived(href(compareQuery(focal.id, focal.year, e.id, r.year, { metric: focal.metric, sex: focal.sex }, currentYear)));
   const pageLink = $derived(href(countryQuery(e.id, r.year)));
   const bandChip = $derived(`${BAND_LABEL[r.band]}${r.percentile !== null ? ` · ${fmtPercentile(r.percentile)}` : ''}`);
+  const thenWhat = $derived(app.lensOn && !!app.econ && e.type === 'country' && app.lastEconYear !== null && r.year <= app.lastEconYear - 5);
+  // J9 lookalikes today: a current-era card (no "then what" window yet) carries the investability badge instead —
+  // live / liquidated fund + MSCI class as recorded, never a price or a return.
+  const badge = $derived(app.lensOn && !!app.econ && e.type === 'country' && !thenWhat);
   const bandTitle = $derived(
     r.percentile !== null
       ? `${kind === 'opposite' ? 'farther' : 'closer'} than ${fmtPercentile(kind === 'opposite' ? r.percentile : 100 - r.percentile)} of random pairs of this kind (${BAND_HINT[r.band]})`
@@ -56,9 +63,9 @@
     <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
       <span class="chip band-{r.band}" title={bandTitle}>{bandChip}</span>
       {#if kind === 'opposite'}
-        <span class="chip font-mono" title="position in the plain farthest-first ordering (diversity may promote a lower rank)">#{r.rankRaw} farthest</span>
+        <span class="chip font-mono" title="rank in the plain farthest-first ordering (diversity may promote a lower rank)">#{r.rankRaw} farthest</span>
       {:else if r.rankRaw !== undefined}
-        <span class="chip font-mono" title="position in the nearest-first ordering">#{r.rankRaw}</span>
+        <span class="chip font-mono" title="rank in the nearest-first ordering">#{r.rankRaw}</span>
       {/if}
       <span class="tabular-nums text-muted" title="distance under the active metric">d {r.d.toFixed(2)}</span>
     </div>
@@ -78,6 +85,23 @@
       {#if card.explanation.w1Sentence}<p class="mt-0.5 text-xs text-muted">{card.explanation.w1Sentence}</p>{/if}
     {:else if card.trend}
       <p class="mt-1.5 text-xs text-fg-2"><span class="text-muted">movement, focal vs this</span> {card.trend}</p>
+    {/if}
+    {#if badge && app.econ}
+      {#await loadEconUi() then m}
+        <div class="mt-1.5"><m.InstrumentBadge econ={app.econ} iso3={e.id} detail={false} /></div>
+      {/await}
+    {/if}
+    {#if thenWhat && app.econ}
+      <details class="mt-1.5 text-xs">
+        <summary class="cursor-pointer text-muted hover:text-fg">then what happened ▸</summary>
+        {#await loadEconUi()}
+          <p class="mt-1 text-muted" aria-busy="true">loading…</p>
+        {:then m}
+          <div class="mt-1.5 rounded-md border border-border bg-surface-2/40 p-2">
+            <m.ThenWhat econ={app.econ} iso3={e.id} year={r.year} name={e.short_name} {currentYear} compact />
+          </div>
+        {/await}
+      </details>
     {/if}
   </div>
 </article>

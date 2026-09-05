@@ -112,8 +112,8 @@
     <details class="w-full sm:w-auto">
       <summary class="btn cursor-pointer text-xs">change countries…</summary>
       <div class="mt-2 grid gap-2 sm:grid-cols-2">
-        <label class="text-xs text-muted">A<Picker id="pick-a" onpick={(e) => app.setCompareEntity('a', e.id)} placeholder="Replace {A.short_name}…" /></label>
-        <label class="text-xs text-muted">B<Picker id="pick-b" onpick={(e) => app.setCompareEntity('b', e.id)} placeholder="Replace {B.short_name}…" /></label>
+        <label class="text-xs text-muted">A<Picker id="picker-a" onpick={(e) => app.setCompareEntity('a', e.id)} placeholder="Replace {A.short_name}…" /></label>
+        <label class="text-xs text-muted">B<Picker id="picker-b" onpick={(e) => app.setCompareEntity('b', e.id)} placeholder="Replace {B.short_name}…" /></label>
       </div>
     </details>
   </header>
@@ -212,6 +212,10 @@
       error={app.pairError}
       onswap={() => app.swapCompare()}
       onbest={() => app.compareBest()}
+      econ={app.econ}
+      econLib={app.econLib}
+      econStatus={app.econStatus}
+      lens={app.lensOn}
     >
       {#snippet tools()}
         {#if yb !== null}

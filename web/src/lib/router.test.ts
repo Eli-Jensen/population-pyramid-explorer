@@ -68,6 +68,23 @@ const cases: Case[] = [
   { path: '/About/', want: { kind: 'redirect', to: '/about' } },
   { path: '/about/more', want: { kind: 'notfound' } },
   { path: '/evidence/', want: { kind: 'redirect', to: '/evidence' } },
+  // M5: /evidence is a static page; /eval/triplets the dev-only tool; other /eval/… stay placeholders
+  { path: '/evidence', want: { kind: 'static', page: 'evidence' } },
+  { path: '/Evidence', want: { kind: 'redirect', to: '/evidence' } },
+  { path: '/evidence/x', want: { kind: 'notfound' } },
+  { path: '/eval/triplets', want: { kind: 'eval', tool: 'triplets' } },
+  { path: '/eval/triplets/', want: { kind: 'redirect', to: '/eval/triplets' } },
+  { path: '/eval/other', want: { kind: 'placeholder', route: 'eval' } },
+  { path: `${PAGES}eval/triplets`, base: PAGES, want: { kind: 'eval', tool: 'triplets' } },
+  // M5: the market lens rides as ?lens=econ (elided when off, last in the order, junk values dropped)
+  { path: '/japan/2026', search: '?lens=econ', want: { kind: 'country', id: 'JPN', year: 2026, lens: 'econ' } },
+  { path: '/japan/2026', search: '?lens=off', want: { kind: 'redirect', to: '/japan/2026' } },
+  { path: '/japan/2026', search: '?lens=econ&unit=abs', want: { kind: 'redirect', to: '/japan/2026?unit=abs&lens=econ' } },
+  { path: '/japan/2026', search: '?unit=abs&mode=any&lens=econ', want: { kind: 'country', unit: 'abs', mode: 'any', lens: 'econ' } },
+  { path: '/japan/2026', search: '?lens=econ&mode=any', want: { kind: 'redirect', to: '/japan/2026?mode=any&lens=econ' } },
+  { path: '/compare/japan/2026/italy/2008', search: '?lens=econ', want: { kind: 'compare', a: 'JPN', b: 'ITA', lens: 'econ' } },
+  { path: '/compare/japan/2026/italy/2008', search: '?lens=econ&view=diff', want: { kind: 'redirect', to: '/compare/japan/2026/italy/2008?view=diff&lens=econ' } },
+  { path: '/compare/japan/2026/italy/best', search: '?lens=econ', want: { kind: 'compare', yb: 'best', lens: 'econ' } },
   // compare (M3) — the detailed table is below
   { path: '/compare/japan/2026/italy/2026', want: { kind: 'compare', a: 'JPN', ya: 2026, b: 'ITA', yb: 2026, view: 'overlay', from: null } },
   { path: `${PAGES}compare/japan/2026/italy/best`, base: PAGES, search: '?view=diff', want: { kind: 'compare', yb: 'best', view: 'diff', from: null } },
@@ -396,5 +413,11 @@ describe('router.parse — M3 compare', () => {
   it('/about is a static query with a canonical form', () => {
     expect(canonical({ kind: 'static', page: 'about' }, PAGES)).toBe(`${PAGES}about`);
     expect(parse(`${PAGES}about`, '', PAGES)).toEqual({ kind: 'static', page: 'about' });
+    expect(canonical({ kind: 'static', page: 'evidence' }, PAGES)).toBe(`${PAGES}evidence`);
+    expect(canonical({ kind: 'eval', tool: 'triplets' }, PAGES)).toBe(`${PAGES}eval/triplets`);
+    expect(canonical(countryQuery('JPN', 2026, { lens: 'econ' }, 2026), '/')).toBe('/japan/2026?lens=econ');
+    expect(canonical(countryQuery('JPN', 2026, { lens: null }, 2026), '/')).toBe('/japan/2026');
+    expect(countryQuery('JPN', 2026, {}, 2026).lens).toBeNull();
+    expect(canonical(compareQuery('JPN', 2026, 'ITA', 2008, { lens: 'econ', view: 'diff' }, 2026), '/')).toBe('/compare/japan/2026/italy/2008?view=diff&lens=econ');
   });
 });
