@@ -259,3 +259,271 @@ describe('AppState.setEntity / setOptions / derived', () => {
     expect(s.loading).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------------------------------- M2 search
+
+import type { CorpusView, Engine, Explanation, SearchQuery, SearchResult } from './engine.ts';
+import type { Bands, Corpus, Embedding } from './types.ts';
+import { defaultBandsSuffice } from './state.svelte.ts';
+
+/**
+ * Fake engine: records calls and returns deterministic, well-formed results so the store's DATA FLOW can be
+ * asserted (which shards / tiers are fetched for which mode, debounce, readiness) without X1's math.
+ */
+function fakeEngine(calls: string[]): Engine {
+  const ents = entities;
+  const nE = ents.length;
+  const idxOfId = (id: string) => idxOf(id);
+  const shardView = (years: number[], u16: Uint16Array, totals: Float32Array): CorpusView => ({
+    u16,
+    totals,
+    nRows: nE,
+    nYears: N_YEARS,
+    entityIdx: idxOfId,
+    rowOf: (id, year) => {
+      const j = years.indexOf(year);
+      const e = idxOfId(id);
+      return j < 0 || e < 0 ? -1 : j * nE + e;
+    },
+  });
+  const result = (view: CorpusView, q: SearchQuery, i: number, rank: number): SearchResult => {
+    const e = ents[(idxOfId(q.id) + 1 + i) % nE]!;
+    const year = view.nRows === nE ? q.year : q.year; // fake: candidate year = query year
+    return { id: e.id, year, row: view.rowOf(e.id, year), d: 0.1 * (i + 1), rankRaw: rank, dy: 0, band: 'typical', percentile: null };
+  };
+  const explanation: Explanation = {
+    decomposition: { metric: 'blend', sex: '2', d: 0.3, l2Part: 0.2, w1Part: 0.1, w1Years: 1.9, topBinsL2: [[0, 0.2]], topBinsW1: [[1, 0.1]] },
+    deltas: { referenceYear: 2026, nReference: 198, all: [], alike: [], differs: [] },
+    because: 'alike', differsIn: 'differs', w1Sentence: 'w1', decompositionSentence: 'dec',
+  };
+  return {
+    fromCorpus: (corpus: Corpus) => {
+      calls.push('fromCorpus');
+      return {
+        u16: corpus.u16, totals: corpus.totals, nRows: corpus.nRows, nYears: N_YEARS, entityIdx: idxOfId,
+        rowOf: (id, year) => { const e = idxOfId(id); return e < 0 ? -1 : e * N_YEARS + (year - YEAR_MIN); },
+      };
+    },
+    fromShards: (main, others, inject) => {
+      calls.push(`fromShards:${[main.year, ...others.map((o) => o.year)].join(',')}${inject ? `+${inject.shard.id}` : ''}`);
+      const shards = [main, ...others];
+      const u16 = new Uint16Array(shards.length * nE * N_DIMS);
+      const totals = new Float32Array(shards.length * nE);
+      shards.forEach((s, j) => { u16.set(s.u16, j * nE * N_DIMS); totals.set(s.totals, j * nE); });
+      return shardView(shards.map((s) => s.year), u16, totals);
+    },
+    lagYears: (tau, trend, L) => (trend === null ? [] : (trend === 'motion' ? [L] : Array.from({ length: L / 5 }, (_, i) => 5 * (i + 1))).map((s) => tau - s)),
+    candidateMask: (view) => new Uint8Array(view.nRows).fill(1),
+    distances: (view) => { calls.push('distances'); return Float64Array.from({ length: view.nRows }, (_, i) => i + 1); },
+    similar: (view, q) => { calls.push(`similar:${q.mode}:${q.year}:${q.metric}`); return Array.from({ length: q.k }, (_, i) => result(view, q, i, i + 1)); },
+    search: (view, q) => { calls.push(`search:${q.mode}:${q.year}:${q.metric}`); const twins = Array.from({ length: q.k }, (_, i) => result(view, q, i, i + 1)); const opp = Array.from({ length: q.k }, (_, i) => result(view, q, i + 10, i + 1)); return { similar: twins, different: opp, strict: opp, d: Float64Array.from({ length: view.nRows }, (_, i) => i + 1), nCandidates: view.nRows }; },
+    different: (view, q) => { calls.push('different'); const rs = Array.from({ length: q.k }, (_, i) => result(view, q, i + 10, i + 1)); return { results: rs, strict: rs }; },
+    bestYearPerEntity: (_view, q) => { calls.push(`bestYear:${q.mode}`); return [{ id: 'ITA', bestYear: q.year, row: 0, d: 0.3, dy: 0, boundaryHit: false, band: 'close', percentile: 20 }]; },
+    isolation: (_view, year, metric) => { calls.push(`isolation:${year}:${metric}`); return new Map(ents.filter((e) => e.type === 'country').map((e, i) => [e.id, i])); },
+    isolationPercentile: () => 91,
+    tableMetric: (q) => q.metric,
+    bandFor: () => ({ label: 'typical', percentile: null, table: null }),
+    featureStats: (_v, year) => { calls.push(`stats:${year}`); return { year, rows: new Int32Array(0), mu: new Float64Array(13), sd: new Float64Array(13).fill(1) }; },
+    explain: () => explanation,
+  };
+}
+
+function fakeCorpus(): Corpus {
+  const nRows = nEntities * N_YEARS;
+  const u16 = new Uint16Array(nRows * N_DIMS);
+  for (let r = 0; r < nRows; r++) u16[r * N_DIMS + (r % N_DIMS)] = U16_TOTAL;
+  return { nRows, nEntities, nYears: N_YEARS, u16, totals: new Float32Array(nRows).fill(1000), source: { path: 'gzip-stream', decodeMs: 1, fetchMs: 1 } };
+}
+const fakeBands = (): Bands => ({ index: {}, values: new Float32Array(0) });
+const fakeEmbedding = (model: string): Embedding => ({ model, nRows: nEntities * N_YEARS, dim: 64, values: new Float32Array(nEntities * N_YEARS * 64) });
+
+function makeM2(start: string, opts: { debounceMs?: number } = {}) {
+  const b = fakeBrowser(start);
+  const log: string[] = [];
+  const data = fakeData(log);
+  const full: DataSource = {
+    ...data,
+    bandsDefault: async () => { log.push('B:default'); return fakeBands(); },
+    bands: async () => { log.push('B:all'); return fakeBands(); },
+    corpus: async () => { log.push('C'); return fakeCorpus(); },
+    embedding: async (m) => { log.push(`EMB:${m}`); return fakeEmbedding(m); },
+  };
+  const calls: string[] = [];
+  const s = new AppState({ clock: clock2026, data: full, engine: fakeEngine(calls), debounceMs: opts.debounceMs ?? 30, env: { base: '/', history: b.history, location: b.location, target: b.target } });
+  return { s, b, log, calls };
+}
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+describe('AppState M2 — constraints on the URL', () => {
+  it('search options come from the query with defaults filled; setOptions replaces and elides', () => {
+    const { s, b } = makeM2('/japan/2026');
+    s.init();
+    expect(s.search).toMatchObject({ mode: 'same', k: 5, div: 0.5, metric: 'blend', era: null, minpop: 100_000 });
+    b.log.length = 0;
+    s.setOptions({ k: 10, metric: 'w1' });
+    expect(b.href()).toBe('/japan/2026?metric=w1&k=10');
+    s.setOptions({ mode: 'today' }); // Y == currentYear: resolves to the concrete range all the same
+    expect(b.href()).toBe('/japan/2026?mode=range&from=2026&to=2026&via=today&metric=w1&k=10');
+    s.resetSearch();
+    expect(b.href()).toBe('/japan/2026');
+    expect(b.log.every((l) => l.op === 'replace')).toBe(true);
+  });
+
+  it('today sugar in the URL is replaceState-d to the concrete range with via=today', () => {
+    const { s, b } = makeM2('/japan/1990?mode=today');
+    s.init();
+    expect(b.log).toEqual([{ op: 'replace', url: '/japan/1990?mode=range&from=2026&to=2026&via=today' }]);
+    expect(s.search).toMatchObject({ mode: 'range', from: 2026, to: 2026, via: 'today' });
+    expect(s.singleYear).toBe(2026);
+  });
+
+  it('J8: the era default follows the year while scrubbing and an explicit value is normalised', () => {
+    const { s, b } = makeM2('/japan/2026?mode=any');
+    s.init();
+    expect(s.searchEra).toBe('obs');
+    s.setYear(2050);
+    expect(s.searchEra).toBe('all');
+    expect(b.href()).toBe('/japan/2050?mode=any');
+    s.setOptions({ era: 'obs' });
+    expect(b.href()).toBe('/japan/2050?mode=any&era=obs');
+    expect(s.searchEra).toBe('obs');
+    s.setYear(2026); // era=obs is the default again → elided
+    expect(b.href()).toBe('/japan/2026?mode=any');
+  });
+
+  it('a trend whose window leaves the corpus is dropped when scrubbing back', () => {
+    const { s, b } = makeM2('/japan/2026?trend=motion&L=20');
+    s.init();
+    s.setYear(1960);
+    expect(b.href()).toBe('/japan/1960');
+    expect(s.search.trend).toBeNull();
+  });
+});
+
+describe('AppState M2 — data tiers per mode', () => {
+  it('same-year: year shard + bands_default only, results from a shard view, no corpus', async () => {
+    const { s, log, calls } = makeM2('/japan/2026');
+    s.init();
+    await flush();
+    expect(log.sort()).toEqual(['B:default', 'E:JPN', 'Y:2026']);
+    expect(s.needsCorpus).toBe(false);
+    expect(s.requiredYears).toEqual([2026]);
+    expect(s.results?.source).toBe('shards');
+    expect(s.results?.twins).toHaveLength(5);
+    expect(s.results?.twins[0]?.explanation?.because).toBe('alike');
+    expect(s.results?.own).toBeNull(); // needs the corpus
+    expect(calls.filter((c) => c.startsWith('fromShards'))).toContain('fromShards:2026');
+    expect(calls).toContain('search:same:2026:blend');
+    expect(calls).toContain('stats:2026');
+    expect(s.isolationPercentile).toBe(91);
+    expect(s.searchError).toBeNull();
+  });
+
+  it('today from 1990: the 2026 shard is the candidate set and the 1990 shard backs the query row / reference year', async () => {
+    const { s, log, calls } = makeM2('/japan/1990?mode=today');
+    s.init();
+    await flush();
+    expect(s.requiredYears).toEqual([1990, 2026]);
+    expect(log.filter((l) => l.startsWith('Y:')).sort()).toEqual(['Y:1990', 'Y:2026']);
+    expect(log).not.toContain('C');
+    expect(s.results?.q).toMatchObject({ mode: 'range', from: 2026, to: 2026, year: 1990 });
+    expect(calls).toContain('fromShards:2026,1990'); // (the derived is lazy: built on the read above)
+    expect(log).toContain('B:all'); // a non-default mode needs the full bands file
+  });
+
+  it('trend (motion, 10 y) adds the τ−10 shard; path adds every 5-year lag', async () => {
+    const a = makeM2('/china/1990?mode=today&trend=motion');
+    a.s.init();
+    await flush();
+    expect(a.s.requiredYears).toEqual([1980, 1990, 2016, 2026]);
+    expect(a.log.filter((l) => l.startsWith('Y:')).sort()).toEqual(['Y:1980', 'Y:1990', 'Y:2016', 'Y:2026']);
+    expect(a.s.results?.twins[0]?.trend).toMatch(/U15 .* vs .* pts · 65\+/);
+    expect(a.s.results?.twins[0]?.explanation).toBeNull();
+    const b = makeM2('/japan/2026?trend=path&L=20');
+    b.s.init();
+    await flush();
+    expect(b.s.requiredYears).toEqual([2006, 2011, 2016, 2021, 2026]);
+  });
+
+  it('any-year: loads the corpus (once) and the full bands; results from the corpus view with the own-trajectory row', async () => {
+    const { s, log, calls } = makeM2('/japan/2026?mode=any');
+    s.init();
+    expect(s.needsCorpus).toBe(true);
+    expect(s.corpusStatus).toBe('loading');
+    expect(s.results).toBeNull();
+    await flush();
+    expect(log.filter((l) => l === 'C')).toHaveLength(1);
+    expect(log).toContain('B:all');
+    expect(s.corpusStatus).toBe('ready');
+    expect(s.results?.source).toBe('corpus');
+    expect(s.results?.own).toMatchObject({ year: expect.any(Number) });
+    expect(Math.abs(s.results!.own!.dy)).toBeGreaterThanOrEqual(5);
+    expect(calls.some((c) => c.startsWith('search:any:'))).toBe(true);
+    s.setOptions({ mode: 'near', n: 5 });
+    await flush();
+    expect(log.filter((l) => l === 'C')).toHaveLength(1); // still once
+  });
+
+  it('the time-shift panel fetches the corpus on open and computes the table', async () => {
+    const { s, log, calls } = makeM2('/japan/2026');
+    s.init();
+    await flush();
+    expect(log).not.toContain('C');
+    expect(s.timeShift).toBeNull();
+    s.setTimeShiftOpen(true);
+    expect(s.needsCorpus).toBe(true);
+    await flush();
+    expect(log).toContain('C');
+    expect(log).toContain('B:all');
+    expect(s.timeShift).toHaveLength(1);
+    expect(calls).toContain('bestYear:any');
+    expect(s.results?.source).toBe('corpus'); // once loaded, the corpus serves the same-year search too
+    s.setTimeShiftOpen(false);
+    expect(s.timeShift).toBeNull();
+  });
+
+  it('the Visual metric loads the exposed embedding lazily and waits for it', async () => {
+    const { s, log } = makeM2('/japan/2026?metric=visual');
+    s.init();
+    if (!s.visualModel) return; // build without an exposed image space: the URL falls back to blend
+    expect(s.needsEmbedding).toBe(true);
+    expect(s.results).toBeNull();
+    await flush();
+    expect(log).toContain(`EMB:${s.visualModel}`);
+    expect(s.embeddingStatus).toBe('ready');
+    expect(s.results?.q.metric).toBe('visual');
+  });
+
+  it('defaultBandsSuffice only for same / blend / two-sex / no trend', () => {
+    expect(defaultBandsSuffice({ mode: 'same', metric: 'blend', sex: '2', trend: null })).toBe(true);
+    expect(defaultBandsSuffice({ mode: 'same', metric: 'l2', sex: '2', trend: null })).toBe(false);
+    expect(defaultBandsSuffice({ mode: 'same', metric: 'blend', sex: '1', trend: null })).toBe(false);
+    expect(defaultBandsSuffice({ mode: 'any', metric: 'blend', sex: '2', trend: null })).toBe(false);
+    expect(defaultBandsSuffice({ mode: 'same', metric: 'blend', sex: '2', trend: 'motion' })).toBe(false);
+  });
+});
+
+describe('AppState M2 — debounce while scrubbing', () => {
+  it('the search year trails a drag by debounceMs and then fetches that year shard; commit syncs at once', async () => {
+    const { s, log, calls } = makeM2('/japan/2026', { debounceMs: 20 });
+    s.init();
+    await flush();
+    log.length = 0;
+    calls.length = 0;
+    s.setYear(2000, { commit: false });
+    s.setYear(2001, { commit: false });
+    expect(s.year).toBe(2001);
+    expect(s.searchYear).toBe(2026); // not yet
+    expect(s.results?.q.year).toBe(2026);
+    await flush();
+    expect(log).toEqual([]); // nothing fetched inside the debounce window
+    await wait(40);
+    expect(s.searchYear).toBe(2001);
+    expect(log).toEqual(['Y:2001']); // one shard for the settled year only
+    expect(s.results?.q.year).toBe(2001);
+    // the derived is lazy: reading results above scanned 2026 once; the settled year scanned exactly once, no 2000
+    expect(calls.filter((c) => c.startsWith('search'))).toEqual(['search:same:2026:blend', 'search:same:2001:blend']);
+    s.setYear(2010, { commit: true });
+    expect(s.searchYear).toBe(2010);
+  });
+});

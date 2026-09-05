@@ -1,16 +1,18 @@
 <script lang="ts">
-  // /{slug}/{year} — the country page (PLAN §7, M1 scope: no twins / opposites / compare yet).
-  // Data flow: the store owns route + tier-1 shards; scrubbing repaints from the entity shard alone.
+  // /{slug}/{year} — the country page (PLAN §7). M1: pyramid, scrubber, callouts, narrative, age shares.
+  // M2: distinctiveness chip, constraint bar, twins + opposites (full width below the two columns), the
+  // own-trajectory row and the collapsed time-shift panel. Data flow: the store owns route + shards + search;
+  // scrubbing repaints from the entity shard alone and the search trails the slider by 30 ms.
   import { app } from '../lib/state.svelte.ts';
-  import { flagEmoji, isAggregate, byId } from '../lib/entities.ts';
-  import { loadBandsDefault } from '../lib/data.ts';
-  import { AXES, UNITS, type Axis, type Unit } from '../lib/router.ts';
+  import { flagEmoji, isAggregate, byId, meta } from '../lib/entities.ts';
+  import { AXES, UNITS, visualExposed, type Axis, type Unit } from '../lib/router.ts';
   import { href } from '../lib/url.ts';
   import { entitySeries, tenYearChange } from '../lib/series.ts';
   import { narrative } from '../lib/narrative.ts';
   import { fmtPersons } from '../lib/format.ts';
   import { UNIT_LABEL } from '../lib/bars.ts';
   import { rememberLast } from '../lib/last.ts';
+  import { eraEdge, METRIC_LABEL } from '../lib/restate.ts';
   import Pyramid from '../lib/components/Pyramid.svelte';
   import Readout from '../lib/components/Readout.svelte';
   import YearScrubber from '../lib/components/YearScrubber.svelte';
@@ -18,6 +20,11 @@
   import Narrative from '../lib/components/Narrative.svelte';
   import AgeShares from '../lib/components/AgeShares.svelte';
   import Picker from '../lib/components/Picker.svelte';
+  import Distinctiveness from '../lib/components/Distinctiveness.svelte';
+  import ConstraintBar from '../lib/components/ConstraintBar.svelte';
+  import Twins from '../lib/components/Twins.svelte';
+  import Opposites from '../lib/components/Opposites.svelte';
+  import TimeShiftTable from '../lib/components/TimeShiftTable.svelte';
 
   const entity = $derived(app.entity);
   const year = $derived(app.year);
@@ -36,10 +43,6 @@
   // Default the readout to the modal bin once a pyramid lands; keep the reader's choice afterwards.
   $effect(() => {
     if (selected === null && features) selected = features.modal_bin / 5;
-  });
-  // Tier-1 fourth fetch (bands_default) — memoised, fire-and-forget; M2 consumes it.
-  $effect(() => {
-    if (entity) void loadBandsDefault().catch(() => {});
   });
   $effect(() => {
     if (entity) rememberLast(entity.id, year);
@@ -72,9 +75,30 @@
   );
   const eraLabel = $derived(app.era === 'observed' ? 'observed' : app.era === 'nowcast' ? 'nowcast' : 'projected');
   const memberNames = $derived(entity?.members?.map((id) => byId(id)?.short_name ?? id).sort() ?? []);
+
+  // ---- M2: search ----
+  const query = $derived(app.query);
+  const results = $derived(app.results);
+  const corpusMb = (meta.sizes.shares_d16z / 1e6).toFixed(1);
+  const embMb = $derived(app.visualModel ? ((meta.sizes.emb[app.visualModel] ?? 0) / 1e6).toFixed(1) : '0');
+  /** Skeleton caption while the search waits for data (null = a computed result is on its way). */
+  const loadingText = $derived.by(() => {
+    if (results) return null;
+    if (app.searchError) return null;
+    if (app.needsCorpus) {
+      if (app.corpusStatus === 'error') return `could not load all years: ${app.corpusError}`;
+      return `loading all years… ${corpusMb} MB`;
+    }
+    if (app.needsEmbedding && !app.embedding) return app.embeddingStatus === 'error' ? 'could not load the image embedding' : `loading the image embedding… ${embMb} MB`;
+    return 'loading this year…';
+  });
+  const focal = $derived(
+    entity && pyramid ? { id: entity.id, shares: pyramid.shares, name: entity.short_name, year: results?.q.year ?? year } : null,
+  );
+  const metricLabel = $derived(query?.trend ? `trend (${query.trend}, ${query.L} y)` : METRIC_LABEL[query?.metric ?? 'blend']);
 </script>
 
-{#if entity}
+{#if entity && query}
   <header class="mb-4 flex flex-wrap items-start gap-3">
     <div class="min-w-0 flex-1">
       <div class="flex flex-wrap items-center gap-2">
@@ -83,6 +107,7 @@
         <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">{entity.short_name}</h1>
         <span class="text-2xl font-light text-fg-2 tabular-nums sm:text-3xl">{year}</span>
         <span class="chip" title="observed ≤ {app.lastObservedYear}; nowcast ≤ {app.currentYear}; projected after">{eraLabel}</span>
+        <Distinctiveness percentile={app.isolationPercentile} {metricLabel} />
       </div>
       <div class="mt-0.5 text-sm text-fg-2">
         {#if entity.name !== entity.short_name}<span>{entity.name} · </span>{/if}
@@ -172,4 +197,42 @@
       </p>
     </aside>
   </div>
+
+  <!-- M2: twins + opposites, full width -->
+  <section aria-label="Similar and different pyramids">
+    <ConstraintBar
+      {query}
+      name={entity.short_name}
+      currentYear={app.currentYear}
+      lastObserved={app.lastObservedYear}
+      visual={visualExposed()}
+      onchange={(o) => app.setOptions(o)}
+      onreset={() => app.resetSearch()}
+    />
+    {#if app.searchError}
+      <p class="card mt-3 border-red-500/40 text-sm" role="alert">The search could not run: {app.searchError}</p>
+    {/if}
+    {#if focal}
+      <Twins {results} k={query.k} {focal} {loadingText} lastObserved={app.lastObservedYear} currentYear={app.currentYear} />
+      <Opposites {results} k={query.k} div={query.div} {focal} {loadingText} lastObserved={app.lastObservedYear} currentYear={app.currentYear} />
+      {#if results && results.ms > 0}
+        <p class="mt-2 text-right text-[11px] text-muted" title="scan + dedupe + MMR + explanations, main thread">
+          {results.nCandidates.toLocaleString('en-US')} candidate rows · {results.source === 'corpus' ? 'all years' : 'year shards'} · {results.ms.toFixed(1)} ms
+          {#if results.source === 'corpus' && app.corpus}
+            · all-years blob {corpusMb} MB fetched in {app.corpus.source.fetchMs.toFixed(0)} ms, decoded in {app.corpus.source.decodeMs.toFixed(0)} ms ({app.corpus.source.path})
+          {/if}
+        </p>
+      {/if}
+      <TimeShiftTable
+        rows={app.timeShift}
+        open={app.timeShiftOpen}
+        ontoggle={(o) => app.setTimeShiftOpen(o)}
+        status={app.corpusStatus}
+        error={app.corpusError}
+        focal={{ name: entity.short_name, year }}
+        eraEdge={eraEdge(app.searchEra, app.currentYear, app.lastObservedYear)}
+        corpusBytes={meta.sizes.shares_d16z}
+      />
+    {/if}
+  </section>
 {/if}
