@@ -1,4 +1,172 @@
 @import "tailwindcss";
 
-:root { color-scheme: light dark; }
-body { margin: 0; }
+/* Design tokens — light first, dark by prefers-color-scheme (PLAN §7). Chart colours are the dataviz
+   reference palette stepped for each surface and validated for CVD separation in both modes:
+   male = slot 1 blue, female = slot 5 magenta (harmonised from populationpyramid.net's #4682B4 / #EE7989,
+   which fail the chroma / lightness gates); age-shares lines = slots 2, 3, 7 (orange, aqua, violet). */
+:root {
+  color-scheme: light;
+  --bg: #f9f9f7;
+  --surface: #fcfcfb;
+  --surface-2: #f0efec;
+  --fg: #0b0b0b;
+  --fg-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --male: #2a78d6;
+  --female: #e87ba4;
+  --u15: #eb6834;
+  --wa: #1baf7a;
+  --o65: #4a3aa7;
+  --accent: #2a78d6;
+  --proj: rgba(11, 11, 11, 0.05);
+  --focus: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-2: #232322;
+    --fg: #ffffff;
+    --fg-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --male: #3987e5;
+    --female: #d55181;
+    --u15: #d95926;
+    --wa: #199e70;
+    --o65: #9085e9;
+    --accent: #3987e5;
+    --proj: rgba(255, 255, 255, 0.06);
+    --focus: #86b6ef;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-muted: var(--muted);
+  --color-grid: var(--grid);
+  --color-axis: var(--axis);
+  --color-border: var(--border);
+  --color-male: var(--male);
+  --color-female: var(--female);
+  --color-u15: var(--u15);
+  --color-wa: var(--wa);
+  --color-o65: var(--o65);
+  --color-accent: var(--accent);
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html {
+  background: var(--bg);
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Focus rings: visible, one style everywhere. */
+:where(a, button, input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduced motion: no tweens anywhere (the chart tween also reads prefersReducedMotion). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Chip + segmented control primitives (used by a few components). */
+.chip {
+  @apply inline-flex items-center rounded-full border border-border px-2 py-0.5 text-xs font-medium text-fg-2;
+}
+.seg {
+  @apply inline-flex overflow-hidden rounded-md border border-border text-sm;
+}
+.seg > button {
+  @apply px-2.5 py-1 text-fg-2;
+}
+.seg > button + button {
+  border-left: 1px solid var(--border);
+}
+.seg > button[aria-pressed="true"] {
+  @apply bg-surface-2 text-fg font-medium;
+}
+.seg > button:hover {
+  @apply text-fg;
+}
+.btn {
+  @apply inline-flex min-h-8 min-w-8 items-center justify-center rounded-md border border-border bg-surface px-2 text-sm text-fg-2 hover:text-fg disabled:opacity-40;
+}
+.card {
+  @apply rounded-lg border border-border bg-surface p-4;
+}
+
+/* Range input: track + thumb styled so the decade ticks and zones behind it line up. */
+input[type="range"].scrub {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  margin: 0;
+  cursor: pointer;
+}
+input[type="range"].scrub::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--axis);
+}
+input[type="range"].scrub::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--axis);
+}
+input[type="range"].scrub::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+input[type="range"].scrub::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+input[type="range"].scrub:focus-visible {
+  outline: none;
+}
+input[type="range"].scrub:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+input[type="range"].scrub:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
