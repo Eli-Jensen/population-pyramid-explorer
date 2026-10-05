@@ -139,4 +139,4 @@ record is in [evals/RESULTS.md](evals/RESULTS.md).
   (`facebook/dinov2-base`), Apache-2.0.
 - **Design inspiration:** [populationpyramid.net](https://www.populationpyramid.net) — the fixed-axis,
   youngest-at-the-bottom pyramid and the year scrubber; no data or code is used from it.
-- **Code:** MIT ([LICENSE](LICENSE)).
+- **Code:** MIT ([LICENSE](LICENSE)); data attributions in [NOTICE](NOTICE).

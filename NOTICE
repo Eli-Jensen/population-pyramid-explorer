@@ -1,0 +1,13 @@
+population-pyramid-explorer
+
+Code: MIT (see LICENSE).
+
+Population data: United Nations, Department of Economic and Social Affairs,
+Population Division (2024). World Population Prospects 2024, Online Edition.
+https://population.un.org/wpp/ — © 2024 United Nations, licensed under
+CC BY 3.0 IGO. Files under web/public/data are reshaped, share-normalised
+and 16-bit-quantised derivatives, not the original UN files.
+
+Economic data (Maddison Project Database 2023, Penn World Table 11.0, World Bank
+WDI and OGHIST) is CC BY 4.0; full attributions are in evals/econ/NOTICE and
+web/public/data/wpp2024/NOTICE.

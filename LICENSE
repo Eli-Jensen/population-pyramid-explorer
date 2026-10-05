@@ -19,9 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-Population data: United Nations, Department of Economic and Social Affairs,
-Population Division (2024). World Population Prospects 2024, Online Edition.
-https://population.un.org/wpp/ — © 2024 United Nations, licensed under
-CC BY 3.0 IGO. Files under web/public/data are reshaped, share-normalised
-and 16-bit-quantised derivatives, not the original UN files.
